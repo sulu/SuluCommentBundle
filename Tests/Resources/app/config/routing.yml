@@ -1,0 +1,7 @@
+sulu_comment:
+    resource: "@SuluCommentBundle/Resources/config/routing.yml"
+    prefix: /admin/content
+
+sulu_comment:
+    resource: "@SuluCommentBundle/Resources/config/routing_api.yml"
+    prefix: /admin/content

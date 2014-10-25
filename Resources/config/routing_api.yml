@@ -1,0 +1,4 @@
+# sulu_comment_homepage:
+#    pattern:  /admin/api/something
+#    defaults: { _controller: SuluCommentBundle:Default:index }
+

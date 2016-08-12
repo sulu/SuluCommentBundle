@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 /**
  * Integrates sulu_comment into symfony kernel.
  */
-class SuluCommentExtension extends Extension
+class SuluCommunityExtension extends Extension
 {
     /**
      * {@inheritdoc}

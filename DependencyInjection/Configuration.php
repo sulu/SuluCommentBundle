@@ -11,6 +11,10 @@
 
 namespace Sulu\Bundle\CommentBundle\DependencyInjection;
 
+use Sulu\Bundle\CommentBundle\Entity\Comment;
+use Sulu\Bundle\CommentBundle\Entity\CommentRepository;
+use Sulu\Bundle\CommentBundle\Entity\Thread;
+use Sulu\Bundle\CommentBundle\Entity\ThreadRepository;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -25,7 +29,28 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sulu_comment');
+        $treeBuilder->root('sulu_comment')
+            ->children()
+                ->arrayNode('objects')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('comment')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue(Comment::class)->end()
+                                ->scalarNode('repository')->defaultValue(CommentRepository::class)->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('thread')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('model')->defaultValue(Thread::class)->end()
+                                ->scalarNode('repository')->defaultValue(ThreadRepository::class)->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }

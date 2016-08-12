@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\CommentBundle\Entity\Comment" table="com_comment"
+            repository-class="Sulu\Bundle\CommentBundle\Entity\CommentRepository">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="state" type="integer"/>
+        <field name="message" type="text"/>
+
+        <one-to-one target-entity="Sulu\Bundle\CommentBundle\Entity\ThreadInterface" field="thread"
+                    inversed-by="comments">
+            <join-column name="threadId"/>
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-one>
+    </entity>
+</doctrine-mapping>

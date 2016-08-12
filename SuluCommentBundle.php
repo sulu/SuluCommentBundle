@@ -11,6 +11,10 @@
 
 namespace Sulu\Bundle\CommentBundle;
 
+use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
+use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
+use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -18,4 +22,19 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class SuluCommentBundle extends Bundle
 {
+    use PersistenceBundleTrait;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $this->buildPersistence(
+            [
+                CommentInterface::class => 'sulu.model.comment.class',
+                ThreadInterface::class => 'sulu.model.thread.class',
+            ],
+            $container
+        );
+    }
 }

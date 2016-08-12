@@ -1,0 +1,31 @@
+parameters:
+    secret: test
+
+framework:
+    router: { resource: "%kernel.root_dir%/config/routing_website.yml" }
+
+security:
+    acl:
+        connection: default
+
+    access_decision_manager:
+        strategy: affirmative
+
+    encoders:
+        Sulu\Bundle\SecurityBundle\Entity\User: plaintext
+
+    providers:
+        testprovider:
+            id: test_user_provider
+
+    access_control:
+       - { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+    firewalls:
+        test:
+            http_basic: ~
+            anonymous: ~
+
+sulu_security:
+    checker:
+        enabled: true

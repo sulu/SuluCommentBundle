@@ -1,0 +1,31 @@
+{
+    "name": "sulu/comment-bundle",
+    "description": "Sulu Bundle for adding comments on entities",
+    "type": "sulu-bundle",
+    "license": "MIT",
+    "require": {
+        "php": "^5.5 || ^7.0",
+        "sulu/sulu": "dev-develop"
+    },
+    "require-dev": {
+        "doctrine/doctrine-bundle": "1.4.*",
+        "jackalope/jackalope-doctrine-dbal": "^1.2.5",
+        "sulu/document-manager": "@dev",
+        "massive/search-bundle": "@dev",
+        "symfony/monolog-bundle": "2.4.*",
+        "phpunit/phpunit": ">=4.8"
+    },
+    "keywords": [],
+    "authors": [
+        {
+            "name": "Sulu Comment",
+            "homepage": "https://github.com/sulu/SuluCommentBundle/contributors"
+        }
+    ],
+    "homepage": "https://github.com/sulu/SuluCommentBundle",
+    "autoload": {
+        "psr-4": {
+            "Sulu\\Bundle\\CommentBundle\\": ""
+        }
+    }
+}

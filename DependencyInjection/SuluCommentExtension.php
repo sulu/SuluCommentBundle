@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CommentBundle\DependencyInjection;
 
+use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -19,8 +20,10 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 /**
  * Integrates sulu_comment into symfony kernel.
  */
-class SuluCommunityExtension extends Extension
+class SuluCommentExtension extends Extension
 {
+    use PersistenceExtensionTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -28,6 +31,8 @@ class SuluCommunityExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
+
+        $this->configurePersistence($config['objects'], $container);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

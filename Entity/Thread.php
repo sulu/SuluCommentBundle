@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\CommentBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
@@ -74,13 +74,15 @@ class Thread implements ThreadInterface, AuditableInterface
     /**
      * @param string $type
      * @param string $entityId
+     * @param Collection $comments
+     * @param int $commentCount
      */
-    public function __construct($type, $entityId)
+    public function __construct($type, $entityId, Collection $comments = null, $commentCount = 0)
     {
         $this->type = $type;
         $this->entityId = $entityId;
-
-        $this->comments = new ArrayCollection();
+        $this->comments = $comments ?: new ArrayCollection();
+        $this->commentCount = $commentCount;
     }
 
     /**
@@ -179,6 +181,20 @@ class Thread implements ThreadInterface, AuditableInterface
 
         if ($comment->isPublished()) {
             $this->increaseCommentCount();
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeComment(CommentInterface $comment)
+    {
+        $this->comments->removeElement($comment);
+
+        if ($comment->isPublished()) {
+            $this->decreaseCommentCount();
         }
 
         return $this;

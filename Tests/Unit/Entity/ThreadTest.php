@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CommentBundle\Tests\Unit\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\CommentBundle\Entity\Thread;
 
@@ -45,7 +46,7 @@ class ThreadTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $thread->getComments());
     }
 
-    public function testAddUnPublishedComment()
+    public function testAddUnpublishedComment()
     {
         $comment = $this->prophesize(CommentInterface::class);
         $thread = new Thread('test', 1);
@@ -56,6 +57,31 @@ class ThreadTest extends \PHPUnit_Framework_TestCase
         $thread->addComment($comment->reveal());
         $this->assertEquals($comment->reveal(), $thread->getComments()->first());
         $this->assertEquals(0, $thread->getCommentCount());
+        $this->assertCount(1, $thread->getComments());
+    }
+
+    public function testRemovePublishedComment()
+    {
+        $comment = $this->prophesize(CommentInterface::class);
+        $thread = new Thread('test', 1, new ArrayCollection([$comment->reveal()]), 1);
+
+        $comment->isPublished()->willReturn(true);
+
+        $thread->removeComment($comment->reveal());
+        $this->assertEquals(0, $thread->getCommentCount());
+        $this->assertCount(0, $thread->getComments());
+    }
+
+    public function testRemoveUnpublishedComment()
+    {
+        $comment1 = $this->prophesize(CommentInterface::class);
+        $comment2 = $this->prophesize(CommentInterface::class);
+        $thread = new Thread('test', 1, new ArrayCollection([$comment1->reveal(), $comment2->reveal()]), 1);
+
+        $comment1->isPublished()->willReturn(false);
+
+        $thread->removeComment($comment1->reveal());
+        $this->assertEquals(1, $thread->getCommentCount());
         $this->assertCount(1, $thread->getComments());
     }
 }

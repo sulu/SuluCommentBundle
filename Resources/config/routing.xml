@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes xmlns="http://friendsofsymfony.github.com/schema/rest">
+    <route id="sulu_comment.comment_template.details" path="/comment-template/details.html">
+        <default key="_controller">SuluCommentBundle:CommentTemplate:details</default>
+    </route>
+    <route id="sulu_comment.thread_template.details" path="/thread-template/details.html">
+        <default key="_controller">SuluCommentBundle:ThreadTemplate:details</default>
+    </route>
+</routes>

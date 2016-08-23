@@ -41,4 +41,38 @@ interface CommentManagerInterface
      * @return ThreadInterface
      */
     public function addComment($type, $entityId, CommentInterface $comment);
+
+    /**
+     * Update given comment.
+     *
+     * @param CommentInterface $comment
+     *
+     * @return CommentInterface
+     */
+    public function update(CommentInterface $comment);
+
+    /**
+     * Delete comments identified by given ids.
+     *
+     * @param int|array $ids single id or array of ids
+     */
+    public function delete($ids);
+
+    /**
+     * Publish given comment.
+     *
+     * @param CommentInterface $comment
+     *
+     * @return CommentInterface
+     */
+    public function publish(CommentInterface $comment);
+
+    /**
+     * Unpublish given comment.
+     *
+     * @param CommentInterface $comment
+     *
+     * @return CommentInterface
+     */
+    public function unpublish(CommentInterface $comment);
 }

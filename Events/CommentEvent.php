@@ -16,7 +16,7 @@ use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Event-arguments for pre and post persist event.
+ * Event-arguments for comment events.
  */
 class CommentEvent extends Event
 {

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CommentBundle\Entity;
 
+use Doctrine\ORM\NoResultException;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
 /**
@@ -42,12 +43,54 @@ class CommentRepository extends EntityRepository implements CommentRepositoryInt
     }
 
     /**
-     * Persists comment.
-     *
-     * @param CommentInterface $comment
+     * @inheritdoc}
+     */
+    public function findCommentsByIds($ids)
+    {
+        $query = $this->createQueryBuilder('c')
+            ->join('c.thread', 't')
+            ->leftJoin('c.creator', 'creator')
+            ->leftJoin('c.changer', 'changer')
+            ->where('c.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery();
+
+        return $query->getResult();
+    }
+
+    /**
+     * @inheritdoc}
+     */
+    public function findCommentById($id)
+    {
+        $query = $this->createQueryBuilder('c')
+            ->join('c.thread', 't')
+            ->leftJoin('c.creator', 'creator')
+            ->leftJoin('c.changer', 'changer')
+            ->where('c.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery();
+
+        try {
+            return $query->getSingleResult();
+        } catch (NoResultException $e) {
+            return;
+        }
+    }
+
+    /**
+     * @inheritdoc}
      */
     public function persist(CommentInterface $comment)
     {
         $this->getEntityManager()->persist($comment);
+    }
+
+    /**
+     * @inheritdoc}
+     */
+    public function delete(CommentInterface $comment)
+    {
+        $this->getEntityManager()->remove($comment);
     }
 }

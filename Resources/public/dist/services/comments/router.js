@@ -1,0 +1,1 @@
+define(["services/husky/util","services/husky/mediator"],function(a,b){"use strict";function c(){}var d=null,e=function(){return null===d&&(d=new c),d},f=function(a){b.emit("sulu.router.navigate",a,!0,!0)};return c.prototype={toList:function(){f("comments")},toEdit:function(a,b){f("comments/edit:"+a+"/"+(b||"details"))}},e()});

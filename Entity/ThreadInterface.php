@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\CommentBundle\Entity;
 
-use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Interface for threads.
@@ -94,4 +94,18 @@ interface ThreadInterface
      * @return $this
      */
     public function addComment(CommentInterface $comment);
+
+    /**
+     * Returns full-name of creator.
+     *
+     * @return string
+     */
+    public function getCreatorFullName();
+
+    /**
+     * Returns full-name of changer.
+     *
+     * @return string
+     */
+    public function getChangerFullName();
 }

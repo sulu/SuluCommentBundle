@@ -18,4 +18,25 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
  */
 class CommentRepository extends EntityRepository implements CommentRepositoryInterface
 {
+    /**
+     * @inheritdoc}
+     */
+    public function findComments($type, $entityId, $page = 1, $pageSize = null)
+    {
+        $query = $this->createQueryBuilder('c')
+            ->join('c.thread', 't')
+            ->leftJoin('c.creator', 'creator')
+            ->leftJoin('c.changer', 'changer')
+            ->where('t.type = :type AND t.entityId = :entityId')
+            ->setParameter('type', $type)
+            ->setParameter('entityId', $entityId)
+            ->getQuery();
+
+        if ($pageSize) {
+            $query->setMaxResults($pageSize);
+            $query->setFirstResult(($page - 1) * $pageSize);
+        }
+
+        return $query->getResult();
+    }
 }

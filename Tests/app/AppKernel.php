@@ -30,12 +30,18 @@ class AppKernel extends SuluTestKernel
      */
     public function registerBundles()
     {
-        return array_merge(
+        $bundles = array_merge(
             [
                 new SuluCommentBundle(),
             ],
             parent::registerBundles()
         );
+
+        if ($this->getContext() !== self::CONTEXT_ADMIN) {
+            $bundles[] = new \FOS\RestBundle\FOSRestBundle();
+        }
+
+        return $bundles;
     }
 
     /**

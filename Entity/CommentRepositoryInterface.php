@@ -16,4 +16,15 @@ namespace Sulu\Bundle\CommentBundle\Entity;
  */
 interface CommentRepositoryInterface
 {
+    /**
+     * Returns comments for given thread.
+     *
+     * @param string $type
+     * @param string $entityId
+     * @param int $page
+     * @param int|null $pageSize
+     *
+     * @return Comment[]
+     */
+    public function findComments($type, $entityId, $page = 1, $pageSize = null);
 }

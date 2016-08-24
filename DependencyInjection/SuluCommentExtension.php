@@ -14,15 +14,38 @@ namespace Sulu\Bundle\CommentBundle\DependencyInjection;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * Integrates sulu_comment into symfony kernel.
  */
-class SuluCommentExtension extends Extension
+class SuluCommentExtension extends Extension implements PrependExtensionInterface
 {
     use PersistenceExtensionTrait;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        if ($container->hasExtension('jms_serializer')) {
+            $container->prependExtensionConfig(
+                'jms_serializer',
+                [
+                    'metadata' => [
+                        'directories' => [
+                            [
+                                'path' => __DIR__ . '/../Resources/config/serializer',
+                                'namespace_prefix' => 'Sulu\Bundle\CommentBundle\Entity',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+    }
 
     /**
      * {@inheritdoc}

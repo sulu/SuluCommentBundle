@@ -27,7 +27,7 @@ class Comment implements CommentInterface, AuditableInterface
     /**
      * @var int
      */
-    protected $state;
+    protected $state = self::STATE_PUBLISHED;
 
     /**
      * @var string
@@ -193,5 +193,29 @@ class Comment implements CommentInterface, AuditableInterface
     public function getChanger()
     {
         return $this->changer;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCreatorFullName()
+    {
+        if (!$this->getCreator()) {
+            return '';
+        }
+
+        return $this->getCreator()->getFullName();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChangerFullName()
+    {
+        if (!$this->getChanger()) {
+            return '';
+        }
+
+        return $this->getChanger()->getFullName();
     }
 }

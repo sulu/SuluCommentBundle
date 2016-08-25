@@ -27,6 +27,15 @@ interface ThreadRepositoryInterface
     public function createNew($type, $entityId);
 
     /**
+     * Returns thread for given id.
+     *
+     * @param int $id
+     *
+     * @return ThreadInterface
+     */
+    public function findThreadById($id);
+
+    /**
      * Returns thread for given type and entity-id.
      *
      * @param string $type

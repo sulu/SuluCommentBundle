@@ -31,6 +31,14 @@ class ThreadRepository extends EntityRepository implements ThreadRepositoryInter
     /**
      * {@inheritdoc}
      */
+    public function findThreadById($id)
+    {
+        return $this->find($id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findThread($type, $entityId)
     {
         return $this->findOneBy(['type' => $type, 'entityId' => $entityId]);

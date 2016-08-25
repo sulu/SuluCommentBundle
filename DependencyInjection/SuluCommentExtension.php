@@ -57,6 +57,9 @@ class SuluCommentExtension extends Extension implements PrependExtensionInterfac
 
         $this->configurePersistence($config['objects'], $container);
 
+        $container->setParameter('sulu_comment.types', $config['types']);
+        $container->setParameter('sulu_comment.default_templates', $config['default_templates']);
+
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
     }

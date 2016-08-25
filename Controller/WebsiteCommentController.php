@@ -28,17 +28,29 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
      * Returns list of comments for given thread.
      *
      * @param string $threadId
+     * @param Request $request
      *
      * @return Response
      */
-    public function cgetCommentsAction($threadId)
+    public function cgetCommentsAction($threadId, Request $request)
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
         $commentManager = $this->get('sulu_comment.manager');
         $comments = $commentManager->findComments($type, $entityId);
 
-        return $this->handleView($this->view($comments));
+        if ($request->getRequestFormat() === 'json') {
+            return $this->handleView($this->view($comments));
+        }
+
+        return $this->render(
+            $this->getTemplate($type, 'comments'),
+            [
+                'template' => $this->getTemplate($type, 'comment'),
+                'comments' => $comments,
+                'threadId' => $threadId,
+            ]
+        );
     }
 
     /**
@@ -53,6 +65,21 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
     public function postCommentsAction($threadId, Request $request)
     {
         $data = $request->request->all();
+        if (array_key_exists('created', $data)
+            || array_key_exists('creator', $data)
+            || array_key_exists('changed', $data)
+            || array_key_exists('changer', $data)
+        ) {
+            return new Response(null, 400);
+        }
+
+        $this->get('sulu_http_cache.handler.url')->invalidatePath(
+            $this->generateUrl('get_threads_comments', ['threadId' => $threadId, '_format' => 'html'])
+        );
+        $this->get('sulu_http_cache.handler.url')->invalidatePath(
+            $this->generateUrl('get_threads_comments', ['threadId' => $threadId])
+        );
+
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
         $serializer = $this->get('serializer');
@@ -70,7 +97,17 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         $entityManager->persist($thread);
         $entityManager->flush();
 
-        return $this->handleView($this->view($comment));
+        if ($request->getRequestFormat() === 'json') {
+            return $this->handleView($this->view($comment));
+        }
+
+        return $this->render(
+            $this->getTemplate($type, 'comment'),
+            [
+                'comment' => $comment,
+                'threadId' => $threadId,
+            ]
+        );
     }
 
     /**
@@ -85,5 +122,25 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         $pos = strpos($threadId, '-');
 
         return [substr($threadId, 0, $pos), substr($threadId, $pos + 1)];
+    }
+
+    /**
+     * Returns template by type.
+     *
+     * @param string $type
+     * @param string $templateType comment or comments
+     *
+     * @return string
+     */
+    private function getTemplate($type, $templateType)
+    {
+        $types = $this->getParameter('sulu_comment.types');
+        $defaults = $this->getParameter('sulu_comment.default_templates');
+
+        if (array_key_exists($type, $types)) {
+            return $types[$type]['templates'][$templateType];
+        }
+
+        return $defaults[$templateType];
     }
 }

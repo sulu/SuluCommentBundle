@@ -30,6 +30,7 @@ class CommentRepository extends EntityRepository implements CommentRepositoryInt
             ->where('t.type = :type AND t.entityId = :entityId')
             ->setParameter('type', $type)
             ->setParameter('entityId', $entityId)
+            ->orderBy('c.created', 'DESC')
             ->getQuery();
 
         if ($pageSize) {

@@ -44,7 +44,7 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $client = $this->createWebsiteClient();
         $client->request(
             'POST',
-            '_api/threads/' . $type . '-' . $entityId . '/comments',
+            '_api/threads/' . $type . '-' . $entityId . '/comments.json',
             ['message' => $message, 'threadTitle' => $threadTitle]
         );
 
@@ -63,6 +63,31 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $this->assertCount(1, $thread->getComments());
 
         return $thread;
+    }
+
+    public function providePostAuditableData()
+    {
+        return [
+            ['created'],
+            ['creator'],
+            ['changed'],
+            ['changer'],
+        ];
+    }
+
+    /**
+     * @dataProvider providePostAuditableData
+     */
+    public function testPostAuditable($field, $type = 'blog', $entityId = '1')
+    {
+        $client = $this->createWebsiteClient();
+        $client->request(
+            'POST',
+            '_api/threads/' . $type . '-' . $entityId . '/comments.json',
+            ['message' => 'Sulu is awesome', 'threadTitle' => 'Test Thread', $field => 1]
+        );
+
+        $this->assertHttpStatusCode(400, $client->getResponse());
     }
 
     public function testPostCommentMultiple($type = 'blog', $entityId = '1')
@@ -86,13 +111,14 @@ class WebsiteCommentControllerTest extends SuluTestCase
     public function testGetComments($type = 'blog', $entityId = '1')
     {
         $this->testPostComment($type, $entityId);
+        sleep(1);
         $this->testPostComment($type, $entityId, 'My new Comment');
         $this->testPostComment('article', '123-123-123');
 
         $client = $this->createWebsiteClient();
         $client->request(
             'GET',
-            '_api/threads/' . $type . '-' . $entityId . '/comments'
+            '_api/threads/' . $type . '-' . $entityId . '/comments.json'
         );
 
         $this->assertHttpStatusCode(200, $client->getResponse());
@@ -100,8 +126,8 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent(), true);
         $this->assertCount(2, $response);
         $this->assertEquals(CommentInterface::STATE_PUBLISHED, $response[0]['state']);
-        $this->assertEquals('Sulu is awesome', $response[0]['message']);
+        $this->assertEquals('My new Comment', $response[0]['message']);
         $this->assertEquals(CommentInterface::STATE_PUBLISHED, $response[1]['state']);
-        $this->assertEquals('My new Comment', $response[1]['message']);
+        $this->assertEquals('Sulu is awesome', $response[1]['message']);
     }
 }

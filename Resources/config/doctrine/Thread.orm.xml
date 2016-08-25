@@ -19,7 +19,7 @@
         <field name="type" type="string" length="255"/>
         <field name="entityId" type="string" column="entityId" length="255"/>
 
-        <field name="title" type="string" length="255"/>
+        <field name="title" type="string" length="255" nullable="true"/>
         <field name="commentCount" column="commentCount" type="integer"/>
 
         <one-to-many target-entity="Sulu\Bundle\CommentBundle\Entity\CommentInterface" mapped-by="thread"

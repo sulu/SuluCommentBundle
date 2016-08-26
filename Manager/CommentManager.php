@@ -14,6 +14,9 @@ namespace Sulu\Bundle\CommentBundle\Manager;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\CommentBundle\Entity\CommentRepositoryInterface;
 use Sulu\Bundle\CommentBundle\Entity\ThreadRepositoryInterface;
+use Sulu\Bundle\CommentBundle\Events\CommentEvent;
+use Sulu\Bundle\CommentBundle\Events\Events;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Manager to interact with comments.
@@ -31,15 +34,23 @@ class CommentManager implements CommentManagerInterface
     private $commentRepository;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
      * @param ThreadRepositoryInterface $threadRepository
      * @param CommentRepositoryInterface $commentRepository
+     * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(
         ThreadRepositoryInterface $threadRepository,
-        CommentRepositoryInterface $commentRepository
+        CommentRepositoryInterface $commentRepository,
+        EventDispatcherInterface $dispatcher
     ) {
         $this->threadRepository = $threadRepository;
         $this->commentRepository = $commentRepository;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -60,6 +71,11 @@ class CommentManager implements CommentManagerInterface
             $thread = $this->threadRepository->createNew($type, $entityId);
         }
 
-        return $thread->addComment($comment);
+        $this->dispatcher->dispatch(Events::PRE_PERSIST_EVENT, new CommentEvent($comment, $thread));
+        $this->commentRepository->persist($comment);
+        $thread = $thread->addComment($comment);
+        $this->dispatcher->dispatch(Events::POST_PERSIST_EVENT, new CommentEvent($comment, $thread));
+
+        return $thread;
     }
 }

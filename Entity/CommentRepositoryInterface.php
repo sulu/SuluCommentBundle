@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\CommentBundle\Entity;
 
+use Sulu\Component\Persistence\Repository\RepositoryInterface;
+
 /**
  * Interface for comment-repository.
  */
-interface CommentRepositoryInterface
+interface CommentRepositoryInterface extends RepositoryInterface
 {
     /**
      * Returns comments for given thread.
@@ -27,4 +29,11 @@ interface CommentRepositoryInterface
      * @return Comment[]
      */
     public function findComments($type, $entityId, $page = 1, $pageSize = null);
+
+    /**
+     * Persists comment.
+     *
+     * @param CommentInterface $comment
+     */
+    public function persist(CommentInterface $comment);
 }

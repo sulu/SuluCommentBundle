@@ -73,6 +73,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
             return new Response(null, 400);
         }
 
+        // invalidate cache for thread-comments.
         $this->get('sulu_http_cache.handler.url')->invalidatePath(
             $this->generateUrl('get_threads_comments', ['threadId' => $threadId, '_format' => 'html'])
         );
@@ -82,6 +83,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
 
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
+        // deserialize comment
         $serializer = $this->get('serializer');
         $comment = $serializer->deserialize(
             json_encode($data),
@@ -93,9 +95,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         $thread = $commentManager->addComment($type, $entityId, $comment);
         $thread->setTitle($request->get('threadTitle'));
 
-        $entityManager = $this->get('doctrine.orm.entity_manager');
-        $entityManager->persist($thread);
-        $entityManager->flush();
+        $this->get('doctrine.orm.entity_manager')->flush();
 
         if ($request->getRequestFormat() === 'json') {
             return $this->handleView($this->view($comment));

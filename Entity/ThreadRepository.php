@@ -25,7 +25,10 @@ class ThreadRepository extends EntityRepository implements ThreadRepositoryInter
     {
         $className = $this->getClassName();
 
-        return new $className($type, $entityId);
+        $thread = new $className($type, $entityId);
+        $this->getEntityManager()->persist($thread);
+
+        return $thread;
     }
 
     /**

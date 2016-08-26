@@ -40,4 +40,14 @@ class CommentRepository extends EntityRepository implements CommentRepositoryInt
 
         return $query->getResult();
     }
+
+    /**
+     * Persists comment.
+     *
+     * @param CommentInterface $comment
+     */
+    public function persist(CommentInterface $comment)
+    {
+        $this->getEntityManager()->persist($comment);
+    }
 }

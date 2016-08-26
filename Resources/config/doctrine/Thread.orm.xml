@@ -2,11 +2,15 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Sulu\Bundle\CommentBundle\Entity\Thread" table="com_threads"
-            repository-class="Sulu\Bundle\CommentBundle\Entity\ThreadRepository">
+    <mapped-superclass name="Sulu\Bundle\CommentBundle\Entity\Thread" table="com_threads"
+                       repository-class="Sulu\Bundle\CommentBundle\Entity\ThreadRepository">
         <indexes>
             <index columns="type,entityId"/>
         </indexes>
+
+        <unique-constraints>
+            <unique-constraint columns="type,entityId"/>
+        </unique-constraints>
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
@@ -15,10 +19,14 @@
         <field name="type" type="string" length="255"/>
         <field name="entityId" type="string" column="entityId" length="255"/>
 
-        <field name="title" type="string" length="255"/>
+        <field name="title" type="string" length="255" nullable="true"/>
         <field name="commentCount" column="commentCount" type="integer"/>
 
         <one-to-many target-entity="Sulu\Bundle\CommentBundle\Entity\CommentInterface" mapped-by="thread"
-                     field="comments"/>
-    </entity>
+                     field="comments">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-many>
+    </mapped-superclass>
 </doctrine-mapping>

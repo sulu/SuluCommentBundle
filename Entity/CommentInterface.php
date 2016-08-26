@@ -85,4 +85,18 @@ interface CommentInterface
      * @return $this
      */
     public function setThread(ThreadInterface $thread);
+
+    /**
+     * Returns full-name of creator.
+     *
+     * @return string
+     */
+    public function getCreatorFullName();
+
+    /**
+     * Returns full-name of changer.
+     *
+     * @return string
+     */
+    public function getChangerFullName();
 }

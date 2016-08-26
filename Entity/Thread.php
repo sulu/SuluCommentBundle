@@ -231,4 +231,28 @@ class Thread implements ThreadInterface, AuditableInterface
     {
         return $this->changer;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCreatorFullName()
+    {
+        if (!$this->getCreator()) {
+            return '';
+        }
+
+        return $this->getCreator()->getFullName();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChangerFullName()
+    {
+        if (!$this->getChanger()) {
+            return '';
+        }
+
+        return $this->getChanger()->getFullName();
+    }
 }

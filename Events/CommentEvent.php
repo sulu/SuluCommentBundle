@@ -21,6 +21,16 @@ use Symfony\Component\EventDispatcher\Event;
 class CommentEvent extends Event
 {
     /**
+     * @var string
+     */
+    private $type;
+
+    /**
+     * @var string
+     */
+    private $entityId;
+
+    /**
      * @var CommentInterface
      */
     private $comment;
@@ -31,13 +41,37 @@ class CommentEvent extends Event
     private $thread;
 
     /**
+     * @param string $type
+     * @param string $entityId
      * @param CommentInterface $comment
      * @param ThreadInterface $thread
      */
-    public function __construct(CommentInterface $comment, ThreadInterface $thread)
+    public function __construct($type, $entityId, CommentInterface $comment, ThreadInterface $thread)
     {
+        $this->type = $type;
+        $this->entityId = $entityId;
         $this->comment = $comment;
         $this->thread = $thread;
+    }
+
+    /**
+     * Returns type.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Returns entity-id.
+     *
+     * @return string
+     */
+    public function getEntityId()
+    {
+        return $this->entityId;
     }
 
     /**

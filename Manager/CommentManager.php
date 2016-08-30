@@ -71,10 +71,10 @@ class CommentManager implements CommentManagerInterface
             $thread = $this->threadRepository->createNew($type, $entityId);
         }
 
-        $this->dispatcher->dispatch(Events::PRE_PERSIST_EVENT, new CommentEvent($comment, $thread));
+        $this->dispatcher->dispatch(Events::PRE_PERSIST_EVENT, new CommentEvent($type, $entityId, $comment, $thread));
         $this->commentRepository->persist($comment);
         $thread = $thread->addComment($comment);
-        $this->dispatcher->dispatch(Events::POST_PERSIST_EVENT, new CommentEvent($comment, $thread));
+        $this->dispatcher->dispatch(Events::POST_PERSIST_EVENT, new CommentEvent($type, $entityId, $comment, $thread));
 
         return $thread;
     }

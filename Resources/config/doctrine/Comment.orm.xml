@@ -9,7 +9,11 @@
         </id>
 
         <field name="state" type="integer"/>
-        <field name="message" type="text"/>
+        <field name="message" type="text">
+            <options>
+                <option name="collation">utf8mb4_unicode_ci</option>
+            </options>
+        </field>
 
         <many-to-one target-entity="Sulu\Bundle\CommentBundle\Entity\ThreadInterface" field="thread"
                     inversed-by="comments">

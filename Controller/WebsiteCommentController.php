@@ -36,8 +36,16 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
+        $page = $request->get('page');
+
+
         $commentManager = $this->get('sulu_comment.manager');
-        $comments = $commentManager->findComments($type, $entityId);
+        $comments = $commentManager->findComments(
+            $type,
+            $entityId,
+            $page ?: 1,
+            $page ? 20 : null
+        );
 
         if ($request->getRequestFormat() === 'json') {
             return $this->handleView($this->view($comments));
@@ -78,7 +86,13 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
             $this->generateUrl('get_threads_comments', ['threadId' => $threadId, '_format' => 'html'])
         );
         $this->get('sulu_http_cache.handler.url')->invalidatePath(
+            $this->generateUrl('get_threads_comments', ['threadId' => $threadId, 'page' => 1, '_format' => 'html'])
+        );
+        $this->get('sulu_http_cache.handler.url')->invalidatePath(
             $this->generateUrl('get_threads_comments', ['threadId' => $threadId])
+        );
+        $this->get('sulu_http_cache.handler.url')->invalidatePath(
+            $this->generateUrl('get_threads_comments', ['threadId' => $threadId, 'page' => 1])
         );
 
         list($type, $entityId) = $this->getThreadIdParts($threadId);

@@ -41,6 +41,14 @@
             <orm:joins ref="thread"/>
         </property>
 
+        <property name="threadType" filter-type="string" list:translation="sulu_comment.list.thread-type"
+                  list:type="translation">
+            <orm:field-name>type</orm:field-name>
+            <orm:entity-name>%sulu.model.thread.class%</orm:entity-name>
+
+            <orm:joins ref="thread"/>
+        </property>
+
         <property name="message" display="always" filter-type="string" list:translation="sulu_comment.list.message">
             <orm:field-name>message</orm:field-name>
             <orm:entity-name>%sulu.model.comment.class%</orm:entity-name>

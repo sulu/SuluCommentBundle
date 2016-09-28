@@ -91,6 +91,8 @@ class CommentManager implements CommentManagerInterface
             Events::PRE_UPDATE_EVENT,
             new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread)
         );
+
+        return $comment;
     }
 
     /**
@@ -114,6 +116,8 @@ class CommentManager implements CommentManagerInterface
     public function updateThread(ThreadInterface $thread)
     {
         $this->dispatcher->dispatch(Events::THREAD_PRE_UPDATE_EVENT, new ThreadEvent($thread));
+
+        return $thread;
     }
 
     /**
@@ -136,7 +140,7 @@ class CommentManager implements CommentManagerInterface
      */
     public function publish(CommentInterface $comment)
     {
-        if (CommentInterface::STATE_PUBLISHED === $comment->getState()) {
+        if ($comment->isPublished()) {
             return $comment;
         }
 
@@ -156,7 +160,7 @@ class CommentManager implements CommentManagerInterface
      */
     public function unpublish(CommentInterface $comment)
     {
-        if (CommentInterface::STATE_UNPUBLISHED === $comment->getState()) {
+        if (!$comment->isPublished()) {
             return $comment;
         }
 
@@ -179,13 +183,13 @@ class CommentManager implements CommentManagerInterface
     private function deleteComment(CommentInterface $comment)
     {
         $thread = $comment->getThread();
-        $preEvent = new CommentEvent($thread->getTitle(), $thread->getEntityId(), $comment, $thread);
+        $preEvent = new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread);
         $this->dispatcher->dispatch(Events::PRE_DELETE_EVENT, $preEvent);
 
         $thread->removeComment($comment);
         $this->commentRepository->delete($comment);
 
-        $postEvent = new CommentEvent($thread->getTitle(), $thread->getEntityId(), $comment, $thread);
+        $postEvent = new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread);
         $this->dispatcher->dispatch(Events::POST_DELETE_EVENT, $postEvent);
     }
 

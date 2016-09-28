@@ -50,6 +50,10 @@
                 <source>sulu_comment.list.type</source>
                 <target>Type</target>
             </trans-unit>
+            <trans-unit id="13" resname="sulu_comment.list.thread-type">
+                <source>sulu_comment.list.thread-type</source>
+                <target>Contribution Type</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

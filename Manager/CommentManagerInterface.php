@@ -59,6 +59,22 @@ interface CommentManagerInterface
     public function delete($ids);
 
     /**
+     * Update given thread.
+     *
+     * @param ThreadInterface $thread
+     *
+     * @return ThreadInterface
+     */
+    public function updateThread(ThreadInterface $thread);
+
+    /**
+     * Delete threads identified by given ids.
+     *
+     * @param int|array $ids single id or array of ids
+     */
+    public function deleteThreads($ids);
+
+    /**
      * Publish given comment.
      *
      * @param CommentInterface $comment

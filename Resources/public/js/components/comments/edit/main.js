@@ -47,7 +47,8 @@ define([
                 }
             };
 
-            if (this.data.state === 1) {
+            // unsafe check is used because rest-api returns as string
+            if (this.data.state == 1) {
                 buttons.state = {
                     parent: 'toggler-on',
                     options: {
@@ -116,13 +117,20 @@ define([
         toggleState: function() {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save');
 
-            if (!this.data.state) {
-                return CommentManager.publish(this.data.id).done(function() {
+            // unsafe check is used because rest-api returns as string
+            if (this.data.state == 0) {
+                this.sandbox.emit('sulu.header.toolbar.button.set', 'state', {title: this.translations.published});
+
+                return CommentManager.publish(this.data.id).done(function(data) {
+                    this.data.state = data.state;
                     this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
                 }.bind(this));
             }
 
-            return CommentManager.unpublish(this.data.id).done(function() {
+            this.sandbox.emit('sulu.header.toolbar.button.set', 'state', {title: this.translations.unpublished});
+
+            return CommentManager.unpublish(this.data.id).done(function(data) {
+                this.data.state = data.state;
                 this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false);
             }.bind(this));
         },

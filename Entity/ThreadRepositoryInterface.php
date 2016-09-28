@@ -36,6 +36,15 @@ interface ThreadRepositoryInterface
     public function findThreadById($id);
 
     /**
+     * Returns threads by given ids.
+     *
+     * @param int[] $ids
+     *
+     * @return ThreadInterface[]
+     */
+    public function findThreadsByIds($ids);
+
+    /**
      * Returns thread for given type and entity-id.
      *
      * @param string $type
@@ -44,4 +53,11 @@ interface ThreadRepositoryInterface
      * @return ThreadInterface
      */
     public function findThread($type, $entityId);
+
+    /**
+     * Delete thread with his comments.
+     *
+     * @param ThreadInterface $thread
+     */
+    public function delete(ThreadInterface $thread);
 }

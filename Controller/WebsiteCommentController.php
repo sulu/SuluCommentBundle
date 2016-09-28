@@ -38,7 +38,6 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
 
         $page = $request->get('page');
 
-
         $commentManager = $this->get('sulu_comment.manager');
         $comments = $commentManager->findComments(
             $type,
@@ -51,13 +50,19 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
             return $this->handleView($this->view($comments));
         }
 
+        $response = new Response();
+        $response->setPrivate();
+        $response->setMaxAge(0);
+        $response->setSharedMaxAge(0);
+
         return $this->render(
             $this->getTemplate($type, 'comments'),
             [
                 'template' => $this->getTemplate($type, 'comment'),
                 'comments' => $comments,
                 'threadId' => $threadId,
-            ]
+            ],
+            $response
         );
     }
 
@@ -80,20 +85,6 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         ) {
             return new Response(null, 400);
         }
-
-        // invalidate cache for thread-comments.
-        $this->get('sulu_http_cache.handler.url')->invalidatePath(
-            $this->generateUrl('get_threads_comments', ['threadId' => $threadId, '_format' => 'html'])
-        );
-        $this->get('sulu_http_cache.handler.url')->invalidatePath(
-            $this->generateUrl('get_threads_comments', ['threadId' => $threadId, 'page' => 1, '_format' => 'html'])
-        );
-        $this->get('sulu_http_cache.handler.url')->invalidatePath(
-            $this->generateUrl('get_threads_comments', ['threadId' => $threadId])
-        );
-        $this->get('sulu_http_cache.handler.url')->invalidatePath(
-            $this->generateUrl('get_threads_comments', ['threadId' => $threadId, 'page' => 1])
-        );
 
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 

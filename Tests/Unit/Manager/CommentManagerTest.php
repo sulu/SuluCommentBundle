@@ -18,6 +18,7 @@ use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
 use Sulu\Bundle\CommentBundle\Entity\ThreadRepositoryInterface;
 use Sulu\Bundle\CommentBundle\Events\CommentEvent;
 use Sulu\Bundle\CommentBundle\Events\Events;
+use Sulu\Bundle\CommentBundle\Events\ThreadEvent;
 use Sulu\Bundle\CommentBundle\Manager\CommentManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -109,5 +110,286 @@ class CommentManagerTest extends \PHPUnit_Framework_TestCase
         $thread = $this->commentManager->addComment($type, $entityId, $this->comment->reveal());
 
         $this->assertEquals($this->thread->reveal(), $thread);
+    }
+
+    public function testUpdate()
+    {
+        $comment = $this->comment;
+        $comment->getThread()->willReturn($this->thread->reveal());
+
+        $this->dispatcher->dispatch(
+            Events::PRE_UPDATE_EVENT,
+            Argument::that(
+                function (CommentEvent $event) use ($comment) {
+                    return $event->getComment() === $comment->reveal();
+                }
+            )
+        )->shouldBeCalled();
+
+        $this->assertEquals($comment->reveal(), $this->commentManager->update($comment->reveal()));
+    }
+
+    public function testUpdateThread()
+    {
+        $thread = $this->thread;
+
+        $this->dispatcher->dispatch(
+            Events::THREAD_PRE_UPDATE_EVENT,
+            Argument::that(
+                function (ThreadEvent $event) use ($thread) {
+                    return $event->getThread() === $thread->reveal();
+                }
+            )
+        )->shouldBeCalled();
+
+        $this->assertEquals($thread->reveal(), $this->commentManager->updateThread($thread->reveal()));
+    }
+
+    public function testDelete()
+    {
+        $dispatcher = $this->dispatcher;
+
+        $comments = [
+            $this->prophesize(CommentInterface::class),
+            $this->prophesize(CommentInterface::class),
+            $this->prophesize(CommentInterface::class),
+        ];
+        $commentsReveal = [];
+
+        $this->thread->getType()->willReturn('Test');
+        $this->thread->getEntityId()->willReturn('123-123-123');
+
+        foreach ($comments as $comment) {
+            $comment->getThread()->willReturn($this->thread->reveal());
+            $this->thread->removeComment($comment->reveal())->shouldBeCalled();
+            $this->commentRepository->delete($comment->reveal())->shouldBeCalled();
+
+            $this->dispatcher->dispatch(
+                Events::PRE_DELETE_EVENT,
+                Argument::that(
+                    function (CommentEvent $event) use ($comment) {
+                        return $event->getComment() === $comment->reveal();
+                    }
+                )
+            )->will(
+                function () use ($comment, $dispatcher) {
+                    $dispatcher->dispatch(
+                        Events::POST_DELETE_EVENT,
+                        Argument::that(
+                            function (CommentEvent $event) use ($comment) {
+                                return $event->getComment() === $comment->reveal();
+                            }
+                        )
+                    )->shouldBeCalledTimes(1);
+                }
+            )->shouldBeCalledTimes(1);
+
+            $commentsReveal[] = $comment->reveal();
+        }
+
+        $this->commentRepository->findCommentsByIds([1, 2, 3])->willReturn($commentsReveal);
+
+        $this->commentManager->delete([1, 2, 3]);
+    }
+
+    public function testDeleteOne()
+    {
+        $dispatcher = $this->dispatcher;
+
+        $comments = [
+            $this->prophesize(CommentInterface::class),
+        ];
+        $commentsReveal = [];
+
+        $this->thread->getType()->willReturn('Test');
+        $this->thread->getEntityId()->willReturn('123-123-123');
+
+        foreach ($comments as $comment) {
+            $comment->getThread()->willReturn($this->thread->reveal());
+            $this->thread->removeComment($comment->reveal())->shouldBeCalled();
+            $this->commentRepository->delete($comment->reveal())->shouldBeCalled();
+
+            $this->dispatcher->dispatch(
+                Events::PRE_DELETE_EVENT,
+                Argument::that(
+                    function (CommentEvent $event) use ($comment) {
+                        return $event->getComment() === $comment->reveal();
+                    }
+                )
+            )->will(
+                function () use ($comment, $dispatcher) {
+                    $dispatcher->dispatch(
+                        Events::POST_DELETE_EVENT,
+                        Argument::that(
+                            function (CommentEvent $event) use ($comment) {
+                                return $event->getComment() === $comment->reveal();
+                            }
+                        )
+                    )->shouldBeCalledTimes(1);
+                }
+            )->shouldBeCalledTimes(1);
+
+            $commentsReveal[] = $comment->reveal();
+        }
+
+        $this->commentRepository->findCommentsByIds([1])->willReturn($commentsReveal);
+
+        $this->commentManager->delete(1);
+    }
+
+    public function testDeleteThread()
+    {
+        $dispatcher = $this->dispatcher;
+
+        $threads = [
+            $this->prophesize(ThreadInterface::class),
+            $this->prophesize(ThreadInterface::class),
+            $this->prophesize(ThreadInterface::class),
+        ];
+        $threadsReveal = [];
+
+        foreach ($threads as $thread) {
+            $this->threadRepository->delete($thread->reveal())->shouldBeCalled();
+
+            $this->dispatcher->dispatch(
+                Events::THREAD_PRE_DELETE_EVENT,
+                Argument::that(
+                    function (ThreadEvent $event) use ($thread) {
+                        return $event->getThread() === $thread->reveal();
+                    }
+                )
+            )->will(
+                function () use ($thread, $dispatcher) {
+                    $dispatcher->dispatch(
+                        Events::THREAD_POST_DELETE_EVENT,
+                        Argument::that(
+                            function (ThreadEvent $event) use ($thread) {
+                                return $event->getThread() === $thread->reveal();
+                            }
+                        )
+                    )->shouldBeCalledTimes(1);
+                }
+            )->shouldBeCalledTimes(1);
+
+            $threadsReveal[] = $thread->reveal();
+        }
+
+        $this->threadRepository->findThreadsByIds([1, 2, 3])->willReturn($threadsReveal);
+
+        $this->commentManager->deleteThreads([1, 2, 3]);
+    }
+
+    public function testDeleteThreadOne()
+    {
+        $dispatcher = $this->dispatcher;
+
+        $threads = [
+            $this->prophesize(ThreadInterface::class),
+        ];
+        $threadsReveal = [];
+
+        foreach ($threads as $thread) {
+            $this->threadRepository->delete($thread->reveal())->shouldBeCalled();
+
+            $this->dispatcher->dispatch(
+                Events::THREAD_PRE_DELETE_EVENT,
+                Argument::that(
+                    function (ThreadEvent $event) use ($thread) {
+                        return $event->getThread() === $thread->reveal();
+                    }
+                )
+            )->will(
+                function () use ($thread, $dispatcher) {
+                    $dispatcher->dispatch(
+                        Events::THREAD_POST_DELETE_EVENT,
+                        Argument::that(
+                            function (ThreadEvent $event) use ($thread) {
+                                return $event->getThread() === $thread->reveal();
+                            }
+                        )
+                    )->shouldBeCalledTimes(1);
+                }
+            )->shouldBeCalledTimes(1);
+
+            $threadsReveal[] = $thread->reveal();
+        }
+
+        $this->threadRepository->findThreadsByIds([1])->willReturn($threadsReveal);
+
+        $this->commentManager->deleteThreads(1);
+    }
+
+    public function testPublish()
+    {
+        $this->comment->isPublished()->willReturn(false);
+        $this->comment->publish()->shouldBeCalled();
+        $this->comment->getThread()->willReturn($this->thread->reveal());
+
+        $comment = $this->comment;
+        $this->dispatcher->dispatch(
+            Events::PUBLISH_EVENT,
+            Argument::that(
+                function (CommentEvent $event) use ($comment) {
+                    return $event->getComment() === $comment->reveal();
+                }
+            )
+        )->shouldBeCalledTimes(1);
+
+        $this->assertEquals($this->comment->reveal(), $this->commentManager->publish($this->comment->reveal()));
+    }
+
+    public function testPublishIsAlreadyPublished()
+    {
+        $this->comment->isPublished()->willReturn(true);
+        $this->comment->publish()->shouldNotBeCalled();
+
+        $comment = $this->comment;
+        $this->dispatcher->dispatch(
+            Events::PUBLISH_EVENT,
+            Argument::that(
+                function (CommentEvent $event) use ($comment) {
+                    return $event->getComment() === $comment->reveal();
+                }
+            )
+        )->shouldNotBeCalled();
+
+        $this->assertEquals($this->comment->reveal(), $this->commentManager->publish($this->comment->reveal()));
+    }
+
+    public function testUnpublish()
+    {
+        $this->comment->isPublished()->willReturn(true);
+        $this->comment->unpublish()->shouldBeCalled();
+        $this->comment->getThread()->willReturn($this->thread->reveal());
+
+        $comment = $this->comment;
+        $this->dispatcher->dispatch(
+            Events::UNPUBLISH_EVENT,
+            Argument::that(
+                function (CommentEvent $event) use ($comment) {
+                    return $event->getComment() === $comment->reveal();
+                }
+            )
+        )->shouldBeCalledTimes(1);
+
+        $this->assertEquals($this->comment->reveal(), $this->commentManager->unpublish($this->comment->reveal()));
+    }
+
+    public function testUnpublishIsAlreadyUnpublished()
+    {
+        $this->comment->isPublished()->willReturn(false);
+        $this->comment->unpublish()->shouldNotBeCalled();
+
+        $comment = $this->comment;
+        $this->dispatcher->dispatch(
+            Events::UNPUBLISH_EVENT,
+            Argument::that(
+                function (CommentEvent $event) use ($comment) {
+                    return $event->getComment() === $comment->reveal();
+                }
+            )
+        )->shouldNotBeCalled();
+
+        $this->assertEquals($this->comment->reveal(), $this->commentManager->unpublish($this->comment->reveal()));
     }
 }

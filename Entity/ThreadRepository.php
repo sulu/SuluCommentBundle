@@ -42,8 +42,32 @@ class ThreadRepository extends EntityRepository implements ThreadRepositoryInter
     /**
      * {@inheritdoc}
      */
+    public function findThreadsByIds($ids)
+    {
+        $query = $this->createQueryBuilder('t')
+            ->leftJoin('t.comments', 'c')
+            ->leftJoin('t.creator', 'creator')
+            ->leftJoin('t.changer', 'changer')
+            ->where('t.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery();
+
+        return $query->getResult();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findThread($type, $entityId)
     {
         return $this->findOneBy(['type' => $type, 'entityId' => $entityId]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function delete(ThreadInterface $thread)
+    {
+        $this->getEntityManager()->remove($thread);
     }
 }

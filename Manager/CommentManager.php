@@ -13,9 +13,11 @@ namespace Sulu\Bundle\CommentBundle\Manager;
 
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\CommentBundle\Entity\CommentRepositoryInterface;
+use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
 use Sulu\Bundle\CommentBundle\Entity\ThreadRepositoryInterface;
 use Sulu\Bundle\CommentBundle\Events\CommentEvent;
 use Sulu\Bundle\CommentBundle\Events\Events;
+use Sulu\Bundle\CommentBundle\Events\ThreadEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -77,5 +79,131 @@ class CommentManager implements CommentManagerInterface
         $this->dispatcher->dispatch(Events::POST_PERSIST_EVENT, new CommentEvent($type, $entityId, $comment, $thread));
 
         return $thread;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function update(CommentInterface $comment)
+    {
+        $thread = $comment->getThread();
+        $this->dispatcher->dispatch(
+            Events::PRE_UPDATE_EVENT,
+            new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread)
+        );
+
+        return $comment;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function delete($ids)
+    {
+        if (!is_array($ids)) {
+            $ids = [$ids];
+        }
+
+        $comments = $this->commentRepository->findCommentsByIds($ids);
+        foreach ($comments as $comment) {
+            $this->deleteComment($comment);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function updateThread(ThreadInterface $thread)
+    {
+        $this->dispatcher->dispatch(Events::THREAD_PRE_UPDATE_EVENT, new ThreadEvent($thread));
+
+        return $thread;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteThreads($ids)
+    {
+        if (!is_array($ids)) {
+            $ids = [$ids];
+        }
+
+        $threads = $this->threadRepository->findThreadsByIds($ids);
+        foreach ($threads as $thread) {
+            $this->deleteThread($thread);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function publish(CommentInterface $comment)
+    {
+        if ($comment->isPublished()) {
+            return $comment;
+        }
+
+        $comment->publish();
+
+        $thread = $comment->getThread();
+        $this->dispatcher->dispatch(
+            Events::PUBLISH_EVENT,
+            new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread)
+        );
+
+        return $comment;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unpublish(CommentInterface $comment)
+    {
+        if (!$comment->isPublished()) {
+            return $comment;
+        }
+
+        $comment->unpublish();
+
+        $thread = $comment->getThread();
+        $this->dispatcher->dispatch(
+            Events::UNPUBLISH_EVENT,
+            new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread)
+        );
+
+        return $comment;
+    }
+
+    /**
+     * Delete comment and raise pre/post events.
+     *
+     * @param CommentInterface $comment
+     */
+    private function deleteComment(CommentInterface $comment)
+    {
+        $thread = $comment->getThread();
+        $preEvent = new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread);
+        $this->dispatcher->dispatch(Events::PRE_DELETE_EVENT, $preEvent);
+
+        $thread->removeComment($comment);
+        $this->commentRepository->delete($comment);
+
+        $postEvent = new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread);
+        $this->dispatcher->dispatch(Events::POST_DELETE_EVENT, $postEvent);
+    }
+
+    /**
+     * Delete thread and raise pre/post events.
+     *
+     * @param ThreadInterface $thread
+     */
+    private function deleteThread(ThreadInterface $thread)
+    {
+        $this->dispatcher->dispatch(Events::THREAD_PRE_DELETE_EVENT, new ThreadEvent($thread));
+
+        $this->threadRepository->delete($thread);
+
+        $this->dispatcher->dispatch(Events::THREAD_POST_DELETE_EVENT, new ThreadEvent($thread));
     }
 }

@@ -22,7 +22,8 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
  */
 class CommentAdmin extends Admin
 {
-    const SECURITY_CONTEXT = 'sulu.comment.comments';
+    const COMMENT_SECURITY_CONTEXT = 'sulu.comment.comments';
+    const THREAD_SECURITY_CONTEXT = 'sulu.comment.threads';
 
     /**
      * @var SecurityCheckerInterface
@@ -41,12 +42,28 @@ class CommentAdmin extends Admin
         $section = new NavigationItem('navigation.modules');
         $section->setPosition(20);
 
-        if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, 'view')) {
-            $comments = new NavigationItem('sulu_comment.comments');
-            $comments->setPosition(40);
-            $comments->setIcon('commenting');
+        $commentModule = new NavigationItem('sulu_comment.comments');
+        $commentModule->setPosition(9);
+        $commentModule->setIcon('commenting');
 
-            $section->addChild($comments);
+        if ($this->securityChecker->hasPermission(self::COMMENT_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
+            $comments = new NavigationItem('sulu_comment.comments');
+            $comments->setPosition(10);
+            $comments->setAction('comments');
+
+            $commentModule->addChild($comments);
+        }
+
+        if ($this->securityChecker->hasPermission(self::THREAD_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
+            $threads = new NavigationItem('sulu_comment.threads');
+            $threads->setPosition(20);
+            $threads->setAction('threads');
+
+            $commentModule->addChild($threads);
+        }
+
+        if ($commentModule->hasChildren()) {
+            $section->addChild($commentModule);
             $rootNavigationItem->addChild($section);
         }
 
@@ -60,11 +77,16 @@ class CommentAdmin extends Admin
     {
         return [
             'Sulu' => [
-                'Global' => [
-                    self::SECURITY_CONTEXT => [
+                'Comment' => [
+                    self::COMMENT_SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
-                        PermissionTypes::EDIT,
                         PermissionTypes::DELETE,
+                        PermissionTypes::LIVE,
+                    ],
+                    self::THREAD_SECURITY_CONTEXT => [
+                        PermissionTypes::VIEW,
+                        PermissionTypes::DELETE,
+                        PermissionTypes::EDIT,
                     ],
                 ],
             ],

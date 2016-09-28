@@ -26,9 +26,27 @@ interface CommentRepositoryInterface extends RepositoryInterface
      * @param int $page
      * @param int|null $pageSize
      *
-     * @return Comment[]
+     * @return CommentInterface[]
      */
     public function findComments($type, $entityId, $page = 1, $pageSize = null);
+
+    /**
+     * Returns comments by given ids.
+     *
+     * @param int[] $ids
+     *
+     * @return CommentInterface[]
+     */
+    public function findCommentsByIds($ids);
+
+    /**
+     * Returns comment by given id.
+     *
+     * @param int $id
+     *
+     * @return CommentInterface
+     */
+    public function findCommentById($id);
 
     /**
      * Persists comment.
@@ -36,4 +54,11 @@ interface CommentRepositoryInterface extends RepositoryInterface
      * @param CommentInterface $comment
      */
     public function persist(CommentInterface $comment);
+
+    /**
+     * Delete comment.
+     *
+     * @param CommentInterface $comment
+     */
+    public function delete(CommentInterface $comment);
 }

@@ -1,0 +1,89 @@
+<class xmlns="http://schemas.sulu.io/class/general"
+       xmlns:orm="http://schemas.sulu.io/class/doctrine"
+       xmlns:list="http://schemas.sulu.io/class/list">
+    <orm:joins name="creator">
+        <orm:join>
+            <orm:entity-name>%sulu.model.user.class%</orm:entity-name>
+            <orm:field-name>%sulu.model.thread.class%.creator</orm:field-name>
+        </orm:join>
+        <orm:join>
+            <orm:entity-name>%sulu_contact.contact.entity%</orm:entity-name>
+            <orm:field-name>%sulu.model.user.class%.contact</orm:field-name>
+        </orm:join>
+    </orm:joins>
+    <orm:joins name="changer">
+        <orm:join>
+            <orm:entity-name>%sulu.model.user.class%</orm:entity-name>
+            <orm:field-name>%sulu.model.thread.class%.changer</orm:field-name>
+        </orm:join>
+        <orm:join>
+            <orm:entity-name>%sulu_contact.contact.entity%</orm:entity-name>
+            <orm:field-name>%sulu.model.user.class%.contact</orm:field-name>
+        </orm:join>
+    </orm:joins>
+
+    <properties>
+        <property name="id" filter-type="integer" list:translation="public.id" list:type="integer">
+            <orm:field-name>id</orm:field-name>
+            <orm:entity-name>%sulu.model.thread.class%</orm:entity-name>
+        </property>
+
+        <property name="title" display="always" filter-type="string" list:translation="public.title">
+            <orm:field-name>title</orm:field-name>
+            <orm:entity-name>%sulu.model.thread.class%</orm:entity-name>
+        </property>
+
+        <property name="commentCount" display="always" filter-type="integer" list:translation="sulu_comment.list.comment-count">
+            <orm:field-name>commentCount</orm:field-name>
+            <orm:entity-name>%sulu.model.thread.class%</orm:entity-name>
+        </property>
+
+        <property name="type" list:translation="sulu_comment.list.type">
+            <orm:field-name>type</orm:field-name>
+            <orm:entity-name>%sulu.model.thread.class%</orm:entity-name>
+        </property>
+
+        <property name="created" display="always" filter-type="datetime" list:translation="public.created"
+                  list:type="datetime">
+            <orm:field-name>created</orm:field-name>
+            <orm:entity-name>%sulu.model.thread.class%</orm:entity-name>
+        </property>
+
+        <property name="changed" filter-type="datetime" list:translation="public.changed" list:type="datetime">
+            <orm:thread-name>changed</orm:thread-name>
+            <orm:entity-name>%sulu.model.thread.class%</orm:entity-name>
+        </property>
+
+        <concatenation-property name="creator" filter-type="string" orm:glue=" "
+                                list:translation="sulu_comment.list.creator">
+            <orm:field>
+                <orm:field-name>firstName</orm:field-name>
+                <orm:entity-name>%sulu_contact.contact.entity%</orm:entity-name>
+
+                <orm:joins ref="creator"/>
+            </orm:field>
+            <orm:field>
+                <orm:field-name>lastName</orm:field-name>
+                <orm:entity-name>%sulu_contact.contact.entity%</orm:entity-name>
+
+                <orm:joins ref="creator"/>
+            </orm:field>
+        </concatenation-property>
+
+        <concatenation-property name="changer" filter-type="string" orm:glue=" "
+                                list:translation="sulu_comment.list.changer">
+            <orm:field>
+                <orm:field-name>firstName</orm:field-name>
+                <orm:entity-name>%sulu_contact.contact.entity%</orm:entity-name>
+
+                <orm:joins ref="changer"/>
+            </orm:field>
+            <orm:field>
+                <orm:field-name>lastName</orm:field-name>
+                <orm:entity-name>%sulu_contact.contact.entity%</orm:entity-name>
+
+                <orm:joins ref="changer"/>
+            </orm:field>
+        </concatenation-property>
+    </properties>
+</class>

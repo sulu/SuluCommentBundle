@@ -6,6 +6,54 @@
                 <source>sulu_comment.comments</source>
                 <target>Comments</target>
             </trans-unit>
+            <trans-unit id="2" resname="sulu_comment.threads">
+                <source>sulu_comment.threads</source>
+                <target>Threads</target>
+            </trans-unit>
+            <trans-unit id="3" resname="sulu_comment.list.thread">
+                <source>sulu_comment.list.thread</source>
+                <target>Thread</target>
+            </trans-unit>
+            <trans-unit id="4" resname="sulu_comment.list.message">
+                <source>sulu_comment.list.message</source>
+                <target>Message</target>
+            </trans-unit>
+            <trans-unit id="5" resname="sulu_comment.list.state">
+                <source>sulu_comment.list.state</source>
+                <target>State</target>
+            </trans-unit>
+            <trans-unit id="6" resname="sulu_comment.comment.unpublished">
+                <source>sulu_comment.comment.unpublished</source>
+                <target>Publish comment</target>
+            </trans-unit>
+            <trans-unit id="7" resname="sulu_comment.comment.published">
+                <source>sulu_comment.comment.published</source>
+                <target>Hide comment</target>
+            </trans-unit>
+            <trans-unit id="8" resname="sulu_comment.details">
+                <source>sulu_comment.details</source>
+                <target>Details</target>
+            </trans-unit>
+            <trans-unit id="9" resname="sulu_comment.list.creator">
+                <source>sulu_comment.list.creator</source>
+                <target>Created by</target>
+            </trans-unit>
+            <trans-unit id="10" resname="sulu_comment.list.changer">
+                <source>sulu_comment.list.changer</source>
+                <target>Changed by</target>
+            </trans-unit>
+            <trans-unit id="11" resname="sulu_comment.list.comment-count">
+                <source>sulu_comment.list.comment-count</source>
+                <target>Number of Comments</target>
+            </trans-unit>
+            <trans-unit id="12" resname="sulu_comment.list.type">
+                <source>sulu_comment.list.type</source>
+                <target>Type</target>
+            </trans-unit>
+            <trans-unit id="13" resname="sulu_comment.list.thread-type">
+                <source>sulu_comment.list.thread-type</source>
+                <target>Threadtype</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

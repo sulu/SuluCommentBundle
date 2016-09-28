@@ -96,6 +96,15 @@ interface ThreadInterface
     public function addComment(CommentInterface $comment);
 
     /**
+     * Remove comment.
+     *
+     * @param CommentInterface $comment
+     *
+     * @return $this
+     */
+    public function removeComment(CommentInterface $comment);
+
+    /**
      * Returns full-name of creator.
      *
      * @return string

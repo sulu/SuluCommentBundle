@@ -24,11 +24,11 @@
             </trans-unit>
             <trans-unit id="6" resname="sulu_comment.comment.unpublished">
                 <source>sulu_comment.comment.unpublished</source>
-                <target></target>
+                <target>Publier commentaire</target>
             </trans-unit>
             <trans-unit id="7" resname="sulu_comment.comment.published">
                 <source>sulu_comment.comment.published</source>
-                <target></target>
+                <target>Cacher commentaire</target>
             </trans-unit>
             <trans-unit id="8" resname="sulu_comment.details">
                 <source>sulu_comment.details</source>

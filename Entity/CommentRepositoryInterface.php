@@ -31,6 +31,18 @@ interface CommentRepositoryInterface extends RepositoryInterface
     public function findComments($type, $entityId, $page = 1, $pageSize = null);
 
     /**
+     * Returns published comments for given thread.
+     *
+     * @param string $type
+     * @param string $entityId
+     * @param int $page
+     * @param int|null $pageSize
+     *
+     * @return CommentInterface[]
+     */
+    public function findPublishedComments($type, $entityId, $page, $pageSize);
+
+    /**
      * Returns comments by given ids.
      *
      * @param int[] $ids

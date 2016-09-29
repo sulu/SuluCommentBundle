@@ -66,6 +66,14 @@ class CommentManager implements CommentManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function findPublishedComments($type, $entityId, $page = 1, $pageSize = null)
+    {
+        return $this->commentRepository->findPublishedComments($type, $entityId, $page, $pageSize);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function addComment($type, $entityId, CommentInterface $comment)
     {
         $thread = $this->threadRepository->findThread($type, $entityId);

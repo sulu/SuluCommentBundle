@@ -71,7 +71,7 @@
             <orm:entity-name>%sulu.model.comment.class%</orm:entity-name>
         </property>
 
-        <concatenation-property name="creator" filter-type="string" orm:glue=" "
+        <concatenation-property name="creator" display="always" filter-type="string" orm:glue=" "
                                 list:translation="sulu_comment.list.creator">
             <orm:field>
                 <orm:field-name>firstName</orm:field-name>

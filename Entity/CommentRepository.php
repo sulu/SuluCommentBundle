@@ -45,6 +45,31 @@ class CommentRepository extends EntityRepository implements CommentRepositoryInt
     /**
      * @inheritdoc}
      */
+    public function findPublishedComments($type, $entityId, $page, $pageSize)
+    {
+        $query = $this->createQueryBuilder('c')
+            ->join('c.thread', 't')
+            ->leftJoin('c.creator', 'creator')
+            ->leftJoin('c.changer', 'changer')
+            ->where('c.state = :state')
+            ->andWhere('t.type = :type AND t.entityId = :entityId')
+            ->setParameter('state', CommentInterface::STATE_PUBLISHED)
+            ->setParameter('type', $type)
+            ->setParameter('entityId', $entityId)
+            ->orderBy('c.created', 'DESC')
+            ->getQuery();
+
+        if ($pageSize) {
+            $query->setMaxResults($pageSize);
+            $query->setFirstResult(($page - 1) * $pageSize);
+        }
+
+        return $query->getResult();
+    }
+
+    /**
+     * @inheritdoc}
+     */
     public function findCommentsByIds($ids)
     {
         $query = $this->createQueryBuilder('c')

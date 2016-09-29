@@ -27,9 +27,21 @@ interface CommentManagerInterface
      * @param int $page
      * @param int|null $pageSize
      *
-     * @return ThreadInterface[]
+     * @return CommentInterface[]
      */
     public function findComments($type, $entityId, $page = 1, $pageSize = null);
+
+    /**
+     * Returns published comments for given thread.
+     *
+     * @param string $type
+     * @param string $entityId
+     * @param int $page
+     * @param int|null $pageSize
+     *
+     * @return CommentInterface[]
+     */
+    public function findPublishedComments($type, $entityId, $page = 1, $pageSize = null);
 
     /**
      * Add comment and returns thread.

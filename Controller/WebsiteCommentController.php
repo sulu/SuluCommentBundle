@@ -39,7 +39,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         $page = $request->get('page');
 
         $commentManager = $this->get('sulu_comment.manager');
-        $comments = $commentManager->findComments(
+        $comments = $commentManager->findPublishedComments(
             $type,
             $entityId,
             $page ?: 1,

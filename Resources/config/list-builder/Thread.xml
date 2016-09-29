@@ -33,12 +33,13 @@
             <orm:entity-name>%sulu.model.thread.class%</orm:entity-name>
         </property>
 
-        <property name="commentCount" display="always" filter-type="integer" list:translation="sulu_comment.list.comment-count">
+        <property name="commentCount" display="always" filter-type="integer"
+                  list:translation="sulu_comment.list.comment-count">
             <orm:field-name>commentCount</orm:field-name>
             <orm:entity-name>%sulu.model.thread.class%</orm:entity-name>
         </property>
 
-        <property name="type" list:translation="sulu_comment.list.type">
+        <property name="type" list:translation="sulu_comment.list.type" list:type="translation">
             <orm:field-name>type</orm:field-name>
             <orm:entity-name>%sulu.model.thread.class%</orm:entity-name>
         </property>

@@ -24,7 +24,7 @@
             </trans-unit>
             <trans-unit id="6" resname="sulu_comment.comment.unpublished">
                 <source>sulu_comment.comment.unpublished</source>
-                <target>Publiseer reactie</target>
+                <target>Publiceer reactie</target>
             </trans-unit>
             <trans-unit id="7" resname="sulu_comment.comment.published">
                 <source>sulu_comment.comment.published</source>

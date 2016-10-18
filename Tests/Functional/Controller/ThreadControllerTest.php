@@ -110,6 +110,65 @@ class ThreadControllerTest extends SuluTestCase
         $this->assertNotNull($this->entityManager->find(ThreadInterface::class, $threads[2]->getId()));
     }
 
+    public function testCGet()
+    {
+        /** @var Thread[] $threads */
+        $threads = [
+            $this->createThread('Test 1', 'Test1', 1),
+            $this->createThread('Test 2', 'Test2', 2),
+            $this->createThread('Test 3', 'Test3', 3),
+        ];
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/threads?fields=id,title');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = $result['_embedded']['threads'];
+        for ($i = 0, $length = count($threads); $i < $length; ++$i) {
+            $this->assertEquals($threads[$i]->getId(), $result[$i]['id']);
+            $this->assertEquals($threads[$i]->getTitle(), $result[$i]['title']);
+        }
+    }
+
+    public function testCGetTypes()
+    {
+        /** @var Thread[] $threads */
+        $threads = [
+            $this->createThread('Test 1', 'Test1', 1),
+            $this->createThread('Test 2', 'Test2', 2),
+            $this->createThread('Test 3', 'Test3', 3),
+        ];
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/threads?fields=id,title&types=Test1,Test3');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $result = json_decode($client->getResponse()->getContent(), true);
+        $result = $result['_embedded']['threads'];
+
+        $expected = [$threads[0], $threads[2]];
+        for ($i = 0, $length = count($expected); $i < $length; ++$i) {
+            $this->assertEquals($expected[$i]->getId(), $result[$i]['id']);
+            $this->assertEquals($expected[$i]->getTitle(), $result[$i]['title']);
+        }
+    }
+
+    /**
+     * Create and persists new thread.
+     *
+     * @param string $title
+     * @param string $type
+     * @param string $entityId
+     *
+     * @return Thread
+     */
     private function createThread($title = 'Sulu is awesome', $type = 'Test', $entityId = '123-123-123')
     {
         $thread = new Thread($type, $entityId, new ArrayCollection());

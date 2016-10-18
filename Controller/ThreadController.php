@@ -54,11 +54,17 @@ class ThreadController extends RestController implements ClassResourceInterface
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
         $listBuilder = $factory->create($this->getParameter('sulu.model.thread.class'));
 
-        $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
+        $fieldDescriptors = $this->getFieldDescriptors();
+        $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
-        $results = $listBuilder->execute();
+        $typeParameter = $request->get('types');
+        if ($typeParameter) {
+            $listBuilder->in($fieldDescriptors['type'], array_filter(explode(',', $typeParameter)));
+        }
+
+        $items = $listBuilder->execute();
         $list = new ListRepresentation(
-            $results,
+            $items,
             'threads',
             'get_threads',
             $request->query->all(),

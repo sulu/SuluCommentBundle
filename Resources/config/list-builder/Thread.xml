@@ -51,8 +51,8 @@
         </property>
 
         <property name="changed" filter-type="datetime" list:translation="public.changed" list:type="datetime">
-            <orm:thread-name>changed</orm:thread-name>
             <orm:entity-name>%sulu.model.thread.class%</orm:entity-name>
+            <orm:field-name>changed</orm:field-name>
         </property>
 
         <concatenation-property name="creator" filter-type="string" orm:glue=" "

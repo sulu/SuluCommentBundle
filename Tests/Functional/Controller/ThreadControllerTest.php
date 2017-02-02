@@ -47,6 +47,24 @@ class ThreadControllerTest extends SuluTestCase
         $this->assertEquals($thread->getTitle(), $data['title']);
     }
 
+    public function testCGetFilter()
+    {
+        $this->createThread('Test 1', 'page', 'Test 1');
+        $this->createThread('Test 2', 'page', 'Test 2');
+        $this->createThread('Test 3', 'article', 'Test 3');
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/threads?type=page');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $data = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertCount(2, $data['_embedded']['threads']);
+    }
+
     public function testPut()
     {
         $thread = $this->createThread();

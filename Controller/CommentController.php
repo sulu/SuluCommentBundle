@@ -57,7 +57,14 @@ class CommentController extends RestController implements ClassResourceInterface
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
         $listBuilder = $factory->create($this->getParameter('sulu.model.comment.class'));
 
-        $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
+        $fieldDescriptors = $this->getFieldDescriptors();
+        $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+
+        foreach ($request->query->all() as $filterKey => $filterValue) {
+            if (isset($fieldDescriptors[$filterKey])) {
+                $listBuilder->where($fieldDescriptors[$filterKey], $filterValue);
+            }
+        }
 
         $results = $listBuilder->execute();
         $list = new ListRepresentation(

@@ -50,6 +50,43 @@ class CommentControllerTest extends SuluTestCase
         $this->assertEquals($comment->getMessage(), $data['message']);
     }
 
+    public function testCGet()
+    {
+        $thread = $this->createThread();
+        $this->createComment($thread);
+        $this->createComment($thread);
+        $this->createComment($thread);
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/comments');
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $data = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertCount(3, $data['_embedded']['comments']);
+    }
+
+    public function testCGetFilter()
+    {
+        $thread = $this->createThread();
+        $this->createComment($thread);
+        $this->createComment($thread, 'Message', CommentInterface::STATE_UNPUBLISHED);
+        $this->createComment($thread);
+
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/comments?state=' . CommentInterface::STATE_UNPUBLISHED);
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+        $data = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertCount(1, $data['_embedded']['comments']);
+    }
+
     public function testPut()
     {
         $thread = $this->createThread();

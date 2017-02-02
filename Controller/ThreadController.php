@@ -57,6 +57,12 @@ class ThreadController extends RestController implements ClassResourceInterface
         $fieldDescriptors = $this->getFieldDescriptors();
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
+        foreach ($request->query->all() as $filterKey => $filterValue) {
+            if (isset($fieldDescriptors[$filterKey])) {
+                $listBuilder->where($fieldDescriptors[$filterKey], $filterValue);
+            }
+        }
+
         $typeParameter = $request->get('types');
         if ($typeParameter) {
             $listBuilder->in($fieldDescriptors['type'], array_filter(explode(',', $typeParameter)));

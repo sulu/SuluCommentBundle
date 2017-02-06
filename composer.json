@@ -15,7 +15,7 @@
         "sulu/document-manager": "@dev",
         "massive/search-bundle": "@dev",
         "symfony/monolog-bundle": "2.4.*",
-        "phpunit/phpunit": ">=4.8"
+        "phpunit/phpunit": ">=4.8, <6.0"
     },
     "keywords": [],
     "authors": [

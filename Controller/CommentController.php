@@ -60,6 +60,15 @@ class CommentController extends RestController implements ClassResourceInterface
         $fieldDescriptors = $this->getFieldDescriptors();
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
+        if ($request->query->get('threadType')) {
+            $listBuilder->in(
+                $fieldDescriptors['threadType'],
+                array_filter(explode(',', $request->query->get('threadType')))
+            );
+
+            $request->query->remove('threadType');
+        }
+
         foreach ($request->query->all() as $filterKey => $filterValue) {
             if (isset($fieldDescriptors[$filterKey])) {
                 $listBuilder->where($fieldDescriptors[$filterKey], $filterValue);

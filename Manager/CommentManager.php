@@ -74,11 +74,15 @@ class CommentManager implements CommentManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function addComment($type, $entityId, CommentInterface $comment)
+    public function addComment($type, $entityId, CommentInterface $comment, $threadTitle = null)
     {
         $thread = $this->threadRepository->findThread($type, $entityId);
         if (!$thread) {
             $thread = $this->threadRepository->createNew($type, $entityId);
+        }
+
+        if ($threadTitle) {
+            $thread->setTitle($threadTitle);
         }
 
         $this->dispatcher->dispatch(Events::PRE_PERSIST_EVENT, new CommentEvent($type, $entityId, $comment, $thread));

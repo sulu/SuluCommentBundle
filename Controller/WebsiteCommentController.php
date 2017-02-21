@@ -97,8 +97,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         );
 
         $commentManager = $this->get('sulu_comment.manager');
-        $thread = $commentManager->addComment($type, $entityId, $comment);
-        $thread->setTitle($request->get('threadTitle'));
+        $commentManager->addComment($type, $entityId, $comment, $request->get('threadTitle'));
 
         $this->get('doctrine.orm.entity_manager')->flush();
 

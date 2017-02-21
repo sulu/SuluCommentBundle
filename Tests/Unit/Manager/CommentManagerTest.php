@@ -107,7 +107,43 @@ class CommentManagerTest extends \PHPUnit_Framework_TestCase
                 }
             );
 
+        $thread->setTitle(Argument::any())->shouldNotBeCalled();
         $thread = $this->commentManager->addComment($type, $entityId, $this->comment->reveal());
+
+        $this->assertEquals($this->thread->reveal(), $thread);
+    }
+
+    public function testAddCommentWithThreadTitle($type = 'article', $entityId = '123-123-123')
+    {
+        $this->threadRepository->findThread($type, $entityId)->willReturn($this->thread->reveal());
+
+        $commentRepository = $this->commentRepository;
+        $comment = $this->comment;
+        $dispatcher = $this->dispatcher;
+        $thread = $this->thread;
+
+        $this->dispatcher->dispatch(Events::PRE_PERSIST_EVENT, Argument::type(CommentEvent::class))
+            ->shouldBeCalledTimes(1)
+            ->will(
+                function () use ($commentRepository, $comment, $dispatcher, $thread) {
+                    $thread->addComment($comment->reveal())->willReturn($thread->reveal());
+                    $commentRepository->persist($comment->reveal())
+                        ->shouldBeCalledTimes(1)
+                        ->will(
+                            function () use ($dispatcher, $thread) {
+                                $dispatcher->dispatch(
+                                    Events::POST_PERSIST_EVENT,
+                                    Argument::type(CommentEvent::class)
+                                )->shouldBeCalledTimes(1);
+
+                                return $thread->reveal();
+                            }
+                        );
+                }
+            );
+
+        $thread->setTitle('Test')->shouldBeCalled();
+        $thread = $this->commentManager->addComment($type, $entityId, $this->comment->reveal(), 'Test');
 
         $this->assertEquals($this->thread->reveal(), $thread);
     }

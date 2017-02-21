@@ -49,10 +49,11 @@ interface CommentManagerInterface
      * @param string $type
      * @param string $entityId
      * @param CommentInterface $comment
+     * @param string $threadTitle
      *
      * @return ThreadInterface
      */
-    public function addComment($type, $entityId, CommentInterface $comment);
+    public function addComment($type, $entityId, CommentInterface $comment, $threadTitle = null);
 
     /**
      * Update given comment.

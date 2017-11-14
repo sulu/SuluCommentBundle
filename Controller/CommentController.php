@@ -196,11 +196,9 @@ class CommentController extends RestController implements ClassResourceInterface
         switch ($action) {
             case 'unpublish':
                 $commentManager->unpublish($comment);
-
                 break;
             case 'publish':
                 $commentManager->publish($comment);
-
                 break;
             default:
                 throw new RestException('Unrecognized action: ' . $action);

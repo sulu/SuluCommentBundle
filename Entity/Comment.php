@@ -124,7 +124,7 @@ class Comment implements CommentInterface, AuditableInterface
      */
     public function isPublished()
     {
-        return $this->state === self::STATE_PUBLISHED;
+        return self::STATE_PUBLISHED === $this->state;
     }
 
     /**

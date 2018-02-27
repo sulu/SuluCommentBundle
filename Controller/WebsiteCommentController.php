@@ -46,7 +46,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
             $page ? 20 : null
         );
 
-        if ($request->getRequestFormat() === 'json') {
+        if ('json' === $request->getRequestFormat()) {
             return $this->handleView($this->view($comments));
         }
 
@@ -101,7 +101,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
 
         $this->get('doctrine.orm.entity_manager')->flush();
 
-        if ($request->getRequestFormat() === 'json') {
+        if ('json' === $request->getRequestFormat()) {
             return $this->handleView($this->view($comment));
         }
 

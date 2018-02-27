@@ -37,7 +37,7 @@ class AppKernel extends SuluTestKernel
             parent::registerBundles()
         );
 
-        if ($this->getContext() !== self::CONTEXT_ADMIN) {
+        if (self::CONTEXT_ADMIN !== $this->getContext()) {
             $bundles[] = new \FOS\RestBundle\FOSRestBundle();
         }
 

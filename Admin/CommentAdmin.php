@@ -23,6 +23,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 class CommentAdmin extends Admin
 {
     const COMMENT_SECURITY_CONTEXT = 'sulu.comment.comments';
+
     const THREAD_SECURITY_CONTEXT = 'sulu.comment.threads';
 
     /**

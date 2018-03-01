@@ -45,6 +45,11 @@ define([
                                     );
                                 }.bind(this)
                             }
+                        },
+                        export: {
+                            options: {
+                                url: '/admin/api/comments.csv'
+                            }
                         }
                     }
                 }

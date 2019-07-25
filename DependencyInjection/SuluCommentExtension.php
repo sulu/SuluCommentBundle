@@ -36,9 +36,41 @@ class SuluCommentExtension extends Extension implements PrependExtensionInterfac
                 [
                     'metadata' => [
                         'directories' => [
-                            [
+                            'sulu_comment' => [
                                 'path' => __DIR__ . '/../Resources/config/serializer',
                                 'namespace_prefix' => 'Sulu\Bundle\CommentBundle\Entity',
+                            ],
+                        ],
+                    ],
+                ]
+            );
+        }
+
+        if ($container->hasExtension('sulu_admin')) {
+            $container->prependExtensionConfig(
+                'sulu_admin',
+                [
+                    'lists' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/lists',
+                        ],
+                    ],
+                    'forms' => [
+                        'directories' => [
+                            __DIR__ . '/../Resources/config/forms',
+                        ],
+                    ],
+                    'resources' => [
+                        'comments' => [
+                            'routes' => [
+                                'list' => 'sulu_comment.get_comments',
+                                'detail' => 'sulu_comment.get_comment',
+                            ],
+                        ],
+                        'threads' => [
+                            'routes' => [
+                                'list' => 'sulu_comment.get_threads',
+                                'detail' => 'sulu_comment.get_thread',
                             ],
                         ],
                     ],

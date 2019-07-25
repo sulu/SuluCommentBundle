@@ -20,8 +20,8 @@ and code are not stable yet (pre 1.0).
 ## Requirements
 
 * Composer
-* PHP `^5.5 || ^7.0`
-* Sulu `^1.3`
+* PHP `^7.1`
+* Sulu `^2.0.0-RC1`
 
 For detailed requirements see [composer.json](https://github.com/sulu/SuluCommentBundle/blob/master/composer.json).
 
@@ -46,28 +46,3 @@ Issues and feature requests are tracked in the [Github issue tracker](https://gi
 When reporting a bug, it may be a good idea to reproduce it in a basic project built using the
 [Sulu Minimal Edition](https://github.com/sulu/sulu-minimal) to allow developers of the bundle to reproduce the issue
 by simply cloning it and following some steps.
-
-## Installation
-
-```
-composer require sulu/comment-bundle
-```
-
-Configure the routing
-
-```
-sulu_comment_api:
-    type: rest
-    resource: "@SuluCommentBundle/Resources/config/routing_api.xml"
-    prefix: /admin/api
-    
-sulu_comment:
-    resource: "@SuluCommentBundle/Resources/config/routing.xml"
-    prefix: /admin/comments
-```
-
-Add bundle to AbstractKernel:
-
-```
-new Sulu\Bundle\CommentBundle\SuluCommentBundle(),    
-```

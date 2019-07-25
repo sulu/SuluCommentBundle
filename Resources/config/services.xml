@@ -5,22 +5,10 @@
 
     <services>
         <service id="sulu_comment.admin" class="Sulu\Bundle\CommentBundle\Admin\CommentAdmin">
+            <argument type="service" id="sulu_admin.route_factory"/>
             <argument type="service" id="sulu_security.security_checker"/>
-            <argument>%sulu_admin.name%</argument>
 
             <tag name="sulu.admin"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
-
-        <service id="sulu_comment.admin.comment_navigation_provider"
-                 class="Sulu\Bundle\CommentBundle\Admin\CommentContentNavigationProvider">
-            <tag name="sulu_admin.content_navigation" alias="comments"/>
-            <tag name="sulu.context" context="admin"/>
-        </service>
-
-        <service id="sulu_comment.admin.thread_navigation_provider"
-                 class="Sulu\Bundle\CommentBundle\Admin\ThreadContentNavigationProvider">
-            <tag name="sulu_admin.content_navigation" alias="threads"/>
             <tag name="sulu.context" context="admin"/>
         </service>
 

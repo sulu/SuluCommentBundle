@@ -6,7 +6,13 @@ Install bundle over composer:
 composer require sulu/comment-bundle
 ```
 
-Configure the routing:
+Add bundle to config/bundles.php`:
+
+```php
+    Sulu\Bundle\CommentBundle\SuluCommentBundle::class => ['all' => true],
+```
+
+Ad the routes of the bunlde to `config/routes/sulu_admin.yaml`:
 
 ```yml
 sulu_comment_api:
@@ -17,12 +23,6 @@ sulu_comment_api:
 sulu_comment:
     resource: "@SuluCommentBundle/Resources/config/routing.xml"
     prefix: /admin/comments
-```
-
-Add bundle to AbstractKernel:
-
-```php
-new Sulu\Bundle\CommentBundle\SuluCommentBundle(),
 ```
 
 Possible bundle configuration:

@@ -17,6 +17,7 @@ namespace Sulu\Bundle\CommentBundle\Entity;
 interface CommentInterface
 {
     const STATE_UNPUBLISHED = 0;
+
     const STATE_PUBLISHED = 1;
 
     /**

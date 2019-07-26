@@ -30,3 +30,7 @@ npm-debug.log
 Tests/app/cache
 Tests/app/logs
 Tests/app/data
+
+# php-cs-fixer
+.php_cs.cache
+php-cs-fixer

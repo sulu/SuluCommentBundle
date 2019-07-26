@@ -1,0 +1,15 @@
+{
+  "sulu_comment.comments": "Reacties",
+  "sulu_comment.threads": "Discussies",
+  "sulu_comment.list.thread": "Discussie",
+  "sulu_comment.list.message": "Bericht",
+  "sulu_comment.list.state": "Status",
+  "sulu_comment.comment.unpublished": "Publiceer reactie",
+  "sulu_comment.comment.published": "Verberg reactie",
+  "sulu_comment.details": "Details",
+  "sulu_comment.list.creator": "Aangemaakt door",
+  "sulu_comment.list.changer": "Aangepast door",
+  "sulu_comment.list.comment-count": "Aantal reacties",
+  "sulu_comment.list.type": "Type",
+  "sulu_comment.list.thread-type": "Discussietype"
+}

@@ -1,0 +1,15 @@
+{
+  "sulu_comment.comments": "Comments",
+  "sulu_comment.threads": "Threads",
+  "sulu_comment.list.thread": "Thread",
+  "sulu_comment.list.message": "Message",
+  "sulu_comment.list.state": "State",
+  "sulu_comment.comment.unpublished": "Publish comment",
+  "sulu_comment.comment.published": "Hide comment",
+  "sulu_comment.details": "Details",
+  "sulu_comment.list.creator": "Created by",
+  "sulu_comment.list.changer": "Changed by",
+  "sulu_comment.list.comment-count": "Number of Comments",
+  "sulu_comment.list.type": "Type",
+  "sulu_comment.list.thread-type": "Threadtype"
+}

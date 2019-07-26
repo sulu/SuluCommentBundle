@@ -128,25 +128,4 @@ class ThreadController extends RestController implements ClassResourceInterface
 
         return $this->handleView($this->view(null, 204));
     }
-
-    /**
-     * Delete multiple threads identified by ids parameter.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function cdeleteAction(Request $request)
-    {
-        $ids = array_filter(explode(',', $request->get('ids', '')));
-
-        if (0 === count($ids)) {
-            return $this->handleView($this->view(null, 204));
-        }
-
-        $this->get('sulu_comment.manager')->deleteThreads($ids);
-        $this->get('doctrine.orm.entity_manager')->flush();
-
-        return $this->handleView($this->view(null, 204));
-    }
 }

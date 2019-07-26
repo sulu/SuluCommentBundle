@@ -138,27 +138,6 @@ class CommentController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Delete multiple comments identified by ids parameter.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function cdeleteAction(Request $request)
-    {
-        $ids = array_filter(explode(',', $request->get('ids', '')));
-
-        if (0 === count($ids)) {
-            return $this->handleView($this->view(null, 204));
-        }
-
-        $this->get('sulu_comment.manager')->delete($ids);
-        $this->get('doctrine.orm.entity_manager')->flush();
-
-        return $this->handleView($this->view(null, 204));
-    }
-
-    /**
      * trigger a action for given comment specified over action get-parameter
      * - publish: Publish a comment
      * - unpublish: Unpublish a comment.

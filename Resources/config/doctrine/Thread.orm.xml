@@ -16,8 +16,8 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="type" type="string" length="255"/>
-        <field name="entityId" type="string" column="entityId" length="255"/>
+        <field name="type" type="string" length="64"/>
+        <field name="entityId" type="string" column="entityId" length="64"/>
 
         <field name="title" type="string" length="255" nullable="true"/>
         <field name="commentCount" column="commentCount" type="integer"/>

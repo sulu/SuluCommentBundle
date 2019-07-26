@@ -12,10 +12,11 @@
 namespace Sulu\Bundle\CommentBundle\Tests\Unit\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\CommentBundle\Entity\Thread;
 
-class ThreadTest extends \PHPUnit_Framework_TestCase
+class ThreadTest extends TestCase
 {
     public function testCommentCount()
     {

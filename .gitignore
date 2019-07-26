@@ -27,9 +27,8 @@ node_modules/
 npm-debug.log
 
 # tests
-Tests/app/cache
-Tests/app/logs
-Tests/app/data
+Tests/Application/var
+Tests/Application/.env.test.local
 
 # php-cs-fixer
 .php_cs.cache

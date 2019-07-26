@@ -11,11 +11,12 @@
 
 namespace Sulu\Bundle\CommentBundle\Tests\Unit\Entity;
 
+use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\CommentBundle\Entity\Comment;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\CommentBundle\Entity\Thread;
 
-class CommentTest extends \PHPUnit_Framework_TestCase
+class CommentTest extends TestCase
 {
     public function testPublish()
     {

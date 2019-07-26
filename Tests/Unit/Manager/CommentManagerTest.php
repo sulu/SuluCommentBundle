@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CommentBundle\Tests\Unit\Manager;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\CommentBundle\Entity\CommentRepositoryInterface;
@@ -22,7 +23,7 @@ use Sulu\Bundle\CommentBundle\Events\ThreadEvent;
 use Sulu\Bundle\CommentBundle\Manager\CommentManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class CommentManagerTest extends \PHPUnit_Framework_TestCase
+class CommentManagerTest extends TestCase
 {
     /**
      * @var ThreadRepositoryInterface

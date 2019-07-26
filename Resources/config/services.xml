@@ -12,7 +12,7 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_comment.manager" class="Sulu\Bundle\CommentBundle\Manager\CommentManager">
+        <service id="sulu_comment.manager" class="Sulu\Bundle\CommentBundle\Manager\CommentManager" public="true">
             <argument type="service" id="sulu.repository.thread"/>
             <argument type="service" id="sulu.repository.comment"/>
             <argument type="service" id="event_dispatcher"/>

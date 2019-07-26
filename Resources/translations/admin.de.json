@@ -1,15 +1,13 @@
 {
   "sulu_comment.comments": "Kommentare",
   "sulu_comment.threads": "Beiträge",
-  "sulu_comment.list.thread": "Beitrag",
-  "sulu_comment.list.message": "Nachricht",
-  "sulu_comment.list.state": "Status",
-  "sulu_comment.comment.unpublished": "Kommentar veröffentlichen",
-  "sulu_comment.comment.published": "Kommentar verstecken",
+  "sulu_comment.thread": "Beitrag",
+  "sulu_comment.message": "Nachricht",
+  "sulu_comment.state": "Status",
+  "sulu_comment.comment_unpublished": "Kommentar veröffentlichen",
+  "sulu_comment.comment_published": "Kommentar verstecken",
   "sulu_comment.details": "Details",
-  "sulu_comment.list.creator": "Erstellt von",
-  "sulu_comment.list.changer": "Bearbeitet von",
-  "sulu_comment.list.comment-count": "Anzahl Kommentare",
-  "sulu_comment.list.type": "Typ",
-  "sulu_comment.list.thread-type": "Beitragstyp"
+  "sulu_comment.comment_count": "Anzahl Kommentare",
+  "sulu_comment.type": "Typ",
+  "sulu_comment.thread_type": "Beitragstyp"
 }

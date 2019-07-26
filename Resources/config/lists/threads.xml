@@ -35,12 +35,12 @@
         </property>
 
         <property name="commentCount" visibility="always"
-                  translation="sulu_comment.list.comment-count">
+                  translation="sulu_comment.comment_count">
             <field-name>commentCount</field-name>
             <entity-name>%sulu.model.thread.class%</entity-name>
         </property>
 
-        <property name="type" translation="sulu_comment.list.type" type="translation">
+        <property name="type" translation="sulu_comment.type">
             <field-name>type</field-name>
             <entity-name>%sulu.model.thread.class%</entity-name>
         </property>
@@ -57,7 +57,7 @@
         </property>
 
         <concatenation-property name="creator" glue=" "
-                                translation="sulu_comment.list.creator">
+                                translation="sulu_admin.creator">
             <field>
                 <field-name>firstName</field-name>
                 <entity-name>%sulu.model.contact.class%</entity-name>
@@ -73,7 +73,7 @@
         </concatenation-property>
 
         <concatenation-property name="changer" glue=" "
-                                translation="sulu_comment.list.changer">
+                                translation="sulu_admin.changer">
             <field>
                 <field-name>firstName</field-name>
                 <entity-name>%sulu.model.contact.class%</entity-name>

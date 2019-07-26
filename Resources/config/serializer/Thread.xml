@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <serializer>
-    <class name="Sulu\Bundle\CommentBundle\Entity\Thread">
-        <property name="id" type="integer"/>
-        <property name="title" type="string"/>
-        <property name="commentCount" type="integer"/>
+    <class name="Sulu\Bundle\CommentBundle\Entity\Thread" exclusion-policy="ALL">
+        <property name="id" expose="true" type="integer"/>
+        <property name="title" expose="true" type="string"/>
+        <property name="commentCount" expose="true" type="integer"/>
 
-        <property name="type" type="string" exclude="true"/>
-        <property name="entityId" type="string" exclude="true"/>
-        <property name="comments" exclude="true"/>
+        <property name="type" expose="true" type="string"/>
+        <property name="entityId" expose="true" type="string"/>
 
-        <virtual-property method="getCreatorFullName" name="creator" serialized-name="creator"/>
-        <virtual-property method="getChangerFullName" name="changer" serialized-name="changer"/>
+        <virtual-property method="getCreatorFullName" name="creator" serialized-name="creator" expose="true"/>
+        <virtual-property method="getChangerFullName" name="changer" serialized-name="changer" expose="true"/>
     </class>
 </serializer>

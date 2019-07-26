@@ -35,26 +35,26 @@
             <entity-name>%sulu.model.comment.class%</entity-name>
         </property>
 
-        <property name="thread" visibility="always" translation="sulu_comment.list.thread">
+        <property name="thread" visibility="always" translation="sulu_comment.thread">
             <field-name>title</field-name>
             <entity-name>%sulu.model.thread.class%</entity-name>
 
             <joins ref="thread"/>
         </property>
 
-        <property name="threadType" translation="sulu_comment.list.thread-type" type="translation">
+        <property name="threadType" translation="sulu_comment.thread_type">
             <field-name>type</field-name>
             <entity-name>%sulu.model.thread.class%</entity-name>
 
             <joins ref="thread"/>
         </property>
 
-        <property name="message" visibility="always" translation="sulu_comment.list.message">
+        <property name="message" visibility="always" translation="sulu_comment.message">
             <field-name>message</field-name>
             <entity-name>%sulu.model.comment.class%</entity-name>
         </property>
 
-        <property name="state" visibility="always" translation="sulu_comment.list.state"
+        <property name="state" visibility="always" translation="sulu_comment.state"
                   type="bool">
             <field-name>state</field-name>
             <entity-name>%sulu.model.comment.class%</entity-name>
@@ -72,7 +72,7 @@
         </property>
 
         <concatenation-property name="creator" visibility="always" glue=" "
-                                translation="sulu_comment.list.creator">
+                                translation="sulu_admin.creator">
             <field>
                 <field-name>firstName</field-name>
                 <entity-name>%sulu.model.contact.class%</entity-name>
@@ -88,7 +88,7 @@
         </concatenation-property>
 
         <concatenation-property name="changer" filter-type="string" glue=" "
-                                translation="sulu_comment.list.changer">
+                                translation="sulu_admin.changer">
             <field>
                 <field-name>firstName</field-name>
                 <entity-name>%sulu.model.contact.class%</entity-name>

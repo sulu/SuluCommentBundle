@@ -15,6 +15,7 @@ namespace Sulu\Bundle\CommentBundle\Tests\Application;
 
 use Sulu\Bundle\CommentBundle\SuluCommentBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 class Kernel extends SuluTestKernel
@@ -23,6 +24,10 @@ class Kernel extends SuluTestKernel
     {
         $bundles = parent::registerBundles();
         $bundles[] = new SuluCommentBundle();
+
+        if (SuluTestKernel::CONTEXT_WEBSITE === $this->getContext()) {
+            $bundles[] = new SecurityBundle();
+        }
 
         return $bundles;
     }

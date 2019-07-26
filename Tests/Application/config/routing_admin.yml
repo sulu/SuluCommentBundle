@@ -3,6 +3,6 @@ sulu_comment:
     prefix: /comments
 
 sulu_comment_api:
-    resource: "@SuluCommentBundle/Resources/config/routing_api.xml"
+    resource: "@SuluCommentBundle/Resources/config/routing_api.yml"
     type: rest
     prefix: /api

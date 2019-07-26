@@ -1,6 +1,10 @@
 sudo: false
+dist: trusty
 
 language: php
+
+services:
+    - mysql
 
 cache:
   directories:
@@ -8,13 +12,14 @@ cache:
 
 matrix:
   include:
-    - php: 5.5
-      # env:
-      #   - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction"
-    - php: 7.0
+    - php: 7.1
       env:
-      # - COMPOSER_FLAGS="--prefer-dist --no-interaction"
+          - COMPOSER_FLAGS="--prefer-lowest --prefer-dist --no-interaction"
+    - php: 7.3
+      env:
+        - COMPOSER_FLAGS="--prefer-dist --no-interaction"
         - CODE_COVERAGE="--coverage-clover=coverage.clover"
+        - PHPSTAN=true
 
 before_install:
   - phpenv config-add Tests/travis.php.ini
@@ -28,6 +33,7 @@ install:
   - ./Tests/app/console doctrine:schema:update --force
 
 script:
+  - if [[ $PHPSTAN = true ]]; then ./vendor/bin/phpstan analyze .; fi
   - ./vendor/bin/phpunit $CODE_COVERAGE
 
 after_script:

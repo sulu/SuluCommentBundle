@@ -25,15 +25,11 @@ class CommentAdmin extends Admin
 {
     const COMMENT_SECURITY_CONTEXT = 'sulu.comment.comments';
     const COMMENT_LIST_ROUTE = 'sulu_comment.comments.list';
-    const COMMENT_ADD_FORM_ROUTE = 'sulu_comment.comments.add_form';
-    const COMMENT_ADD_FORM_DETAILS_ROUTE = 'sulu_comment.comments.add_form.details';
     const COMMENT_EDIT_FORM_ROUTE = 'sulu_comment.comments.edit_form';
     const COMMENT_EDIT_FORM_DETAILS_ROUTE = 'sulu_comment.comments.edit_form.details';
 
     const THREAD_SECURITY_CONTEXT = 'sulu.comment.threads';
     const THREAD_LIST_ROUTE = 'sulu_comment.threads.list';
-    const THREAD_ADD_FORM_ROUTE = 'sulu_comment.threads.add_form';
-    const THREAD_ADD_FORM_DETAILS_ROUTE = 'sulu_comment.threads.add_form.details';
     const THREAD_EDIT_FORM_ROUTE = 'sulu_comment.threads.edit_form';
     const THREAD_EDIT_FORM_DETAILS_ROUTE = 'sulu_comment.threads.edit_form.details';
 
@@ -98,7 +94,6 @@ class CommentAdmin extends Admin
         ];
 
         $listToolbarActions = [
-            'sulu_admin.add',
             'sulu_admin.delete',
         ];
 
@@ -108,22 +103,9 @@ class CommentAdmin extends Admin
                 ->setListKey('comments')
                 ->setTitle('sulu_comment.comments')
                 ->addListAdapters(['table'])
-                ->setAddRoute(static::COMMENT_ADD_FORM_ROUTE)
                 ->setEditRoute(static::COMMENT_EDIT_FORM_ROUTE)
                 ->enableSearching()
                 ->addToolbarActions($listToolbarActions)
-                ->getRoute(),
-            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::COMMENT_ADD_FORM_ROUTE, '/comments/add')
-                ->setResourceKey('comments')
-                ->setBackRoute(static::COMMENT_LIST_ROUTE)
-                ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder(static::COMMENT_ADD_FORM_DETAILS_ROUTE, '/details')
-                ->setResourceKey('comments')
-                ->setFormKey('comment_details')
-                ->setTabTitle('sulu_admin.details')
-                ->setEditRoute(static::COMMENT_EDIT_FORM_ROUTE)
-                ->addToolbarActions($formToolbarActions)
-                ->setParent(static::COMMENT_ADD_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::COMMENT_EDIT_FORM_ROUTE, '/comments/:id')
                 ->setResourceKey('comments')
@@ -141,22 +123,9 @@ class CommentAdmin extends Admin
                 ->setListKey('threads')
                 ->setTitle('sulu_comment.threads')
                 ->addListAdapters(['table'])
-                ->setAddRoute(static::THREAD_ADD_FORM_ROUTE)
                 ->setEditRoute(static::THREAD_EDIT_FORM_ROUTE)
                 ->enableSearching()
                 ->addToolbarActions($listToolbarActions)
-                ->getRoute(),
-            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::THREAD_ADD_FORM_ROUTE, '/threads/add')
-                ->setResourceKey('threads')
-                ->setBackRoute(static::THREAD_LIST_ROUTE)
-                ->getRoute(),
-            $this->routeBuilderFactory->createFormRouteBuilder(static::THREAD_ADD_FORM_DETAILS_ROUTE, '/details')
-                ->setResourceKey('threads')
-                ->setFormKey('thread_details')
-                ->setTabTitle('sulu_admin.details')
-                ->setEditRoute(static::THREAD_EDIT_FORM_ROUTE)
-                ->addToolbarActions($formToolbarActions)
-                ->setParent(static::THREAD_ADD_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::THREAD_EDIT_FORM_ROUTE, '/threads/:id')
                 ->setResourceKey('threads')

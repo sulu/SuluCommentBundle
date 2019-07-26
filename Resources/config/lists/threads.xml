@@ -1,0 +1,91 @@
+<?xml version="1.0" ?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>threads</key>
+
+    <joins name="creator">
+        <join>
+            <entity-name>%sulu.model.user.class%</entity-name>
+            <field-name>%sulu.model.thread.class%.creator</field-name>
+        </join>
+        <join>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+            <field-name>%sulu.model.user.class%.contact</field-name>
+        </join>
+    </joins>
+    <joins name="changer">
+        <join>
+            <entity-name>%sulu.model.user.class%</entity-name>
+            <field-name>%sulu.model.thread.class%.changer</field-name>
+        </join>
+        <join>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+            <field-name>%sulu.model.user.class%.contact</field-name>
+        </join>
+    </joins>
+
+    <properties>
+        <property name="id" translation="sulu_admin.id" type="integer">
+            <field-name>id</field-name>
+            <entity-name>%sulu.model.thread.class%</entity-name>
+        </property>
+
+        <property name="title" visibility="always" translation="sulu_admin.title">
+            <field-name>title</field-name>
+            <entity-name>%sulu.model.thread.class%</entity-name>
+        </property>
+
+        <property name="commentCount" visibility="always"
+                  translation="sulu_comment.list.comment-count">
+            <field-name>commentCount</field-name>
+            <entity-name>%sulu.model.thread.class%</entity-name>
+        </property>
+
+        <property name="type" translation="sulu_comment.list.type" type="translation">
+            <field-name>type</field-name>
+            <entity-name>%sulu.model.thread.class%</entity-name>
+        </property>
+
+        <property name="created" visibility="always" translation="sulu_admin.created"
+                  type="datetime">
+            <field-name>created</field-name>
+            <entity-name>%sulu.model.thread.class%</entity-name>
+        </property>
+
+        <property name="changed" translation="sulu_admin.changed" type="datetime">
+            <field-name>changed</field-name>
+            <entity-name>%sulu.model.thread.class%</entity-name>
+        </property>
+
+        <concatenation-property name="creator" glue=" "
+                                translation="sulu_comment.list.creator">
+            <field>
+                <field-name>firstName</field-name>
+                <entity-name>%sulu.model.contact.class%</entity-name>
+
+                <joins ref="creator"/>
+            </field>
+            <field>
+                <field-name>lastName</field-name>
+                <entity-name>%sulu.model.contact.class%</entity-name>
+
+                <joins ref="creator"/>
+            </field>
+        </concatenation-property>
+
+        <concatenation-property name="changer" glue=" "
+                                translation="sulu_comment.list.changer">
+            <field>
+                <field-name>firstName</field-name>
+                <entity-name>%sulu.model.contact.class%</entity-name>
+
+                <joins ref="changer"/>
+            </field>
+            <field>
+                <field-name>lastName</field-name>
+                <entity-name>%sulu.model.contact.class%</entity-name>
+
+                <joins ref="changer"/>
+            </field>
+        </concatenation-property>
+    </properties>
+</list>

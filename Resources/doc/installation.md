@@ -17,7 +17,7 @@ Ad the routes of the bunlde to `config/routes/sulu_admin.yaml`:
 ```yml
 sulu_comment_api:
     type: rest
-    resource: "@SuluCommentBundle/Resources/config/routing_api.xml"
+    resource: "@SuluCommentBundle/Resources/config/routing_api.yml"
     prefix: /admin/api
 
 sulu_comment:

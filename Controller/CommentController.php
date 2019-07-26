@@ -33,18 +33,6 @@ class CommentController extends RestController implements ClassResourceInterface
     use RequestParametersTrait;
 
     /**
-     * Returns list of field-descriptors.
-     *
-     * @Get("/comments/fields")
-     *
-     * @return Response
-     */
-    public function getFieldsAction()
-    {
-        return $this->handleView($this->view($this->getFieldDescriptors()));
-    }
-
-    /**
      * Returns list of comments.
      *
      * @param Request $request
@@ -57,7 +45,8 @@ class CommentController extends RestController implements ClassResourceInterface
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
         $listBuilder = $factory->create($this->getParameter('sulu.model.comment.class'));
 
-        $fieldDescriptors = $this->getFieldDescriptors();
+        $fieldDescriptors = $this->get('sulu_core.list_builder.field_descriptor_factory')
+            ->getFieldDescriptors('comments');
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         if ($request->query->get('threadType')) {
@@ -79,7 +68,7 @@ class CommentController extends RestController implements ClassResourceInterface
         $list = new ListRepresentation(
             $results,
             'comments',
-            'get_comments',
+            $request->attributes->get('_route'),
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),
@@ -209,16 +198,5 @@ class CommentController extends RestController implements ClassResourceInterface
         $this->get('doctrine.orm.entity_manager')->flush();
 
         return $this->handleView($this->view($comment));
-    }
-
-    /**
-     * Returns array of field-descriptors.
-     *
-     * @return FieldDescriptorInterface[]
-     */
-    private function getFieldDescriptors()
-    {
-        return $this->get('sulu_core.list_builder.field_descriptor_factory')
-            ->getFieldDescriptorForClass($this->getParameter('sulu.model.comment.class'));
     }
 }

@@ -30,18 +30,6 @@ class ThreadController extends RestController implements ClassResourceInterface
     use RequestParametersTrait;
 
     /**
-     * Returns list of field-descriptors.
-     *
-     * @Get("/threads/fields")
-     *
-     * @return Response
-     */
-    public function getFieldsAction()
-    {
-        return $this->handleView($this->view($this->getFieldDescriptors()));
-    }
-
-    /**
      * Returns list of threads.
      *
      * @param Request $request
@@ -54,7 +42,8 @@ class ThreadController extends RestController implements ClassResourceInterface
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
         $listBuilder = $factory->create($this->getParameter('sulu.model.thread.class'));
 
-        $fieldDescriptors = $this->getFieldDescriptors();
+        $fieldDescriptors = $this->get('sulu_core.list_builder.field_descriptor_factory')
+            ->getFieldDescriptors('threads');
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         foreach ($request->query->all() as $filterKey => $filterValue) {
@@ -72,7 +61,7 @@ class ThreadController extends RestController implements ClassResourceInterface
         $list = new ListRepresentation(
             $items,
             'threads',
-            'get_threads',
+            $request->attributes->get('_route'),
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),
@@ -161,16 +150,5 @@ class ThreadController extends RestController implements ClassResourceInterface
         $this->get('doctrine.orm.entity_manager')->flush();
 
         return $this->handleView($this->view(null, 204));
-    }
-
-    /**
-     * Returns array of field-descriptors.
-     *
-     * @return FieldDescriptorInterface[]
-     */
-    private function getFieldDescriptors()
-    {
-        return $this->get('sulu_core.list_builder.field_descriptor_factory')
-            ->getFieldDescriptorForClass($this->getParameter('sulu.model.thread.class'));
     }
 }

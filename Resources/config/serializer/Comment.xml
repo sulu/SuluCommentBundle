@@ -11,5 +11,6 @@
 
         <virtual-property method="getCreatorFullName" name="creator" serialized-name="creator" expose="true"/>
         <virtual-property method="getChangerFullName" name="changer" serialized-name="changer" expose="true"/>
+        <virtual-property method="isPublished" name="published" serialized-name="published" expose="true"/>
     </class>
 </serializer>

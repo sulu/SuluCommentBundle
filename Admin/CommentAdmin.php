@@ -95,6 +95,7 @@ class CommentAdmin extends Admin
 
         $listToolbarActions = [
             'sulu_admin.delete',
+            'sulu_admin.export',
         ];
 
         return [
@@ -115,7 +116,7 @@ class CommentAdmin extends Admin
                 ->setResourceKey('comments')
                 ->setFormKey('comment_details')
                 ->setTabTitle('sulu_admin.details')
-                ->addToolbarActions($formToolbarActions)
+                ->addToolbarActions(array_merge($formToolbarActions, ['sulu_admin.publish_toggler']))
                 ->setParent(static::COMMENT_EDIT_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createListRouteBuilder(static::THREAD_LIST_ROUTE, '/threads')

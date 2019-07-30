@@ -12,7 +12,7 @@ Add bundle to config/bundles.php`:
     Sulu\Bundle\CommentBundle\SuluCommentBundle::class => ['all' => true],
 ```
 
-Ad the routes of the bunlde to `config/routes/sulu_admin.yaml`:
+Add the routes of the bundle to `config/routes/sulu_admin.yaml`:
 
 ```yml
 sulu_comment_api:
@@ -23,6 +23,14 @@ sulu_comment_api:
 sulu_comment:
     resource: "@SuluCommentBundle/Resources/config/routing.xml"
     prefix: /admin/comments
+```
+
+And `config/routes/sulu_website.yaml`:
+
+````
+sulu_comments:
+    type: rest
+    resource: "@SuluCommentBundle/Resources/config/routing_website.xml"
 ```
 
 Possible bundle configuration:

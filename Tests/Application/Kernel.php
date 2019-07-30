@@ -26,6 +26,7 @@ class Kernel extends SuluTestKernel
         $bundles[] = new SuluCommentBundle();
 
         if (SuluTestKernel::CONTEXT_WEBSITE === $this->getContext()) {
+            $bundles[] = new \FOS\RestBundle\FOSRestBundle();
             $bundles[] = new SecurityBundle();
         }
 

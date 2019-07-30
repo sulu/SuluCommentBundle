@@ -68,7 +68,7 @@ class Comment implements CommentInterface, AuditableInterface
         $this->state = $state;
         $this->thread = $thread;
 
-        if ($this->isPublished()) {
+        if ($this->thread && $this->isPublished()) {
             $thread->increaseCommentCount();
         }
     }

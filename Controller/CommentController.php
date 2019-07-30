@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CommentBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
@@ -120,6 +119,24 @@ class CommentController extends RestController implements ClassResourceInterface
         $this->get('doctrine.orm.entity_manager')->flush();
 
         return $this->handleView($this->view($comment));
+    }
+
+    /**
+     * Delete multiple comments identified by id.
+     *
+     * @return Response
+     */
+    public function cdeleteAction(Request $request)
+    {
+        $ids = array_filter(explode(',', $request->query->get('ids')));
+        if (0 === count($ids)) {
+            return $this->handleView($this->view(null, 204));
+        }
+
+        $this->get('sulu_comment.manager')->delete($ids);
+        $this->get('doctrine.orm.entity_manager')->flush();
+
+        return $this->handleView($this->view(null, 204));
     }
 
     /**

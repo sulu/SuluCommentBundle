@@ -99,7 +99,7 @@ class CommentRepository extends EntityRepository implements CommentRepositoryInt
         try {
             return $query->getSingleResult();
         } catch (NoResultException $e) {
-            return;
+            return null;
         }
     }
 

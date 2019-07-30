@@ -31,7 +31,7 @@ interface ThreadRepositoryInterface
      *
      * @param int $id
      *
-     * @return ThreadInterface
+     * @return ThreadInterface|null
      */
     public function findThreadById($id);
 
@@ -50,7 +50,7 @@ interface ThreadRepositoryInterface
      * @param string $type
      * @param string $entityId
      *
-     * @return ThreadInterface
+     * @return ThreadInterface|null
      */
     public function findThread($type, $entityId);
 

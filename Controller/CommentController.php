@@ -17,6 +17,7 @@ use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\CommentBundle\Entity\CommentRepositoryInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
@@ -43,6 +44,7 @@ class CommentController extends RestController implements ClassResourceInterface
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
         $listBuilder = $factory->create($this->getParameter('sulu.model.comment.class'));
 
+        /** @var FieldDescriptorInterface[] $fieldDescriptors */
         $fieldDescriptors = $this->get('sulu_core.list_builder.field_descriptor_factory')
             ->getFieldDescriptors('comments');
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
@@ -107,7 +109,7 @@ class CommentController extends RestController implements ClassResourceInterface
      */
     public function putAction($id, Request $request)
     {
-        /** @var CommentInterface $comment */
+        /** @var CommentInterface|null $comment */
         $comment = $this->get('sulu.repository.comment')->findCommentById($id);
         if (!$comment) {
             throw new EntityNotFoundException(CommentInterface::class, $id);
@@ -176,6 +178,9 @@ class CommentController extends RestController implements ClassResourceInterface
         $commentRepository = $this->get('sulu.repository.comment');
         $commentManager = $this->get('sulu_comment.manager');
         $comment = $commentRepository->findCommentById($id);
+        if (!$comment) {
+            return $this->handleView($this->view(null, 404));
+        }
 
         switch ($action) {
             case 'unpublish':

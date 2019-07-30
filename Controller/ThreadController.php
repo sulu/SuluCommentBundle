@@ -14,6 +14,7 @@ namespace Sulu\Bundle\CommentBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
@@ -40,6 +41,7 @@ class ThreadController extends RestController implements ClassResourceInterface
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
         $listBuilder = $factory->create($this->getParameter('sulu.model.thread.class'));
 
+        /** @var FieldDescriptorInterface[] $fieldDescriptors */
         $fieldDescriptors = $this->get('sulu_core.list_builder.field_descriptor_factory')
             ->getFieldDescriptors('threads');
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
@@ -100,7 +102,7 @@ class ThreadController extends RestController implements ClassResourceInterface
      */
     public function putAction($id, Request $request)
     {
-        /** @var ThreadInterface $thread */
+        /** @var ThreadInterface|null $thread */
         $thread = $this->get('sulu.repository.thread')->findThreadById($id);
         if (!$thread) {
             throw new EntityNotFoundException(ThreadInterface::class, $id);

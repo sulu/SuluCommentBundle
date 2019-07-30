@@ -56,7 +56,7 @@ interface CommentRepositoryInterface extends RepositoryInterface
      *
      * @param int $id
      *
-     * @return CommentInterface
+     * @return CommentInterface|null
      */
     public function findCommentById($id);
 

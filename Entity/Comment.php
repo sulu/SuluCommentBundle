@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\CommentBundle\Entity;
 
 use Sulu\Component\Persistence\Model\AuditableInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Minimum implementation for comments.
@@ -35,7 +35,7 @@ class Comment implements CommentInterface, AuditableInterface
     protected $message;
 
     /**
-     * @var ThreadInterface
+     * @var ThreadInterface|null
      */
     protected $thread;
 
@@ -69,7 +69,7 @@ class Comment implements CommentInterface, AuditableInterface
         $this->thread = $thread;
 
         if ($this->thread && $this->isPublished()) {
-            $thread->increaseCommentCount();
+            $this->thread->increaseCommentCount();
         }
     }
 
@@ -150,6 +150,10 @@ class Comment implements CommentInterface, AuditableInterface
      */
     public function getThread()
     {
+        if (!$this->thread) {
+            throw new \RuntimeException('No thread assigned.');
+        }
+
         return $this->thread;
     }
 
@@ -180,7 +184,7 @@ class Comment implements CommentInterface, AuditableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return UserInterface|null
      */
     public function getCreator()
     {
@@ -188,7 +192,7 @@ class Comment implements CommentInterface, AuditableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return UserInterface|null
      */
     public function getChanger()
     {
@@ -200,11 +204,12 @@ class Comment implements CommentInterface, AuditableInterface
      */
     public function getCreatorFullName()
     {
-        if (!$this->getCreator()) {
+        $creator = $this->getCreator();
+        if (!$creator) {
             return '';
         }
 
-        return $this->getCreator()->getFullName();
+        return $creator->getFullName();
     }
 
     /**
@@ -212,10 +217,11 @@ class Comment implements CommentInterface, AuditableInterface
      */
     public function getChangerFullName()
     {
-        if (!$this->getChanger()) {
+        $changer = $this->getChanger();
+        if (!$changer) {
             return '';
         }
 
-        return $this->getChanger()->getFullName();
+        return $changer->getFullName();
     }
 }

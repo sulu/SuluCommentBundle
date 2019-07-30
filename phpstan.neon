@@ -11,8 +11,9 @@ parameters:
         - .
     level: max
     excludes_analyse:
-        - %currentWorkingDirectory%/vendor/*
+        - %currentWorkingDirectory%/DependencyInjection/Configuration.php
         - %currentWorkingDirectory%/Tests/*
+        - %currentWorkingDirectory%/vendor/*
     symfony:
         container_xml_path: %rootDir%/../../../Tests/Application/var/cache/admin/dev/adminAdminDevDebugProjectContainer.xml
         console_application_loader: Tests/phpstan/console-application.php

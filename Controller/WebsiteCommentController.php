@@ -124,6 +124,9 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
     private function getThreadIdParts($threadId)
     {
         $pos = strpos($threadId, '-');
+        if (false === $pos) {
+            throw new \RuntimeException('Thread id is not valid.');
+        }
 
         return [substr($threadId, 0, $pos), substr($threadId, $pos + 1)];
     }

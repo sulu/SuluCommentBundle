@@ -20,6 +20,7 @@
         "sulu/document-manager": "@dev",
         "symfony/browser-kit": "^3.4 || ^4.0",
         "symfony/dotenv": "^3.4 || ^4.0",
+        "symfony/form": "^3.4 || ^4.0",
         "symfony/monolog-bundle": "^3.1",
         "symfony/security-bundle": "^3.4 || ^4.0",
         "symfony/stopwatch": "^3.4 ||  ^4.0",

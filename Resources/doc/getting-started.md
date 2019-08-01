@@ -25,7 +25,6 @@ sulu_comment:
     default_templates:
         comments:             'SuluCommentBundle:WebsiteComment:comments.html.twig'
         comment:              'SuluCommentBundle:WebsiteComment:comment.html.twig'
-        form:                 'SuluCommentBundle:WebsiteComment:form.html.twig'
 ```
 
 If you only want to customize the templates for the example `page` type:
@@ -35,7 +34,9 @@ sulu_comment:
     types:
         page:
             templates:
-                comment:      'SuluCommentBundle:WebsiteComment:comment.html.twig'
                 comments:     'SuluCommentBundle:WebsiteComment:comments.html.twig'
-                form:         'SuluCommentBundle:WebsiteComment:form.html.twig'
+                comment:      'SuluCommentBundle:WebsiteComment:comment.html.twig'
 ```
+
+To extend the form you can provide a [FormExtension](https://symfony.com/doc/current/form/create_form_type_extension.html)
+for `Sulu\Bundle\CommentBundle\Form\Type\CommentType`.

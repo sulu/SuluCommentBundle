@@ -1,0 +1,13 @@
+sulu_comment.comments:
+    type: rest
+    name_prefix: sulu_comment.
+    resource: Sulu\Bundle\CommentBundle\Controller\CommentController
+    options:
+        expose: true
+
+sulu_comment.threads:
+    type: rest
+    name_prefix: sulu_comment.
+    resource: Sulu\Bundle\CommentBundle\Controller\ThreadController
+    options:
+        expose: true

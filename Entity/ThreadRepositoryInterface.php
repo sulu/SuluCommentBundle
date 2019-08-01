@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -31,7 +31,7 @@ interface ThreadRepositoryInterface
      *
      * @param int $id
      *
-     * @return ThreadInterface
+     * @return ThreadInterface|null
      */
     public function findThreadById($id);
 
@@ -50,7 +50,7 @@ interface ThreadRepositoryInterface
      * @param string $type
      * @param string $entityId
      *
-     * @return ThreadInterface
+     * @return ThreadInterface|null
      */
     public function findThread($type, $entityId);
 

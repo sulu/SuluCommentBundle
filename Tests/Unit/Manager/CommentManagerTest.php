@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CommentBundle\Tests\Unit\Manager;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\CommentBundle\Entity\CommentRepositoryInterface;
@@ -22,7 +23,7 @@ use Sulu\Bundle\CommentBundle\Events\ThreadEvent;
 use Sulu\Bundle\CommentBundle\Manager\CommentManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class CommentManagerTest extends \PHPUnit_Framework_TestCase
+class CommentManagerTest extends TestCase
 {
     /**
      * @var ThreadRepositoryInterface
@@ -90,12 +91,12 @@ class CommentManagerTest extends \PHPUnit_Framework_TestCase
         $this->dispatcher->dispatch(Events::PRE_PERSIST_EVENT, Argument::type(CommentEvent::class))
             ->shouldBeCalledTimes(1)
             ->will(
-                function () use ($commentRepository, $comment, $dispatcher, $thread) {
+                function() use ($commentRepository, $comment, $dispatcher, $thread) {
                     $thread->addComment($comment->reveal())->willReturn($thread->reveal());
                     $commentRepository->persist($comment->reveal())
                         ->shouldBeCalledTimes(1)
                         ->will(
-                            function () use ($dispatcher, $thread) {
+                            function() use ($dispatcher, $thread) {
                                 $dispatcher->dispatch(
                                     Events::POST_PERSIST_EVENT,
                                     Argument::type(CommentEvent::class)
@@ -125,12 +126,12 @@ class CommentManagerTest extends \PHPUnit_Framework_TestCase
         $this->dispatcher->dispatch(Events::PRE_PERSIST_EVENT, Argument::type(CommentEvent::class))
             ->shouldBeCalledTimes(1)
             ->will(
-                function () use ($commentRepository, $comment, $dispatcher, $thread) {
+                function() use ($commentRepository, $comment, $dispatcher, $thread) {
                     $thread->addComment($comment->reveal())->willReturn($thread->reveal());
                     $commentRepository->persist($comment->reveal())
                         ->shouldBeCalledTimes(1)
                         ->will(
-                            function () use ($dispatcher, $thread) {
+                            function() use ($dispatcher, $thread) {
                                 $dispatcher->dispatch(
                                     Events::POST_PERSIST_EVENT,
                                     Argument::type(CommentEvent::class)
@@ -156,7 +157,7 @@ class CommentManagerTest extends \PHPUnit_Framework_TestCase
         $this->dispatcher->dispatch(
             Events::PRE_UPDATE_EVENT,
             Argument::that(
-                function (CommentEvent $event) use ($comment) {
+                function(CommentEvent $event) use ($comment) {
                     return $event->getComment() === $comment->reveal();
                 }
             )
@@ -172,7 +173,7 @@ class CommentManagerTest extends \PHPUnit_Framework_TestCase
         $this->dispatcher->dispatch(
             Events::THREAD_PRE_UPDATE_EVENT,
             Argument::that(
-                function (ThreadEvent $event) use ($thread) {
+                function(ThreadEvent $event) use ($thread) {
                     return $event->getThread() === $thread->reveal();
                 }
             )
@@ -203,16 +204,16 @@ class CommentManagerTest extends \PHPUnit_Framework_TestCase
             $this->dispatcher->dispatch(
                 Events::PRE_DELETE_EVENT,
                 Argument::that(
-                    function (CommentEvent $event) use ($comment) {
+                    function(CommentEvent $event) use ($comment) {
                         return $event->getComment() === $comment->reveal();
                     }
                 )
             )->will(
-                function () use ($comment, $dispatcher) {
+                function() use ($comment, $dispatcher) {
                     $dispatcher->dispatch(
                         Events::POST_DELETE_EVENT,
                         Argument::that(
-                            function (CommentEvent $event) use ($comment) {
+                            function(CommentEvent $event) use ($comment) {
                                 return $event->getComment() === $comment->reveal();
                             }
                         )
@@ -248,16 +249,16 @@ class CommentManagerTest extends \PHPUnit_Framework_TestCase
             $this->dispatcher->dispatch(
                 Events::PRE_DELETE_EVENT,
                 Argument::that(
-                    function (CommentEvent $event) use ($comment) {
+                    function(CommentEvent $event) use ($comment) {
                         return $event->getComment() === $comment->reveal();
                     }
                 )
             )->will(
-                function () use ($comment, $dispatcher) {
+                function() use ($comment, $dispatcher) {
                     $dispatcher->dispatch(
                         Events::POST_DELETE_EVENT,
                         Argument::that(
-                            function (CommentEvent $event) use ($comment) {
+                            function(CommentEvent $event) use ($comment) {
                                 return $event->getComment() === $comment->reveal();
                             }
                         )
@@ -290,16 +291,16 @@ class CommentManagerTest extends \PHPUnit_Framework_TestCase
             $this->dispatcher->dispatch(
                 Events::THREAD_PRE_DELETE_EVENT,
                 Argument::that(
-                    function (ThreadEvent $event) use ($thread) {
+                    function(ThreadEvent $event) use ($thread) {
                         return $event->getThread() === $thread->reveal();
                     }
                 )
             )->will(
-                function () use ($thread, $dispatcher) {
+                function() use ($thread, $dispatcher) {
                     $dispatcher->dispatch(
                         Events::THREAD_POST_DELETE_EVENT,
                         Argument::that(
-                            function (ThreadEvent $event) use ($thread) {
+                            function(ThreadEvent $event) use ($thread) {
                                 return $event->getThread() === $thread->reveal();
                             }
                         )
@@ -330,16 +331,16 @@ class CommentManagerTest extends \PHPUnit_Framework_TestCase
             $this->dispatcher->dispatch(
                 Events::THREAD_PRE_DELETE_EVENT,
                 Argument::that(
-                    function (ThreadEvent $event) use ($thread) {
+                    function(ThreadEvent $event) use ($thread) {
                         return $event->getThread() === $thread->reveal();
                     }
                 )
             )->will(
-                function () use ($thread, $dispatcher) {
+                function() use ($thread, $dispatcher) {
                     $dispatcher->dispatch(
                         Events::THREAD_POST_DELETE_EVENT,
                         Argument::that(
-                            function (ThreadEvent $event) use ($thread) {
+                            function(ThreadEvent $event) use ($thread) {
                                 return $event->getThread() === $thread->reveal();
                             }
                         )
@@ -365,7 +366,7 @@ class CommentManagerTest extends \PHPUnit_Framework_TestCase
         $this->dispatcher->dispatch(
             Events::PUBLISH_EVENT,
             Argument::that(
-                function (CommentEvent $event) use ($comment) {
+                function(CommentEvent $event) use ($comment) {
                     return $event->getComment() === $comment->reveal();
                 }
             )
@@ -383,7 +384,7 @@ class CommentManagerTest extends \PHPUnit_Framework_TestCase
         $this->dispatcher->dispatch(
             Events::PUBLISH_EVENT,
             Argument::that(
-                function (CommentEvent $event) use ($comment) {
+                function(CommentEvent $event) use ($comment) {
                     return $event->getComment() === $comment->reveal();
                 }
             )
@@ -402,7 +403,7 @@ class CommentManagerTest extends \PHPUnit_Framework_TestCase
         $this->dispatcher->dispatch(
             Events::UNPUBLISH_EVENT,
             Argument::that(
-                function (CommentEvent $event) use ($comment) {
+                function(CommentEvent $event) use ($comment) {
                     return $event->getComment() === $comment->reveal();
                 }
             )
@@ -420,7 +421,7 @@ class CommentManagerTest extends \PHPUnit_Framework_TestCase
         $this->dispatcher->dispatch(
             Events::UNPUBLISH_EVENT,
             Argument::that(
-                function (CommentEvent $event) use ($comment) {
+                function(CommentEvent $event) use ($comment) {
                     return $event->getComment() === $comment->reveal();
                 }
             )

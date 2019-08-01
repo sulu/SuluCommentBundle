@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CommentBundle\Controller;
 
-use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
@@ -33,18 +32,6 @@ class CommentController extends RestController implements ClassResourceInterface
     use RequestParametersTrait;
 
     /**
-     * Returns list of field-descriptors.
-     *
-     * @Get("/comments/fields")
-     *
-     * @return Response
-     */
-    public function getFieldsAction()
-    {
-        return $this->handleView($this->view($this->getFieldDescriptors()));
-    }
-
-    /**
      * Returns list of comments.
      *
      * @param Request $request
@@ -57,7 +44,9 @@ class CommentController extends RestController implements ClassResourceInterface
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
         $listBuilder = $factory->create($this->getParameter('sulu.model.comment.class'));
 
-        $fieldDescriptors = $this->getFieldDescriptors();
+        /** @var FieldDescriptorInterface[] $fieldDescriptors */
+        $fieldDescriptors = $this->get('sulu_core.list_builder.field_descriptor_factory')
+            ->getFieldDescriptors('comments');
         $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         if ($request->query->get('threadType')) {
@@ -79,7 +68,7 @@ class CommentController extends RestController implements ClassResourceInterface
         $list = new ListRepresentation(
             $results,
             'comments',
-            'get_comments',
+            $request->attributes->get('_route'),
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),
@@ -120,7 +109,7 @@ class CommentController extends RestController implements ClassResourceInterface
      */
     public function putAction($id, Request $request)
     {
-        /** @var CommentInterface $comment */
+        /** @var CommentInterface|null $comment */
         $comment = $this->get('sulu.repository.comment')->findCommentById($id);
         if (!$comment) {
             throw new EntityNotFoundException(CommentInterface::class, $id);
@@ -135,6 +124,24 @@ class CommentController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Delete multiple comments identified by id.
+     *
+     * @return Response
+     */
+    public function cdeleteAction(Request $request)
+    {
+        $ids = array_filter(explode(',', $request->query->get('ids')));
+        if (0 === count($ids)) {
+            return $this->handleView($this->view(null, 204));
+        }
+
+        $this->get('sulu_comment.manager')->delete($ids);
+        $this->get('doctrine.orm.entity_manager')->flush();
+
+        return $this->handleView($this->view(null, 204));
+    }
+
+    /**
      * Delete comment identified by id.
      *
      * @param int $id
@@ -144,27 +151,6 @@ class CommentController extends RestController implements ClassResourceInterface
     public function deleteAction($id)
     {
         $this->get('sulu_comment.manager')->delete([$id]);
-        $this->get('doctrine.orm.entity_manager')->flush();
-
-        return $this->handleView($this->view(null, 204));
-    }
-
-    /**
-     * Delete multiple comments identified by ids parameter.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function cdeleteAction(Request $request)
-    {
-        $ids = array_filter(explode(',', $request->get('ids', '')));
-
-        if (0 === count($ids)) {
-            return $this->handleView($this->view(null, 204));
-        }
-
-        $this->get('sulu_comment.manager')->delete($ids);
         $this->get('doctrine.orm.entity_manager')->flush();
 
         return $this->handleView($this->view(null, 204));
@@ -192,6 +178,9 @@ class CommentController extends RestController implements ClassResourceInterface
         $commentRepository = $this->get('sulu.repository.comment');
         $commentManager = $this->get('sulu_comment.manager');
         $comment = $commentRepository->findCommentById($id);
+        if (!$comment) {
+            return $this->handleView($this->view(null, 404));
+        }
 
         switch ($action) {
             case 'unpublish':
@@ -209,16 +198,5 @@ class CommentController extends RestController implements ClassResourceInterface
         $this->get('doctrine.orm.entity_manager')->flush();
 
         return $this->handleView($this->view($comment));
-    }
-
-    /**
-     * Returns array of field-descriptors.
-     *
-     * @return FieldDescriptorInterface[]
-     */
-    private function getFieldDescriptors()
-    {
-        return $this->get('sulu_core.list_builder.field_descriptor_factory')
-            ->getFieldDescriptorForClass($this->getParameter('sulu.model.comment.class'));
     }
 }

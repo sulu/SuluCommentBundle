@@ -1,0 +1,13 @@
+{
+  "sulu_comment.comments": "Commentaire",
+  "sulu_comment.threads": "Contributions",
+  "sulu_comment.thread": "Contribution",
+  "sulu_comment.message": "Message",
+  "sulu_comment.state": "Statut",
+  "sulu_comment.comment_unpublished": "Publier commentaire",
+  "sulu_comment.comment_published": "Cacher commentaire",
+  "sulu_comment.details": "Détails",
+  "sulu_comment.comment_count": "Nombre de commentaires",
+  "sulu_comment.type": "Type",
+  "sulu_comment.thread_type": "Contribution Type"
+}

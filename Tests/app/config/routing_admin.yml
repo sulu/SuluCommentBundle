@@ -1,8 +1,0 @@
-sulu_comment:
-    resource: "@SuluCommentBundle/Resources/config/routing.xml"
-    prefix: /comments
-
-sulu_comment_api:
-    resource: "@SuluCommentBundle/Resources/config/routing_api.xml"
-    type: rest
-    prefix: /api

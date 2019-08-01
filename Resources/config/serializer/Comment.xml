@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <serializer>
-    <class name="Sulu\Bundle\CommentBundle\Entity\Comment">
-        <property name="id" type="integer"/>
-        <property name="state" type="string"/>
-        <property name="message" type="string"/>
-        <property name="creator" exclude="true"/>
-        <property name="created" type="DateTime"/>
-        <property name="changer" exclude="true"/>
-        <property name="changed" type="DateTime"/>
+    <class name="Sulu\Bundle\CommentBundle\Entity\Comment" exclusion-policy="ALL">
+        <property name="id" expose="true" type="integer"/>
+        <property name="state" expose="true" type="string"/>
+        <property name="message" expose="true" type="string"/>
+        <property name="created" expose="true" type="DateTime"/>
+        <property name="changed" expose="true" type="DateTime"/>
 
-        <property name="thread" type="Sulu\Bundle\CommentBundle\Entity\Thread"/>
+        <property name="thread" expose="true" type="Sulu\Bundle\CommentBundle\Entity\Thread"/>
 
-        <virtual-property method="getCreatorFullName" name="creator" serialized-name="creator"/>
-        <virtual-property method="getChangerFullName" name="changer" serialized-name="changer"/>
+        <virtual-property method="getCreatorFullName" name="creator" serialized-name="creator" expose="true"/>
+        <virtual-property method="getChangerFullName" name="changer" serialized-name="changer" expose="true"/>
+        <virtual-property method="isPublished" name="published" serialized-name="published" expose="true"/>
     </class>
 </serializer>

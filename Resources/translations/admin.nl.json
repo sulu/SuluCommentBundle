@@ -1,0 +1,13 @@
+{
+  "sulu_comment.comments": "Reacties",
+  "sulu_comment.threads": "Discussies",
+  "sulu_comment.thread": "Discussie",
+  "sulu_comment.message": "Bericht",
+  "sulu_comment.state": "Status",
+  "sulu_comment.comment_unpublished": "Publiceer reactie",
+  "sulu_comment.comment_published": "Verberg reactie",
+  "sulu_comment.details": "Details",
+  "sulu_comment.comment_count": "Aantal reacties",
+  "sulu_comment.type": "Type",
+  "sulu_comment.thread_type": "Discussietype"
+}

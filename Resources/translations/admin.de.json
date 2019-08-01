@@ -1,0 +1,13 @@
+{
+  "sulu_comment.comments": "Kommentare",
+  "sulu_comment.threads": "Beiträge",
+  "sulu_comment.thread": "Beitrag",
+  "sulu_comment.message": "Nachricht",
+  "sulu_comment.state": "Status",
+  "sulu_comment.comment_unpublished": "Kommentar veröffentlichen",
+  "sulu_comment.comment_published": "Kommentar verstecken",
+  "sulu_comment.details": "Details",
+  "sulu_comment.comment_count": "Anzahl Kommentare",
+  "sulu_comment.type": "Typ",
+  "sulu_comment.thread_type": "Beitragstyp"
+}

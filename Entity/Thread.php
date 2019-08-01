@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -217,7 +217,7 @@ class Thread implements ThreadInterface, AuditableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return UserInterface|null
      */
     public function getCreator()
     {
@@ -225,7 +225,7 @@ class Thread implements ThreadInterface, AuditableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return UserInterface|null
      */
     public function getChanger()
     {
@@ -237,11 +237,12 @@ class Thread implements ThreadInterface, AuditableInterface
      */
     public function getCreatorFullName()
     {
-        if (!$this->getCreator()) {
+        $creator = $this->getCreator();
+        if (!$creator) {
             return '';
         }
 
-        return $this->getCreator()->getFullName();
+        return $creator->getFullName();
     }
 
     /**
@@ -249,10 +250,11 @@ class Thread implements ThreadInterface, AuditableInterface
      */
     public function getChangerFullName()
     {
-        if (!$this->getChanger()) {
+        $changer = $this->getChanger();
+        if (!$changer) {
             return '';
         }
 
-        return $this->getChanger()->getFullName();
+        return $changer->getFullName();
     }
 }

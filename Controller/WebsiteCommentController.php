@@ -3,7 +3,7 @@
 /*
  * This file is part of Sulu.
  *
- * (c) MASSIVE ART WebServices GmbH
+ * (c) Sulu GmbH
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -124,6 +124,9 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
     private function getThreadIdParts($threadId)
     {
         $pos = strpos($threadId, '-');
+        if (false === $pos) {
+            throw new \RuntimeException('Thread id is not valid.');
+        }
 
         return [substr($threadId, 0, $pos), substr($threadId, $pos + 1)];
     }

@@ -13,6 +13,7 @@ namespace Functional\Controller;
 
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Functional test-cases for website api.
@@ -63,6 +64,32 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $this->assertCount(1, $thread->getComments());
 
         return $thread;
+    }
+
+    public function testPostCommentWithReferrer(
+        $type = 'blog',
+        $entityId = '1',
+        $message = 'Sulu is awesome',
+        $threadTitle = 'Test Thread'
+    ) {
+        $client = $this->createWebsiteClient();
+        $client->request(
+            'POST',
+            '_api/threads/' . $type . '-' . $entityId . '/comments?referrer=https://sulu.io',
+            ['message' => $message, 'threadTitle' => $threadTitle]
+        );
+
+        /** @var RedirectResponse $response */
+        $response = $client->getResponse();
+        $this->assertHttpStatusCode(302, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertEquals('https://sulu.io', $response->getTargetUrl());
+
+        $thread = $this->getContainer()->get('sulu.repository.thread')->findThread($type, $entityId);
+        $this->assertEquals($type, $thread->getType());
+        $this->assertEquals($entityId, $thread->getEntityId());
+        $this->assertEquals(1, $thread->getCommentCount());
+        $this->assertCount(1, $thread->getComments());
     }
 
     public function providePostAuditableData()

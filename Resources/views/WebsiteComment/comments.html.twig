@@ -1,3 +1,5 @@
 {% for comment in comments %}
     {% include template with {threadId: threadId, comment: comment} %}
 {% endfor %}
+
+{% include formTemplate with {threadId: threadId, referrer: referrer} %}

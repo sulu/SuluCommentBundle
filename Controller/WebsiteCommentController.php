@@ -11,14 +11,17 @@
 
 namespace Sulu\Bundle\CommentBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Rest\RestController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @RouteResource("thread")
+ * @NamePrefix("sulu_comment.")
  *
  * Provides a website-api for comments.
  */
@@ -37,6 +40,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
         $page = $request->get('page');
+        $referrer = $request->get('referrer');
 
         $commentManager = $this->get('sulu_comment.manager');
         $comments = $commentManager->findPublishedComments(
@@ -59,8 +63,10 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
             $this->getTemplate($type, 'comments'),
             [
                 'template' => $this->getTemplate($type, 'comment'),
+                'formTemplate' => $this->getTemplate($type, 'form'),
                 'comments' => $comments,
                 'threadId' => $threadId,
+                'referrer' => $referrer,
             ],
             $response
         );
@@ -100,6 +106,10 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         $commentManager->addComment($type, $entityId, $comment, $request->get('threadTitle'));
 
         $this->get('doctrine.orm.entity_manager')->flush();
+
+        if ($referrer = $request->query->get('referrer')) {
+            return new RedirectResponse($referrer);
+        }
 
         if ('json' === $request->getRequestFormat()) {
             return $this->handleView($this->view($comment));

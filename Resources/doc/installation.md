@@ -14,7 +14,7 @@ Add bundle to config/bundles.php`:
 
 Add the routes of the bundle to `config/routes/sulu_admin.yaml`:
 
-```yml
+```yaml
 sulu_comment_api:
     type: rest
     resource: "@SuluCommentBundle/Resources/config/routing_api.yml"
@@ -27,28 +27,36 @@ sulu_comment:
 
 And `config/routes/sulu_website.yaml`:
 
-````
+```yaml
 sulu_comments:
     type: rest
     resource: "@SuluCommentBundle/Resources/config/routing_website.xml"
 ```
 
+Follow the [Getting started](https://github.com/sulu/SuluCommentBundle/blob/master/Resources/doc/getting-started.md)
+documentation to include basic comments to your page.
+
+## Bundle configuration
+
 Possible bundle configuration:
 
-```yml
+```yaml
 sulu_comment:
     default_templates:
         comments:             'SuluCommentBundle:WebsiteComment:comments.html.twig'
         comment:              'SuluCommentBundle:WebsiteComment:comment.html.twig'
+        form:                 'SuluCommentBundle:WebsiteComment:form.html.twig'
     types:
-        templates:
-            comments:             'SuluCommentBundle:WebsiteComment:comments.html.twig'
-            comment:              'SuluCommentBundle:WebsiteComment:comment.html.twig'
+        <type>:
+            templates:
+                comments:     'SuluCommentBundle:WebsiteComment:comments.html.twig'
+                comment:      'SuluCommentBundle:WebsiteComment:comment.html.twig'
+                form:         'SuluCommentBundle:WebsiteComment:form.html.twig'
     objects:
         comment:
-            model:                Sulu\Bundle\CommentBundle\Entity\Comment
-            repository:           Sulu\Bundle\CommentBundle\Entity\CommentRepository
+            model:            Sulu\Bundle\CommentBundle\Entity\Comment
+            repository:       Sulu\Bundle\CommentBundle\Entity\CommentRepository
         thread:
-            model:                Sulu\Bundle\CommentBundle\Entity\Thread
-            repository:           Sulu\Bundle\CommentBundle\Entity\ThreadRepository
+            model:            Sulu\Bundle\CommentBundle\Entity\Thread
+            repository:       Sulu\Bundle\CommentBundle\Entity\ThreadRepository
 ```

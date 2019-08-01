@@ -3,25 +3,29 @@
     <key>comments</key>
 
     <joins name="creator">
-            <join>
-                <entity-name>%sulu.model.user.class%</entity-name>
-                <field-name>%sulu.model.comment.class%.creator</field-name>
-            </join>
-            <join>
-                <entity-name>%sulu.model.contact.class%</entity-name>
-                <field-name>%sulu.model.user.class%.contact</field-name>
-            </join>
+        <join>
+            <entity-name>%sulu.model.user.class%</entity-name>
+            <field-name>%sulu.model.comment.class%.creator</field-name>
+        </join>
+
+        <join>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+            <field-name>%sulu.model.user.class%.contact</field-name>
+        </join>
     </joins>
+
     <joins name="changer">
-            <join>
-                <entity-name>%sulu.model.user.class%</entity-name>
-                <field-name>%sulu.model.comment.class%.changer</field-name>
-            </join>
-            <join>
-                <entity-name>%sulu.model.contact.class%</entity-name>
-                <field-name>%sulu.model.user.class%.contact</field-name>
-            </join>
+        <join>
+            <entity-name>%sulu.model.user.class%</entity-name>
+            <field-name>%sulu.model.comment.class%.changer</field-name>
+        </join>
+
+        <join>
+            <entity-name>%sulu.model.contact.class%</entity-name>
+            <field-name>%sulu.model.user.class%.contact</field-name>
+        </join>
     </joins>
+
     <joins name="thread">
         <join>
             <entity-name>%sulu.model.thread.class%</entity-name>
@@ -54,8 +58,7 @@
             <entity-name>%sulu.model.comment.class%</entity-name>
         </property>
 
-        <property name="state" visibility="always" translation="sulu_comment.state"
-                  type="bool">
+        <property name="state" visibility="always" translation="sulu_comment.state" type="bool">
             <field-name>state</field-name>
             <entity-name>%sulu.model.comment.class%</entity-name>
         </property>
@@ -71,14 +74,14 @@
             <entity-name>%sulu.model.comment.class%</entity-name>
         </property>
 
-        <concatenation-property name="creator" visibility="always" glue=" "
-                                translation="sulu_admin.creator">
+        <concatenation-property name="creator" visibility="always" glue=" " translation="sulu_admin.creator">
             <field>
                 <field-name>firstName</field-name>
                 <entity-name>%sulu.model.contact.class%</entity-name>
 
                 <joins ref="creator"/>
             </field>
+
             <field>
                 <field-name>lastName</field-name>
                 <entity-name>%sulu.model.contact.class%</entity-name>
@@ -87,14 +90,14 @@
             </field>
         </concatenation-property>
 
-        <concatenation-property name="changer" filter-type="string" glue=" "
-                                translation="sulu_admin.changer">
+        <concatenation-property name="changer" filter-type="string" glue=" " translation="sulu_admin.changer">
             <field>
                 <field-name>firstName</field-name>
                 <entity-name>%sulu.model.contact.class%</entity-name>
 
                 <joins ref="changer"/>
             </field>
+
             <field>
                 <field-name>lastName</field-name>
                 <entity-name>%sulu.model.contact.class%</entity-name>

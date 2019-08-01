@@ -1,0 +1,10 @@
+{% set attributes = {threadId: threadId} %}
+{% if referrer|default %}
+    {% set attributes = attributes|merge({referrer: referrer}) %}
+{% endif %}
+<form action="{{ path('sulu_comment.post_thread_comments', attributes) }}" method="post">
+    <label for="message">{{ 'Message'|trans }}</label>
+    <input id="message" name="message" type="text"/>
+
+    <button type="submit">{{ 'Send'|trans }}</button>
+</form>

@@ -14,6 +14,10 @@ namespace Sulu\Bundle\CommentBundle\Controller;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
+use Sulu\Bundle\CommentBundle\Entity\CommentRepositoryInterface;
+use Sulu\Bundle\CommentBundle\Form\Type\CommentType;
+use Sulu\Bundle\CommentBundle\Manager\CommentManagerInterface;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,9 +63,20 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         $response->setMaxAge(0);
         $response->setSharedMaxAge(0);
 
+        $form = $this->createForm(
+            CommentType::class,
+            null,
+            [
+                'data_class' => $this->getParameter('sulu.model.comment.class'),
+                'threadId' => $threadId,
+                'referrer' => $referrer,
+            ]
+        );
+
         return $this->render(
             $this->getTemplate($type, 'comments'),
             [
+                'form' => $form->createView(),
                 'template' => $this->getTemplate($type, 'comment'),
                 'formTemplate' => $this->getTemplate($type, 'form'),
                 'comments' => $comments,
@@ -83,25 +98,32 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
      */
     public function postCommentsAction($threadId, Request $request)
     {
-        $data = $request->request->all();
-        if (array_key_exists('created', $data)
-            || array_key_exists('creator', $data)
-            || array_key_exists('changed', $data)
-            || array_key_exists('changer', $data)
-        ) {
+        list($type, $entityId) = $this->getThreadIdParts($threadId);
+
+        /** @var CommentRepositoryInterface $repository */
+        $repository = $this->get('sulu.repository.comment');
+
+        /** @var CommentInterface $comment */
+        $comment = $repository->createNew();
+
+        $form = $this->createForm(
+            CommentType::class,
+            $comment,
+            [
+                'data_class' => $this->getParameter('sulu.model.comment.class'),
+                'threadId' => $threadId,
+            ]
+        );
+
+        $form->handleRequest($request);
+
+        if (!$form->isSubmitted() || !$form->isValid()) {
             return new Response(null, 400);
         }
 
-        list($type, $entityId) = $this->getThreadIdParts($threadId);
+        $comment = $form->getData();
 
-        // deserialize comment
-        $serializer = $this->get('serializer');
-        $comment = $serializer->deserialize(
-            json_encode($data),
-            $this->getParameter('sulu.model.comment.class'),
-            'json'
-        );
-
+        /** @var CommentManagerInterface $commentManager */
         $commentManager = $this->get('sulu_comment.manager');
         $commentManager->addComment($type, $entityId, $comment, $request->get('threadTitle'));
 

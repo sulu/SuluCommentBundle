@@ -45,13 +45,11 @@ sulu_comment:
     default_templates:
         comments:             'SuluCommentBundle:WebsiteComment:comments.html.twig'
         comment:              'SuluCommentBundle:WebsiteComment:comment.html.twig'
-        form:                 'SuluCommentBundle:WebsiteComment:form.html.twig'
     types:
         <type>:
             templates:
                 comments:     'SuluCommentBundle:WebsiteComment:comments.html.twig'
                 comment:      'SuluCommentBundle:WebsiteComment:comment.html.twig'
-                form:         'SuluCommentBundle:WebsiteComment:form.html.twig'
     objects:
         comment:
             model:            Sulu\Bundle\CommentBundle\Entity\Comment

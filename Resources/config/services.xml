@@ -17,5 +17,11 @@
             <argument type="service" id="sulu.repository.comment"/>
             <argument type="service" id="event_dispatcher"/>
         </service>
+
+        <service id="Sulu\Bundle\CommentBundle\Form\Type\CommentType">
+            <argument type="service" id="router"/>
+
+            <tag name="form.type"/>
+        </service>
     </services>
 </container>

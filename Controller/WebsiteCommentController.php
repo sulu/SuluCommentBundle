@@ -26,20 +26,13 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @RouteResource("thread")
  * @NamePrefix("sulu_comment.")
- *
- * Provides a website-api for comments.
  */
 class WebsiteCommentController extends RestController implements ClassResourceInterface
 {
     /**
      * Returns list of comments for given thread.
-     *
-     * @param string $threadId
-     * @param Request $request
-     *
-     * @return Response
      */
-    public function cgetCommentsAction($threadId, Request $request)
+    public function cgetCommentsAction(string $threadId, Request $request): Response
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
@@ -90,13 +83,8 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
     /**
      * Create new comment for given thread.
      * If the thread does not exists a new will be created.
-     *
-     * @param string $threadId
-     * @param Request $request
-     *
-     * @return Response
      */
-    public function postCommentsAction($threadId, Request $request)
+    public function postCommentsAction(string $threadId, Request $request): Response
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
@@ -149,11 +137,9 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
     /**
      * Splits the thread-id into type and entity-id.
      *
-     * @param string $threadId
-     *
      * @return array list($type, $entityId)
      */
-    private function getThreadIdParts($threadId)
+    private function getThreadIdParts(string $threadId): array
     {
         $pos = strpos($threadId, '-');
         if (false === $pos) {
@@ -165,13 +151,8 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
 
     /**
      * Returns template by type.
-     *
-     * @param string $type
-     * @param string $templateType comment or comments
-     *
-     * @return string
      */
-    private function getTemplate($type, $templateType)
+    private function getTemplate(string $type, string $templateType): string
     {
         $types = $this->getParameter('sulu_comment.types');
         $defaults = $this->getParameter('sulu_comment.default_templates');

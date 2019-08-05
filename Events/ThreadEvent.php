@@ -14,9 +14,6 @@ namespace Sulu\Bundle\CommentBundle\Events;
 use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
 use Symfony\Component\EventDispatcher\Event;
 
-/**
- * Event-arguments for thread events.
- */
 class ThreadEvent extends Event
 {
     /**
@@ -24,20 +21,12 @@ class ThreadEvent extends Event
      */
     private $thread;
 
-    /**
-     * @param ThreadInterface $thread
-     */
     public function __construct(ThreadInterface $thread)
     {
         $this->thread = $thread;
     }
 
-    /**
-     * Returns thread.
-     *
-     * @return ThreadInterface
-     */
-    public function getThread()
+    public function getThread(): ThreadInterface
     {
         return $this->thread;
     }

@@ -11,9 +11,6 @@
 
 namespace Sulu\Bundle\CommentBundle\Events;
 
-/**
- * Container for comment-events.
- */
 final class Events
 {
     const PRE_PERSIST_EVENT = 'sulu_comment.pre_persist';

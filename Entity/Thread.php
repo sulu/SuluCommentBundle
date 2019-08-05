@@ -14,13 +14,13 @@ namespace Sulu\Bundle\CommentBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 
-/**
- * Minimum implementation for threads.
- */
 class Thread implements ThreadInterface, AuditableInterface
 {
+    use AuditableTrait;
+
     /**
      * @var int
      */
@@ -71,13 +71,7 @@ class Thread implements ThreadInterface, AuditableInterface
      */
     protected $creator;
 
-    /**
-     * @param string $type
-     * @param string $entityId
-     * @param Collection $comments
-     * @param int $commentCount
-     */
-    public function __construct($type, $entityId, Collection $comments = null, $commentCount = 0)
+    public function __construct(string $type, string $entityId, Collection $comments = null, int $commentCount = 0)
     {
         $this->type = $type;
         $this->entityId = $entityId;
@@ -85,96 +79,65 @@ class Thread implements ThreadInterface, AuditableInterface
         $this->commentCount = $commentCount;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getEntityId()
+    public function getEntityId(): string
     {
         return $this->entityId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setTitle($title)
+    public function setTitle(string $title): ThreadInterface
     {
         $this->title = $title;
+
+        return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getCommentCount()
+    public function getCommentCount(): int
     {
         return $this->commentCount;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function increaseCommentCount()
+    public function increaseCommentCount(): ThreadInterface
     {
         ++$this->commentCount;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function decreaseCommentCount()
+    public function decreaseCommentCount(): ThreadInterface
     {
         --$this->commentCount;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setCommentCount($commentCount)
+    public function setCommentCount(int $commentCount): ThreadInterface
     {
         $this->commentCount = $commentCount;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getComments()
+    public function getComments(): Collection
     {
         return $this->comments;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function addComment(CommentInterface $comment)
+    public function addComment(CommentInterface $comment): ThreadInterface
     {
         $this->comments->add($comment);
         $comment->setThread($this);
@@ -186,10 +149,7 @@ class Thread implements ThreadInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function removeComment(CommentInterface $comment)
+    public function removeComment(CommentInterface $comment): ThreadInterface
     {
         $this->comments->removeElement($comment);
 
@@ -200,42 +160,7 @@ class Thread implements ThreadInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getChanged()
-    {
-        return $this->changed;
-    }
-
-    /**
-     * @return UserInterface|null
-     */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    /**
-     * @return UserInterface|null
-     */
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCreatorFullName()
+    public function getCreatorFullName(): string
     {
         $creator = $this->getCreator();
         if (!$creator) {
@@ -245,10 +170,7 @@ class Thread implements ThreadInterface, AuditableInterface
         return $creator->getFullName();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getChangerFullName()
+    public function getChangerFullName(): string
     {
         $changer = $this->getChanger();
         if (!$changer) {

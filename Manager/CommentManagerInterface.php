@@ -14,94 +14,40 @@ namespace Sulu\Bundle\CommentBundle\Manager;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
 
-/**
- * Interface for comment-manager.
- */
 interface CommentManagerInterface
 {
     /**
-     * Returns comments for given thread.
-     *
-     * @param string $type
-     * @param string $entityId
-     * @param int $page
-     * @param int|null $pageSize
-     *
      * @return CommentInterface[]
      */
-    public function findComments($type, $entityId, $page = 1, $pageSize = null);
+    public function findComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array;
 
     /**
-     * Returns published comments for given thread.
-     *
-     * @param string $type
-     * @param string $entityId
-     * @param int $page
-     * @param int|null $pageSize
-     *
      * @return CommentInterface[]
      */
-    public function findPublishedComments($type, $entityId, $page = 1, $pageSize = null);
+    public function findPublishedComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array;
+
+    public function addComment(
+        string $type,
+        string $entityId,
+        CommentInterface $comment,
+        ?string $threadTitle = null
+    ): ThreadInterface;
+
+    public function update(CommentInterface $comment): CommentInterface;
 
     /**
-     * Add comment and returns thread.
-     *
-     * @param string $type
-     * @param string $entityId
-     * @param CommentInterface $comment
-     * @param string $threadTitle
-     *
-     * @return ThreadInterface
+     * @param int[] $ids
      */
-    public function addComment($type, $entityId, CommentInterface $comment, $threadTitle = null);
+    public function delete(array $ids): void;
+
+    public function updateThread(ThreadInterface $thread): ThreadInterface;
 
     /**
-     * Update given comment.
-     *
-     * @param CommentInterface $comment
-     *
-     * @return CommentInterface
+     * @param int[] $ids
      */
-    public function update(CommentInterface $comment);
+    public function deleteThreads(array $ids): void;
 
-    /**
-     * Delete comments identified by given ids.
-     *
-     * @param int|array $ids single id or array of ids
-     */
-    public function delete($ids);
+    public function publish(CommentInterface $comment): CommentInterface;
 
-    /**
-     * Update given thread.
-     *
-     * @param ThreadInterface $thread
-     *
-     * @return ThreadInterface
-     */
-    public function updateThread(ThreadInterface $thread);
-
-    /**
-     * Delete threads identified by given ids.
-     *
-     * @param int|array $ids single id or array of ids
-     */
-    public function deleteThreads($ids);
-
-    /**
-     * Publish given comment.
-     *
-     * @param CommentInterface $comment
-     *
-     * @return CommentInterface
-     */
-    public function publish(CommentInterface $comment);
-
-    /**
-     * Unpublish given comment.
-     *
-     * @param CommentInterface $comment
-     *
-     * @return CommentInterface
-     */
-    public function unpublish(CommentInterface $comment);
+    public function unpublish(CommentInterface $comment): CommentInterface;
 }

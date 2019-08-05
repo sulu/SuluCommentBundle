@@ -49,9 +49,6 @@ class CommentAdmin extends Admin
         $this->securityChecker = $securityChecker;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getNavigation(): Navigation
     {
         $rootNavigationItem = $this->getNavigationItemRoot();
@@ -83,9 +80,6 @@ class CommentAdmin extends Admin
         return new Navigation($rootNavigationItem);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRoutes(): array
     {
         $formToolbarActions = [
@@ -142,9 +136,6 @@ class CommentAdmin extends Admin
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSecurityContexts()
     {
         return [

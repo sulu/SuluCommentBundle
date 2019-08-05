@@ -13,64 +13,37 @@ namespace Sulu\Bundle\CommentBundle\Entity;
 
 use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
-/**
- * Interface for comment-repository.
- */
 interface CommentRepositoryInterface extends RepositoryInterface
 {
     /**
-     * Returns comments for given thread.
-     *
-     * @param string $type
-     * @param string $entityId
-     * @param int $page
-     * @param int|null $pageSize
-     *
      * @return CommentInterface[]
      */
-    public function findComments($type, $entityId, $page = 1, $pageSize = null);
+    public function findComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array;
 
     /**
-     * Returns published comments for given thread.
-     *
-     * @param string $type
-     * @param string $entityId
-     * @param int $page
-     * @param int|null $pageSize
-     *
      * @return CommentInterface[]
      */
-    public function findPublishedComments($type, $entityId, $page, $pageSize);
+    public function findPublishedComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array;
 
     /**
-     * Returns comments by given ids.
-     *
      * @param int[] $ids
      *
      * @return CommentInterface[]
      */
-    public function findCommentsByIds($ids);
+    public function findCommentsByIds(array $ids): array;
 
     /**
-     * Returns comment by given id.
-     *
-     * @param int $id
-     *
      * @return CommentInterface|null
      */
-    public function findCommentById($id);
+    public function findCommentById(int $id): ?CommentInterface;
 
     /**
-     * Persists comment.
-     *
      * @param CommentInterface $comment
      */
-    public function persist(CommentInterface $comment);
+    public function persist(CommentInterface $comment): void;
 
     /**
-     * Delete comment.
-     *
      * @param CommentInterface $comment
      */
-    public function delete(CommentInterface $comment);
+    public function delete(CommentInterface $comment): void;
 }

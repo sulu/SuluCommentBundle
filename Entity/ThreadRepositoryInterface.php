@@ -11,53 +11,20 @@
 
 namespace Sulu\Bundle\CommentBundle\Entity;
 
-/**
- * Interface for thread-repository.
- */
 interface ThreadRepositoryInterface
 {
-    /**
-     * Create a new thread for given type and entity-id.
-     *
-     * @param string $type
-     * @param string $entityId
-     *
-     * @return ThreadInterface
-     */
-    public function createNew($type, $entityId);
+    public function createNew(string $type, string $entityId): ThreadInterface;
+
+    public function findThreadById(int $id): ?ThreadInterface;
 
     /**
-     * Returns thread for given id.
-     *
-     * @param int $id
-     *
-     * @return ThreadInterface|null
-     */
-    public function findThreadById($id);
-
-    /**
-     * Returns threads by given ids.
-     *
      * @param int[] $ids
      *
      * @return ThreadInterface[]
      */
-    public function findThreadsByIds($ids);
+    public function findThreadsByIds(array $ids): array;
 
-    /**
-     * Returns thread for given type and entity-id.
-     *
-     * @param string $type
-     * @param string $entityId
-     *
-     * @return ThreadInterface|null
-     */
-    public function findThread($type, $entityId);
+    public function findThread(string $type, string $entityId): ?ThreadInterface;
 
-    /**
-     * Delete thread with his comments.
-     *
-     * @param ThreadInterface $thread
-     */
-    public function delete(ThreadInterface $thread);
+    public function delete(ThreadInterface $thread): void;
 }

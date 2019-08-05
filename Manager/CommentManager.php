@@ -20,9 +20,6 @@ use Sulu\Bundle\CommentBundle\Events\Events;
 use Sulu\Bundle\CommentBundle\Events\ThreadEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * Manager to interact with comments.
- */
 class CommentManager implements CommentManagerInterface
 {
     /**
@@ -40,11 +37,6 @@ class CommentManager implements CommentManagerInterface
      */
     private $dispatcher;
 
-    /**
-     * @param ThreadRepositoryInterface $threadRepository
-     * @param CommentRepositoryInterface $commentRepository
-     * @param EventDispatcherInterface $dispatcher
-     */
     public function __construct(
         ThreadRepositoryInterface $threadRepository,
         CommentRepositoryInterface $commentRepository,
@@ -55,27 +47,22 @@ class CommentManager implements CommentManagerInterface
         $this->dispatcher = $dispatcher;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findComments($type, $entityId, $page = 1, $pageSize = null)
+    public function findComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array
     {
         return $this->commentRepository->findComments($type, $entityId, $page, $pageSize);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findPublishedComments($type, $entityId, $page = 1, $pageSize = null)
+    public function findPublishedComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array
     {
         return $this->commentRepository->findPublishedComments($type, $entityId, $page, $pageSize);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function addComment($type, $entityId, CommentInterface $comment, $threadTitle = null)
-    {
+    public function addComment(
+        string $type,
+        string $entityId,
+        CommentInterface $comment,
+        string $threadTitle = null
+    ): ThreadInterface {
         $thread = $this->threadRepository->findThread($type, $entityId);
         if (!$thread) {
             $thread = $this->threadRepository->createNew($type, $entityId);
@@ -93,10 +80,7 @@ class CommentManager implements CommentManagerInterface
         return $thread;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function update(CommentInterface $comment)
+    public function update(CommentInterface $comment): CommentInterface
     {
         $thread = $comment->getThread();
         $this->dispatcher->dispatch(
@@ -107,10 +91,7 @@ class CommentManager implements CommentManagerInterface
         return $comment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function delete($ids)
+    public function delete(array $ids): void
     {
         if (!is_array($ids)) {
             $ids = [$ids];
@@ -122,20 +103,14 @@ class CommentManager implements CommentManagerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function updateThread(ThreadInterface $thread)
+    public function updateThread(ThreadInterface $thread): ThreadInterface
     {
         $this->dispatcher->dispatch(Events::THREAD_PRE_UPDATE_EVENT, new ThreadEvent($thread));
 
         return $thread;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteThreads($ids)
+    public function deleteThreads(array $ids): void
     {
         if (!is_array($ids)) {
             $ids = [$ids];
@@ -147,10 +122,7 @@ class CommentManager implements CommentManagerInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function publish(CommentInterface $comment)
+    public function publish(CommentInterface $comment): CommentInterface
     {
         if ($comment->isPublished()) {
             return $comment;
@@ -167,10 +139,7 @@ class CommentManager implements CommentManagerInterface
         return $comment;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function unpublish(CommentInterface $comment)
+    public function unpublish(CommentInterface $comment): CommentInterface
     {
         if (!$comment->isPublished()) {
             return $comment;
@@ -187,12 +156,7 @@ class CommentManager implements CommentManagerInterface
         return $comment;
     }
 
-    /**
-     * Delete comment and raise pre/post events.
-     *
-     * @param CommentInterface $comment
-     */
-    private function deleteComment(CommentInterface $comment)
+    private function deleteComment(CommentInterface $comment): void
     {
         $thread = $comment->getThread();
         $preEvent = new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread);
@@ -205,12 +169,7 @@ class CommentManager implements CommentManagerInterface
         $this->dispatcher->dispatch(Events::POST_DELETE_EVENT, $postEvent);
     }
 
-    /**
-     * Delete thread and raise pre/post events.
-     *
-     * @param ThreadInterface $thread
-     */
-    private function deleteThread(ThreadInterface $thread)
+    private function deleteThread(ThreadInterface $thread): void
     {
         $this->dispatcher->dispatch(Events::THREAD_PRE_DELETE_EVENT, new ThreadEvent($thread));
 

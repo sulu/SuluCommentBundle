@@ -21,21 +21,11 @@ use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Provides an api for threads.
- */
 class ThreadController extends RestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
 
-    /**
-     * Returns list of threads.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function cgetAction(Request $request)
+    public function cgetAction(Request $request): Response
     {
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
@@ -71,16 +61,7 @@ class ThreadController extends RestController implements ClassResourceInterface
         return $this->handleView($this->view($list, 200));
     }
 
-    /**
-     * Returns single thread.
-     *
-     * @param int $id
-     *
-     * @return Response
-     *
-     * @throws EntityNotFoundException
-     */
-    public function getAction($id)
+    public function getAction(int $id): Response
     {
         $thread = $this->get('sulu.repository.thread')->findThreadById($id);
         if (!$thread) {
@@ -90,17 +71,7 @@ class ThreadController extends RestController implements ClassResourceInterface
         return $this->handleView($this->view($thread));
     }
 
-    /**
-     * Update thread.
-     *
-     * @param int $id
-     * @param Request $request
-     *
-     * @return Response
-     *
-     * @throws EntityNotFoundException
-     */
-    public function putAction($id, Request $request)
+    public function putAction($id, Request $request): Response
     {
         /** @var ThreadInterface|null $thread */
         $thread = $this->get('sulu.repository.thread')->findThreadById($id);
@@ -116,13 +87,9 @@ class ThreadController extends RestController implements ClassResourceInterface
         return $this->handleView($this->view($thread));
     }
 
-    /**
-     * Delete multiple threads identified by id.
-     *
-     * @return Response
-     */
-    public function cdeleteAction(Request $request)
+    public function cdeleteAction(Request $request): Response
     {
+        /** @var int[] $ids */
         $ids = array_filter(explode(',', $request->query->get('ids')));
         if (0 === count($ids)) {
             return $this->handleView($this->view(null, 204));
@@ -134,14 +101,7 @@ class ThreadController extends RestController implements ClassResourceInterface
         return $this->handleView($this->view(null, 204));
     }
 
-    /**
-     * Delete thread identified by id.
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function deleteAction($id)
+    public function deleteAction(int $id): Response
     {
         $this->get('sulu_comment.manager')->deleteThreads([$id]);
         $this->get('doctrine.orm.entity_manager')->flush();

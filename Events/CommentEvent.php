@@ -15,9 +15,6 @@ use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
 use Symfony\Component\EventDispatcher\Event;
 
-/**
- * Event-arguments for comment events.
- */
 class CommentEvent extends Event
 {
     /**
@@ -40,13 +37,7 @@ class CommentEvent extends Event
      */
     private $thread;
 
-    /**
-     * @param string $type
-     * @param string $entityId
-     * @param CommentInterface $comment
-     * @param ThreadInterface $thread
-     */
-    public function __construct($type, $entityId, CommentInterface $comment, ThreadInterface $thread)
+    public function __construct(string $type, string $entityId, CommentInterface $comment, ThreadInterface $thread)
     {
         $this->type = $type;
         $this->entityId = $entityId;
@@ -54,42 +45,22 @@ class CommentEvent extends Event
         $this->thread = $thread;
     }
 
-    /**
-     * Returns type.
-     *
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * Returns entity-id.
-     *
-     * @return string
-     */
-    public function getEntityId()
+    public function getEntityId(): string
     {
         return $this->entityId;
     }
 
-    /**
-     * Returns comment.
-     *
-     * @return CommentInterface
-     */
-    public function getComment()
+    public function getComment(): CommentInterface
     {
         return $this->comment;
     }
 
-    /**
-     * Returns thread.
-     *
-     * @return ThreadInterface
-     */
-    public function getThread()
+    public function getThread(): ThreadInterface
     {
         return $this->thread;
     }

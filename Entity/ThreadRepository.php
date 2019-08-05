@@ -13,15 +13,9 @@ namespace Sulu\Bundle\CommentBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
-/**
- * Repository for querying comments.
- */
 class ThreadRepository extends EntityRepository implements ThreadRepositoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function createNew($type, $entityId)
+    public function createNew(string $type, string $entityId): ThreadInterface
     {
         $className = $this->getClassName();
 
@@ -31,18 +25,12 @@ class ThreadRepository extends EntityRepository implements ThreadRepositoryInter
         return $thread;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findThreadById($id)
+    public function findThreadById(int $id): ?ThreadInterface
     {
         return $this->find($id);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findThreadsByIds($ids)
+    public function findThreadsByIds(array $ids): array
     {
         $query = $this->createQueryBuilder('t')
             ->leftJoin('t.comments', 'c')
@@ -55,18 +43,12 @@ class ThreadRepository extends EntityRepository implements ThreadRepositoryInter
         return $query->getResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function findThread($type, $entityId)
+    public function findThread(string $type, string $entityId): ?ThreadInterface
     {
         return $this->findOneBy(['type' => $type, 'entityId' => $entityId]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function delete(ThreadInterface $thread)
+    public function delete(ThreadInterface $thread): void
     {
         $this->getEntityManager()->remove($thread);
     }

@@ -62,6 +62,8 @@ class CommentManagerTest extends TestCase
         $this->dispatcher = $this->prophesize(EventDispatcherInterface::class);
 
         $this->thread = $this->prophesize(ThreadInterface::class);
+        $this->thread->getType()->willReturn('test');
+        $this->thread->getEntityId()->willReturn('123-123-123');
         $this->comment = $this->prophesize(CommentInterface::class);
 
         $this->commentManager = new CommentManager(
@@ -101,8 +103,6 @@ class CommentManagerTest extends TestCase
                                     Events::POST_PERSIST_EVENT,
                                     Argument::type(CommentEvent::class)
                                 )->shouldBeCalledTimes(1);
-
-                                return $thread->reveal();
                             }
                         );
                 }
@@ -136,8 +136,6 @@ class CommentManagerTest extends TestCase
                                     Events::POST_PERSIST_EVENT,
                                     Argument::type(CommentEvent::class)
                                 )->shouldBeCalledTimes(1);
-
-                                return $thread->reveal();
                             }
                         );
                 }
@@ -271,7 +269,7 @@ class CommentManagerTest extends TestCase
 
         $this->commentRepository->findCommentsByIds([1])->willReturn($commentsReveal);
 
-        $this->commentManager->delete(1);
+        $this->commentManager->delete([1]);
     }
 
     public function testDeleteThread()
@@ -353,7 +351,7 @@ class CommentManagerTest extends TestCase
 
         $this->threadRepository->findThreadsByIds([1])->willReturn($threadsReveal);
 
-        $this->commentManager->deleteThreads(1);
+        $this->commentManager->deleteThreads([1]);
     }
 
     public function testPublish()

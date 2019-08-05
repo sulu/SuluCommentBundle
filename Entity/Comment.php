@@ -12,13 +12,13 @@
 namespace Sulu\Bundle\CommentBundle\Entity;
 
 use Sulu\Component\Persistence\Model\AuditableInterface;
+use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 
-/**
- * Minimum implementation for comments.
- */
 class Comment implements CommentInterface, AuditableInterface
 {
+    use AuditableTrait;
+
     /**
      * @var int
      */
@@ -59,11 +59,7 @@ class Comment implements CommentInterface, AuditableInterface
      */
     protected $creator;
 
-    /**
-     * @param int $state
-     * @param ThreadInterface $thread
-     */
-    public function __construct($state = self::STATE_PUBLISHED, ThreadInterface $thread = null)
+    public function __construct(int $state = self::STATE_PUBLISHED, ThreadInterface $thread = null)
     {
         $this->state = $state;
         $this->thread = $thread;
@@ -73,28 +69,17 @@ class Comment implements CommentInterface, AuditableInterface
         }
     }
 
-    /**
-     * Returns id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getState()
+    public function getState(): int
     {
         return $this->state;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function publish()
+    public function publish(): CommentInterface
     {
         if (null !== $this->thread && !$this->isPublished()) {
             $this->thread->increaseCommentCount();
@@ -105,10 +90,7 @@ class Comment implements CommentInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function unpublish()
+    public function unpublish(): CommentInterface
     {
         if (null !== $this->thread && $this->isPublished()) {
             $this->thread->decreaseCommentCount();
@@ -119,36 +101,24 @@ class Comment implements CommentInterface, AuditableInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isPublished()
+    public function isPublished(): bool
     {
         return self::STATE_PUBLISHED === $this->state;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getMessage()
+    public function getMessage(): string
     {
-        return $this->message;
+        return $this->message ?? '';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setMessage($message)
+    public function setMessage($message): CommentInterface
     {
         $this->message = $message;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getThread()
+    public function getThread(): ThreadInterface
     {
         if (!$this->thread) {
             throw new \RuntimeException('No thread assigned.');
@@ -157,52 +127,14 @@ class Comment implements CommentInterface, AuditableInterface
         return $this->thread;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setThread(ThreadInterface $thread)
+    public function setThread(ThreadInterface $thread): CommentInterface
     {
         $this->thread = $thread;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getChanged()
-    {
-        return $this->changed;
-    }
-
-    /**
-     * @return UserInterface|null
-     */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    /**
-     * @return UserInterface|null
-     */
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCreatorFullName()
+    public function getCreatorFullName(): string
     {
         $creator = $this->getCreator();
         if (!$creator) {
@@ -212,10 +144,7 @@ class Comment implements CommentInterface, AuditableInterface
         return $creator->getFullName();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getChangerFullName()
+    public function getChangerFullName(): string
     {
         $changer = $this->getChanger();
         if (!$changer) {

@@ -31,14 +31,7 @@ class CommentController extends RestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
 
-    /**
-     * Returns list of comments.
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function cgetAction(Request $request)
+    public function cgetAction(Request $request): Response
     {
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
         $factory = $this->get('sulu_core.doctrine_list_builder_factory');
@@ -78,16 +71,7 @@ class CommentController extends RestController implements ClassResourceInterface
         return $this->handleView($this->view($list, 200));
     }
 
-    /**
-     * Returns single comment.
-     *
-     * @param int $id
-     *
-     * @return Response
-     *
-     * @throws EntityNotFoundException
-     */
-    public function getAction($id)
+    public function getAction(int $id): Response
     {
         $comment = $this->get('sulu.repository.comment')->findCommentById($id);
         if (!$comment) {
@@ -97,17 +81,7 @@ class CommentController extends RestController implements ClassResourceInterface
         return $this->handleView($this->view($comment));
     }
 
-    /**
-     * Update comment.
-     *
-     * @param int $id
-     * @param Request $request
-     *
-     * @return Response
-     *
-     * @throws EntityNotFoundException
-     */
-    public function putAction($id, Request $request)
+    public function putAction(int $id, Request $request): Response
     {
         /** @var CommentInterface|null $comment */
         $comment = $this->get('sulu.repository.comment')->findCommentById($id);
@@ -123,13 +97,9 @@ class CommentController extends RestController implements ClassResourceInterface
         return $this->handleView($this->view($comment));
     }
 
-    /**
-     * Delete multiple comments identified by id.
-     *
-     * @return Response
-     */
-    public function cdeleteAction(Request $request)
+    public function cdeleteAction(Request $request): Response
     {
+        /** @var int[] $ids */
         $ids = array_filter(explode(',', $request->query->get('ids')));
         if (0 === count($ids)) {
             return $this->handleView($this->view(null, 204));
@@ -141,14 +111,7 @@ class CommentController extends RestController implements ClassResourceInterface
         return $this->handleView($this->view(null, 204));
     }
 
-    /**
-     * Delete comment identified by id.
-     *
-     * @param int $id
-     *
-     * @return Response
-     */
-    public function deleteAction($id)
+    public function deleteAction(int $id): Response
     {
         $this->get('sulu_comment.manager')->delete([$id]);
         $this->get('doctrine.orm.entity_manager')->flush();
@@ -162,15 +125,8 @@ class CommentController extends RestController implements ClassResourceInterface
      * - unpublish: Unpublish a comment.
      *
      * @Post("/comments/{id}")
-     *
-     * @param int $id
-     * @param Request $request
-     *
-     * @return Response
-     *
-     * @throws RestException
      */
-    public function postTriggerAction($id, Request $request)
+    public function postTriggerAction(int $id, Request $request): Response
     {
         $action = $this->getRequestParameter($request, 'action', true);
 

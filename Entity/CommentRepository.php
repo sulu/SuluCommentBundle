@@ -14,15 +14,9 @@ namespace Sulu\Bundle\CommentBundle\Entity;
 use Doctrine\ORM\NoResultException;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 
-/**
- * Repository for querying comments.
- */
 class CommentRepository extends EntityRepository implements CommentRepositoryInterface
 {
-    /**
-     * @inheritdoc}
-     */
-    public function findComments($type, $entityId, $page = 1, $pageSize = null)
+    public function findComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array
     {
         $query = $this->createQueryBuilder('c')
             ->join('c.thread', 't')
@@ -42,10 +36,7 @@ class CommentRepository extends EntityRepository implements CommentRepositoryInt
         return $query->getResult();
     }
 
-    /**
-     * @inheritdoc}
-     */
-    public function findPublishedComments($type, $entityId, $page, $pageSize)
+    public function findPublishedComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array
     {
         $query = $this->createQueryBuilder('c')
             ->join('c.thread', 't')
@@ -67,10 +58,7 @@ class CommentRepository extends EntityRepository implements CommentRepositoryInt
         return $query->getResult();
     }
 
-    /**
-     * @inheritdoc}
-     */
-    public function findCommentsByIds($ids)
+    public function findCommentsByIds(array $ids): array
     {
         $query = $this->createQueryBuilder('c')
             ->join('c.thread', 't')
@@ -83,10 +71,7 @@ class CommentRepository extends EntityRepository implements CommentRepositoryInt
         return $query->getResult();
     }
 
-    /**
-     * @inheritdoc}
-     */
-    public function findCommentById($id)
+    public function findCommentById(int $id): ?CommentInterface
     {
         $query = $this->createQueryBuilder('c')
             ->join('c.thread', 't')
@@ -103,18 +88,12 @@ class CommentRepository extends EntityRepository implements CommentRepositoryInt
         }
     }
 
-    /**
-     * @inheritdoc}
-     */
-    public function persist(CommentInterface $comment)
+    public function persist(CommentInterface $comment): void
     {
         $this->getEntityManager()->persist($comment);
     }
 
-    /**
-     * @inheritdoc}
-     */
-    public function delete(CommentInterface $comment)
+    public function delete(CommentInterface $comment): void
     {
         $this->getEntityManager()->remove($comment);
     }

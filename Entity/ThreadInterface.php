@@ -13,108 +13,36 @@ namespace Sulu\Bundle\CommentBundle\Entity;
 
 use Doctrine\Common\Collections\Collection;
 
-/**
- * Interface for threads.
- */
 interface ThreadInterface
 {
-    /**
-     * Returns id.
-     *
-     * @return int
-     */
-    public function getId();
+    public function getId(): int;
+
+    public function getType(): string;
+
+    public function getEntityId(): string;
+
+    public function getTitle(): string;
+
+    public function setTitle(string $title): self;
+
+    public function getCommentCount(): int;
+
+    public function increaseCommentCount(): self;
+
+    public function decreaseCommentCount(): self;
+
+    public function setCommentCount(int $commentCount): self;
 
     /**
-     * Returns type.
-     *
-     * @return string
+     * @return CommentInterface[]|Collection
      */
-    public function getType();
+    public function getComments(): Collection;
 
-    /**
-     * Returns entity-id.
-     *
-     * @return string
-     */
-    public function getEntityId();
+    public function addComment(CommentInterface $comment): self;
 
-    /**
-     * @return string
-     */
-    public function getTitle();
+    public function removeComment(CommentInterface $comment): self;
 
-    /**
-     * @param string $title
-     */
-    public function setTitle($title);
+    public function getCreatorFullName(): string;
 
-    /**
-     * Returns comment-count.
-     *
-     * @return int
-     */
-    public function getCommentCount();
-
-    /**
-     * Increases comment-count.
-     *
-     * @return $this
-     */
-    public function increaseCommentCount();
-
-    /**
-     * Decreases comment-count.
-     *
-     * @return $this
-     */
-    public function decreaseCommentCount();
-
-    /**
-     * Set comment-count.
-     *
-     * @param int $commentCount
-     *
-     * @return $this
-     */
-    public function setCommentCount($commentCount);
-
-    /**
-     * Returns comments.
-     *
-     * @return Collection
-     */
-    public function getComments();
-
-    /**
-     * Add comment.
-     *
-     * @param CommentInterface $comment
-     *
-     * @return $this
-     */
-    public function addComment(CommentInterface $comment);
-
-    /**
-     * Remove comment.
-     *
-     * @param CommentInterface $comment
-     *
-     * @return $this
-     */
-    public function removeComment(CommentInterface $comment);
-
-    /**
-     * Returns full-name of creator.
-     *
-     * @return string
-     */
-    public function getCreatorFullName();
-
-    /**
-     * Returns full-name of changer.
-     *
-     * @return string
-     */
-    public function getChangerFullName();
+    public function getChangerFullName(): string;
 }

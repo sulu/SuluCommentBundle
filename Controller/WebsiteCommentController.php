@@ -137,7 +137,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
     /**
      * Splits the thread-id into type and entity-id.
      *
-     * @return array list($type, $entityId)
+     * @return string[] list($type, $entityId)
      */
     private function getThreadIdParts(string $threadId): array
     {

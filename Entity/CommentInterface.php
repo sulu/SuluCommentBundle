@@ -29,7 +29,7 @@ interface CommentInterface
 
     public function getMessage(): string;
 
-    public function setMessage($message): self;
+    public function setMessage(string $message): self;
 
     public function getThread(): ThreadInterface;
 

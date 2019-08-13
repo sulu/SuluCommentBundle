@@ -17,6 +17,7 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Integrates sulu_comment into sulu-admin.
@@ -43,10 +44,19 @@ class CommentAdmin extends Admin
      */
     private $securityChecker;
 
-    public function __construct(RouteBuilderFactoryInterface $routeBuilderFactory, SecurityCheckerInterface $securityChecker)
-    {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(
+        RouteBuilderFactoryInterface $routeBuilderFactory,
+        SecurityCheckerInterface $securityChecker,
+        TranslatorInterface $translator
+    ) {
         $this->routeBuilderFactory = $routeBuilderFactory;
         $this->securityChecker = $securityChecker;
+        $this->translator = $translator;
     }
 
     public function getNavigation(): Navigation
@@ -87,6 +97,14 @@ class CommentAdmin extends Admin
             'sulu_admin.delete',
         ];
 
+        /** @var array $commentFormToolbarActions */
+        $commentFormToolbarActions = array_merge($formToolbarActions, ['sulu_admin.toggler' => [
+            'label' => $this->translator->trans('sulu_admin.publish', [], 'admin'),
+            'property' => 'published',
+            'activate' => 'publish',
+            'deactivate' => 'unpublish',
+        ]]);
+
         $listToolbarActions = [
             'sulu_admin.delete',
             'sulu_admin.export',
@@ -110,7 +128,7 @@ class CommentAdmin extends Admin
                 ->setResourceKey('comments')
                 ->setFormKey('comment_details')
                 ->setTabTitle('sulu_admin.details')
-                ->addToolbarActions(array_merge($formToolbarActions, ['sulu_admin.publish_toggler']))
+                ->addToolbarActions($commentFormToolbarActions)
                 ->setParent(static::COMMENT_EDIT_FORM_ROUTE)
                 ->getRoute(),
             $this->routeBuilderFactory->createListRouteBuilder(static::THREAD_LIST_ROUTE, '/threads')

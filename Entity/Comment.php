@@ -111,7 +111,7 @@ class Comment implements CommentInterface, AuditableInterface
         return $this->message ?? '';
     }
 
-    public function setMessage($message): CommentInterface
+    public function setMessage(string $message): CommentInterface
     {
         $this->message = $message;
 

@@ -71,7 +71,7 @@ class ThreadController extends RestController implements ClassResourceInterface
         return $this->handleView($this->view($thread));
     }
 
-    public function putAction($id, Request $request): Response
+    public function putAction(int $id, Request $request): Response
     {
         /** @var ThreadInterface|null $thread */
         $thread = $this->get('sulu.repository.thread')->findThreadById($id);

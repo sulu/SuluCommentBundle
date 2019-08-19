@@ -12,6 +12,7 @@
 namespace Functional\Controller;
 
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
+use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -62,6 +63,52 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $this->assertEquals($entityId, $thread->getEntityId());
         $this->assertEquals(1, $thread->getCommentCount());
         $this->assertCount(1, $thread->getComments());
+
+        return $thread;
+    }
+
+    /**
+     * @dataProvider providePostData
+     */
+    public function testPostCommentWithParent(
+        $type = 'blog',
+        $entityId = '1',
+        $message = 'Sulu is awesome',
+        $threadTitle = 'Test Thread'
+    ) {
+        /** @var ThreadInterface $thread */
+        $thread = $this->testPostComment($type, $entityId);
+
+        /** @var CommentInterface $parent */
+        $parent = $thread->getComments()->first();
+
+        $client = $this->createWebsiteClient();
+        $client->request(
+            'POST',
+            '_api/threads/' . $type . '-' . $entityId . '/comments.json?parent=' . $parent->getId(),
+            ['message' => $message, 'threadTitle' => $threadTitle]
+        );
+
+        $this->assertHttpStatusCode(200, $client->getResponse());
+
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertEquals(CommentInterface::STATE_PUBLISHED, $response['state']);
+        $this->assertEquals($message, $response['message']);
+        $this->assertEquals($threadTitle, $response['thread']['title']);
+        $this->assertEquals(2, $response['thread']['comment_count']);
+
+        $this->getContainer()->get('doctrine.orm.default_entity_manager')->clear();
+        $thread = $this->getContainer()->get('sulu.repository.thread')->findThread($type, $entityId);
+        $this->assertEquals($type, $thread->getType());
+        $this->assertEquals($entityId, $thread->getEntityId());
+        $this->assertEquals(2, $thread->getCommentCount());
+        $this->assertCount(2, $thread->getComments());
+
+        $comment1 = $thread->getComments()->first();
+        $comment2 = $thread->getComments()->last();
+        $this->assertEquals($parent->getId(), $comment1->getId());
+        $this->assertEquals($parent->getId(), $comment2->getParent()->getId());
 
         return $thread;
     }

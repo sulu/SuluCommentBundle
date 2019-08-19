@@ -1,5 +1,14 @@
 {% for comment in comments %}
-    {% include template with {threadId: threadId, comment: comment} %}
+    {% include commentTemplate with {
+        threadId: threadId,
+        comment: comment,
+        referrer: referrer,
+        nestedComments: nestedComments,
+        commentTemplate: commentTemplate,
+        commentsTemplate: commentsTemplate,
+    } only %}
 {% endfor %}
 
-{{ form(form) }}
+{% if form|default %}
+    {{ form(form) }}
+{% endif %}

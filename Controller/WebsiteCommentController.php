@@ -70,8 +70,9 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
             $this->getTemplate($type, 'comments'),
             [
                 'form' => $form->createView(),
-                'template' => $this->getTemplate($type, 'comment'),
-                'formTemplate' => $this->getTemplate($type, 'form'),
+                'nestedComments' => $this->getNestedCommentsFlag($type),
+                'commentTemplate' => $this->getTemplate($type, 'comment'),
+                'commentsTemplate' => $this->getTemplate($type, 'comments'),
                 'comments' => $comments,
                 'threadId' => $threadId,
                 'referrer' => $referrer,
@@ -93,6 +94,10 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
 
         /** @var CommentInterface $comment */
         $comment = $repository->createNew();
+
+        if ($parent = $request->get('parent')) {
+            $comment->setParent($repository->findCommentById($parent));
+        }
 
         $form = $this->createForm(
             CommentType::class,
@@ -149,18 +154,27 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         return [substr($threadId, 0, $pos), substr($threadId, $pos + 1)];
     }
 
-    /**
-     * Returns template by type.
-     */
     private function getTemplate(string $type, string $templateType): string
     {
-        $types = $this->getParameter('sulu_comment.types');
         $defaults = $this->getParameter('sulu_comment.default_templates');
 
+        $types = $this->getParameter('sulu_comment.types');
         if (array_key_exists($type, $types)) {
             return $types[$type]['templates'][$templateType];
         }
 
         return $defaults[$templateType];
+    }
+
+    private function getNestedCommentsFlag(string $type): string
+    {
+        $default = $this->getParameter('sulu_comment.nested_comments');
+
+        $types = $this->getParameter('sulu_comment.types');
+        if (array_key_exists($type, $types)) {
+            return $types[$type]['nested_comments'];
+        }
+
+        return $default;
     }
 }

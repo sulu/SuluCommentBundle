@@ -23,5 +23,12 @@
 
             <tag name="form.type"/>
         </service>
+
+        <service id="Sulu\Bundle\CommentBundle\Twig\CommentFormFactoryTwigExtension">
+            <argument type="service" id="form.factory"/>
+            <argument type="string">%sulu.model.comment.class%</argument>
+
+            <tag name="twig.extension"/>
+        </service>
     </services>
 </container>

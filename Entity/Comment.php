@@ -11,9 +11,10 @@
 
 namespace Sulu\Bundle\CommentBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Persistence\Model\AuditableTrait;
-use Sulu\Component\Security\Authentication\UserInterface;
 
 class Comment implements CommentInterface, AuditableInterface
 {
@@ -40,29 +41,35 @@ class Comment implements CommentInterface, AuditableInterface
     protected $thread;
 
     /**
-     * @var \DateTime
+     * @var int
      */
-    protected $created;
+    protected $lft;
 
     /**
-     * @var \DateTime
+     * @var int
      */
-    protected $changed;
+    protected $rgt;
 
     /**
-     * @var UserInterface
+     * @var int
      */
-    protected $changer;
+    protected $depth;
 
     /**
-     * @var UserInterface
+     * @var CommentInterface|null
      */
-    protected $creator;
+    protected $parent;
+
+    /**
+     * @var Collection|CommentInterface[]
+     */
+    protected $children;
 
     public function __construct(int $state = self::STATE_PUBLISHED, ThreadInterface $thread = null)
     {
         $this->state = $state;
         $this->thread = $thread;
+        $this->children = new ArrayCollection();
 
         if ($this->thread && $this->isPublished()) {
             $this->thread->increaseCommentCount();
@@ -132,6 +139,37 @@ class Comment implements CommentInterface, AuditableInterface
         $this->thread = $thread;
 
         return $this;
+    }
+
+    public function getParent(): ?CommentInterface
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?CommentInterface $parent = null): CommentInterface
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    public function getDepth(): int
+    {
+        return $this->depth;
+    }
+
+    public function getChildren(): Collection
+    {
+        return $this->children;
+    }
+
+    public function getPublishedChildren(): Collection
+    {
+        return $this->children->filter(
+            function(CommentInterface $comment) {
+                return $comment->isPublished();
+            }
+        );
     }
 
     public function getCreatorFullName(): string

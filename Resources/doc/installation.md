@@ -45,11 +45,17 @@ sulu_comment:
     default_templates:
         comments:             'SuluCommentBundle:WebsiteComment:comments.html.twig'
         comment:              'SuluCommentBundle:WebsiteComment:comment.html.twig'
+        form:                 'SuluCommentBundle:WebsiteComment:form.html.twig'
+    nested_comments:          true
     types:
-        <type>:
+
+        # Prototype
+        type:
             templates:
                 comments:     'SuluCommentBundle:WebsiteComment:comments.html.twig'
                 comment:      'SuluCommentBundle:WebsiteComment:comment.html.twig'
+                form:         'SuluCommentBundle:WebsiteComment:form.html.twig'
+            nested_comments:  true
     objects:
         comment:
             model:            Sulu\Bundle\CommentBundle\Entity\Comment

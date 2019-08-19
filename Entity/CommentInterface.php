@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\CommentBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
+
 interface CommentInterface
 {
     const STATE_UNPUBLISHED = 0;
@@ -34,6 +36,16 @@ interface CommentInterface
     public function getThread(): ThreadInterface;
 
     public function setThread(ThreadInterface $thread): self;
+
+    public function getParent(): ?CommentInterface;
+
+    public function setParent(CommentInterface $parent = null): CommentInterface;
+
+    public function getDepth(): int;
+
+    public function getChildren(): Collection;
+
+    public function getPublishedChildren(): Collection;
 
     public function getCreatorFullName(): string;
 

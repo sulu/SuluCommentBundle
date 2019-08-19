@@ -2,6 +2,23 @@
 
 ## dev-develop
 
+### Add nested tree to comments
+
+Comments can now be nested - therefor the database schema has changed and can be updated by:
+
+```sql
+ALTER TABLE com_comment ADD lft INT NOT NULL, ADD rgt INT NOT NULL, ADD depth INT NOT NULL, ADD idCommentsParent INT DEFAULT NULL;
+ALTER TABLE com_comment ADD CONSTRAINT FK_AA6F14A324308710 FOREIGN KEY (idCommentsParent) REFERENCES com_comment (id) ON DELETE CASCADE;
+CREATE INDEX IDX_AA6F14A324308710 ON com_comment (idCommentsParent);
+```
+
+Use following configuration to disable the nested comments by default:
+
+```yaml
+sulu_comment:
+    nested_comments: false
+``` 
+
 ### Type-Hints
 
 We have added type-hints to the whole codebase. Therefor the function parameter and returns validation is stricter

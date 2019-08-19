@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CommentBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,10 +37,13 @@ class CommentType extends AbstractType
         if ($options['referrer']) {
             $attributes['referrer'] = $options['referrer'];
         }
+        if ($options['parent']) {
+            $attributes['parent'] = $options['parent'];
+        }
 
         $builder->setAction($this->router->generate('sulu_comment.post_thread_comments', $attributes));
         $builder->add('message', TextType::class);
-        $builder->add('threadTitle', TextType::class, ['mapped' => false]);
+        $builder->add('threadTitle', HiddenType::class, ['mapped' => false]);
         $builder->add('submit', SubmitType::class);
     }
 
@@ -47,6 +51,7 @@ class CommentType extends AbstractType
     {
         $resolver->setRequired('threadId');
         $resolver->setDefault('referrer', null);
+        $resolver->setDefault('parent', null);
         $resolver->setDefault('csrf_protection', false);
     }
 

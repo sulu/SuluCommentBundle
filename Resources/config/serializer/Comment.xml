@@ -9,6 +9,7 @@
 
         <property name="thread" expose="true" type="Sulu\Bundle\CommentBundle\Entity\Thread"/>
 
+        <virtual-property method="getPublishedChildren" name="publishedComments" serialized-name="publishedChildren" expose="true"/>
         <virtual-property method="getCreatorFullName" name="creator" serialized-name="creator" expose="true"/>
         <virtual-property method="getChangerFullName" name="changer" serialized-name="changer" expose="true"/>
         <virtual-property method="isPublished" name="published" serialized-name="published" expose="true"/>

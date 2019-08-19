@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\CommentBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
-use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
+use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
-class CommentRepository extends EntityRepository implements CommentRepositoryInterface
+class CommentRepository extends NestedTreeRepository implements CommentRepositoryInterface
 {
     public function findComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array
     {
@@ -38,17 +38,19 @@ class CommentRepository extends EntityRepository implements CommentRepositoryInt
 
     public function findPublishedComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array
     {
-        $query = $this->createQueryBuilder('c')
+        $queryBuilder = $this->createQueryBuilder('c')
             ->join('c.thread', 't')
             ->leftJoin('c.creator', 'creator')
             ->leftJoin('c.changer', 'changer')
             ->where('c.state = :state')
+            ->andWhere('c.parent IS NULL')
             ->andWhere('t.type = :type AND t.entityId = :entityId')
             ->setParameter('state', CommentInterface::STATE_PUBLISHED)
             ->setParameter('type', $type)
             ->setParameter('entityId', $entityId)
-            ->orderBy('c.created', 'DESC')
-            ->getQuery();
+            ->orderBy('c.created', 'DESC');
+
+        $query = $queryBuilder->getQuery();
 
         if ($pageSize) {
             $query->setMaxResults($pageSize);
@@ -96,5 +98,12 @@ class CommentRepository extends EntityRepository implements CommentRepositoryInt
     public function delete(CommentInterface $comment): void
     {
         $this->getEntityManager()->remove($comment);
+    }
+
+    public function createNew()
+    {
+        $className = $this->getClassName();
+
+        return new $className();
     }
 }

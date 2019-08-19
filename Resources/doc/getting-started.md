@@ -40,3 +40,21 @@ sulu_comment:
 
 To extend the form you can provide a [FormExtension](https://symfony.com/doc/current/form/create_form_type_extension.html)
 for `Sulu\Bundle\CommentBundle\Form\Type\CommentType`.
+
+## Nested Comments
+
+By default comments can be nested in the default implementation. If you want to disable it use following configuration:
+
+```yaml
+sulu_comment:
+    nested_comments: false
+```
+
+Or for a single type (here `page`):
+
+```yaml
+sulu_comment:
+    types:
+        page:
+            nested_comments: false
+```

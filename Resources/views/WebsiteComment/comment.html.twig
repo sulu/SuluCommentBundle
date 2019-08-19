@@ -1,2 +1,19 @@
 <p>{{ comment.message }}</p>
 <h3>{{ comment.creator.fullName|default('Unknown User'|trans) }} am {{ comment.created|date('d.m.Y') }}</h3>
+
+{% if nestedComments %}
+    {{ form(sulu_create_comment_form(threadId, referrer, comment.id)) }}
+{% endif %}
+
+<hr>
+
+{% if nestedComments %}
+    {% include commentsTemplate with {
+        threadId: threadId,
+        comments: comment.publishedChildren,
+        referrer: referrer,
+        nestedComments: nestedComments,
+        commentTemplate: commentTemplate,
+        commentsTemplate: commentsTemplate,
+    } only %}
+{% endif %}

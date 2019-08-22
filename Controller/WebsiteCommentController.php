@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CommentBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -143,18 +144,9 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
     }
 
     /**
-     * Updates existing comment.
-     *
-     * @param $threadId
-     * @param $commentId
-     * @param Request $request
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     *
-     * @return Response
+     * @Post("/threads/{threadId}/comments/{commentId}")
      */
-    public function postUpdateCommentsAction($threadId, $commentId, Request $request): Response
+    public function putCommentAction(string $threadId, string $commentId, Request $request): Response
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
@@ -173,6 +165,10 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         $comment->setMessage($message);
         $entityManager->flush();
 
+        if ($referrer = $request->query->get('referrer')) {
+            return new RedirectResponse($referrer);
+        }
+
         if ('json' === $request->getRequestFormat()) {
             return $this->handleView($this->view($comment));
         }
@@ -186,18 +182,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         );
     }
 
-    /**
-     * Deletes comment by given id.
-     *
-     * @param $commentId
-     * @param Request $request
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     *
-     * @return Response
-     */
-    public function deleteCommentAction($commentId, Request $request): Response
+    public function deleteCommentAction(string $threadId, string $commentId, Request $request): Response
     {
         /** @var EntityManager $entityManager */
         $entityManager = $this->get('doctrine.orm.entity_manager');
@@ -215,7 +200,11 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
             return new RedirectResponse($referrer);
         }
 
-        return new RedirectResponse('/');
+        if ('json' === $request->getRequestFormat()) {
+            return $this->handleView($this->view());
+        }
+
+        return new Response();
     }
 
     /**

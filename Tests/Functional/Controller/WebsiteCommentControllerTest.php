@@ -42,7 +42,8 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $entityId = '1',
         $message = 'Sulu is awesome',
         $threadTitle = 'Test Thread'
-    ) {
+    )
+    {
         $client = $this->createWebsiteClient();
         $client->request(
             'POST',
@@ -75,7 +76,8 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $entityId = '1',
         $message = 'Sulu is awesome',
         $threadTitle = 'Test Thread'
-    ) {
+    )
+    {
         /** @var ThreadInterface $thread */
         $thread = $this->testPostComment($type, $entityId);
 
@@ -180,6 +182,25 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $thread2 = $this->testPostComment('article', '123-123-123');
 
         $this->assertNotEquals($thread1->getId(), $thread2->getId());
+    }
+
+    public function testPutComment($type = 'blog', $entityId = '1')
+    {
+        $thread = $this->testPostComment($type, $entityId);
+        $comment = $thread->getComments()->first();
+
+        $client = $this->createWebsiteClient();
+        $client->request(
+            'POST',
+            '_api/threads/' . $type . '-' . $entityId . '/comment/' . $comment->getId() . '.json',
+            ['message' => 'New message']
+        );
+
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals('New message', $response['message']);
+
+        $thread = $this->getContainer()->get('sulu.repository.thread')->findThread($type, $entityId);
+        $this->asserEquals('New message', $thread->getComments()->first()->getMessage());
     }
 
     public function testGetComments($type = 'blog', $entityId = '1')

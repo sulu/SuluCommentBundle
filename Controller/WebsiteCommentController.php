@@ -11,9 +11,12 @@
 
 namespace Sulu\Bundle\CommentBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\CommentBundle\Entity\Comment;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\CommentBundle\Entity\CommentRepositoryInterface;
 use Sulu\Bundle\CommentBundle\Form\Type\CommentType;
@@ -137,6 +140,82 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
                 'threadId' => $threadId,
             ]
         );
+    }
+
+    /**
+     * Updates existing comment.
+     *
+     * @param $threadId
+     * @param $commentId
+     * @param Request $request
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @return Response
+     */
+    public function postUpdateCommentsAction($threadId, $commentId, Request $request): Response
+    {
+        list($type, $entityId) = $this->getThreadIdParts($threadId);
+
+        /** @var CommentRepositoryInterface $repository */
+        $repository = $this->get('sulu.repository.comment');
+        $message = $request->query->get('message');
+
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
+        /** @var CommentRepository $commentRepository */
+        $commentRepository = $entityManager->getRepository(Comment::class);
+
+        /** @var Comment $comment */
+        $comment = $commentRepository->findCommentById($commentId);
+        $comment->setMessage($message);
+        $entityManager->flush();
+
+        if ('json' === $request->getRequestFormat()) {
+            return $this->handleView($this->view($comment));
+        }
+
+        return $this->render(
+            $this->getTemplate($type, 'comment'),
+            [
+                'comment' => $comment,
+                'threadId' => $threadId,
+            ]
+        );
+    }
+
+    /**
+     * Deletes comment by given id.
+     *
+     * @param $commentId
+     * @param Request $request
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @return Response
+     */
+    public function deleteCommentAction($commentId, Request $request): Response
+    {
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
+        /** @var CommentRepository $commentRepository */
+        $commentRepository = $entityManager->getRepository(Comment::class);
+        $referrer = $request->get('referrer');
+        /** @var Comment $comment */
+        $comment = $commentRepository->findCommentById($commentId);
+
+        $entityManager->remove($comment);
+        $entityManager->flush();
+
+        if ($referrer = $request->query->get('referrer')) {
+            return new RedirectResponse($referrer);
+        }
+
+        return new RedirectResponse('/');
     }
 
     /**

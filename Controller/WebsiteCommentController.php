@@ -146,7 +146,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
     /**
      * @Post("/threads/{threadId}/comments/{commentId}")
      */
-    public function putCommentAction(string $threadId, string $commentId, Request $request): Response
+    public function putCommentAction(string $threadId, int $commentId, Request $request): Response
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
@@ -182,7 +182,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         );
     }
 
-    public function deleteCommentAction(string $threadId, string $commentId, Request $request): Response
+    public function deleteCommentAction(string $threadId, int $commentId, Request $request): Response
     {
         /** @var EntityManager $entityManager */
         $entityManager = $this->get('doctrine.orm.entity_manager');

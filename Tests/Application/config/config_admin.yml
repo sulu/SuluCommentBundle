@@ -1,5 +1,6 @@
 parameters:
     secret: test
+    database.url: '%env(resolve:DATABASE_URL)%'
 
 framework:
     router: { resource: "%kernel.root_dir%/config/routing_admin.yml" }

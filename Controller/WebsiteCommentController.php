@@ -11,10 +11,14 @@
 
 namespace Sulu\Bundle\CommentBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\CommentBundle\Entity\Comment;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
+use Sulu\Bundle\CommentBundle\Entity\CommentRepository;
 use Sulu\Bundle\CommentBundle\Entity\CommentRepositoryInterface;
 use Sulu\Bundle\CommentBundle\Form\Type\CommentType;
 use Sulu\Bundle\CommentBundle\Manager\CommentManagerInterface;
@@ -137,6 +141,70 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
                 'threadId' => $threadId,
             ]
         );
+    }
+
+    /**
+     * @Post("/threads/{threadId}/comments/{commentId}")
+     */
+    public function putCommentAction(string $threadId, string $commentId, Request $request): Response
+    {
+        list($type, $entityId) = $this->getThreadIdParts($threadId);
+
+        /** @var CommentRepositoryInterface $repository */
+        $repository = $this->get('sulu.repository.comment');
+        $message = $request->request->get('message');
+
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
+        /** @var CommentRepository $commentRepository */
+        $commentRepository = $entityManager->getRepository(Comment::class);
+
+        /** @var Comment $comment */
+        $comment = $commentRepository->findCommentById(intval($commentId));
+        $comment->setMessage($message);
+        $entityManager->flush();
+
+        if ($referrer = $request->query->get('referrer')) {
+            return new RedirectResponse($referrer);
+        }
+
+        if ('json' === $request->getRequestFormat()) {
+            return $this->handleView($this->view($comment));
+        }
+
+        return $this->render(
+            $this->getTemplate($type, 'comment'),
+            [
+                'comment' => $comment,
+                'threadId' => $threadId,
+            ]
+        );
+    }
+
+    public function deleteCommentAction(string $threadId, string $commentId, Request $request): Response
+    {
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+
+        /** @var CommentRepository $commentRepository */
+        $commentRepository = $entityManager->getRepository(Comment::class);
+        $referrer = $request->get('referrer');
+        /** @var Comment $comment */
+        $comment = $commentRepository->findCommentById(intval($commentId));
+
+        $entityManager->remove($comment);
+        $entityManager->flush();
+
+        if ($referrer = $request->query->get('referrer')) {
+            return new RedirectResponse($referrer);
+        }
+
+        if ('json' === $request->getRequestFormat()) {
+            return $this->handleView($this->view());
+        }
+
+        return new Response();
     }
 
     /**

@@ -161,7 +161,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         $commentRepository = $entityManager->getRepository(Comment::class);
 
         /** @var Comment $comment */
-        $comment = $commentRepository->findCommentById((int)$commentId);
+        $comment = $commentRepository->findCommentById(intval($commentId));
         $comment->setMessage($message);
         $entityManager->flush();
 
@@ -191,7 +191,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         $commentRepository = $entityManager->getRepository(Comment::class);
         $referrer = $request->get('referrer');
         /** @var Comment $comment */
-        $comment = $commentRepository->findCommentById((int)$commentId);
+        $comment = $commentRepository->findCommentById(intval($commentId));
 
         $entityManager->remove($comment);
         $entityManager->flush();

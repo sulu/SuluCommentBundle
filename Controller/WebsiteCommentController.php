@@ -146,7 +146,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
     /**
      * @Post("/threads/{threadId}/comments/{commentId}")
      */
-    public function putCommentAction(string $threadId, int $commentId, Request $request): Response
+    public function putCommentAction(string $threadId, string $commentId, Request $request): Response
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
@@ -161,7 +161,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         $commentRepository = $entityManager->getRepository(Comment::class);
 
         /** @var Comment $comment */
-        $comment = $commentRepository->findCommentById($commentId);
+        $comment = $commentRepository->findCommentById((int)$commentId);
         $comment->setMessage($message);
         $entityManager->flush();
 
@@ -182,7 +182,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         );
     }
 
-    public function deleteCommentAction(string $threadId, int $commentId, Request $request): Response
+    public function deleteCommentAction(string $threadId, string $commentId, Request $request): Response
     {
         /** @var EntityManager $entityManager */
         $entityManager = $this->get('doctrine.orm.entity_manager');
@@ -191,7 +191,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         $commentRepository = $entityManager->getRepository(Comment::class);
         $referrer = $request->get('referrer');
         /** @var Comment $comment */
-        $comment = $commentRepository->findCommentById($commentId);
+        $comment = $commentRepository->findCommentById((int)$commentId);
 
         $entityManager->remove($comment);
         $entityManager->flush();

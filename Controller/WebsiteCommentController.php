@@ -11,10 +11,9 @@
 
 namespace Sulu\Bundle\CommentBundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
-use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\CommentBundle\Entity\Comment;
@@ -152,7 +151,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
 
         /** @var CommentRepositoryInterface $repository */
         $repository = $this->get('sulu.repository.comment');
-        $message = $request->query->get('message');
+        $message = $request->request->get('message');
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->get('doctrine.orm.entity_manager');

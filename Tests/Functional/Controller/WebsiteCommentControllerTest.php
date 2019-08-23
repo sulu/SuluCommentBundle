@@ -42,8 +42,7 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $entityId = '1',
         $message = 'Sulu is awesome',
         $threadTitle = 'Test Thread'
-    )
-    {
+    ) {
         $client = $this->createWebsiteClient();
         $client->request(
             'POST',
@@ -76,8 +75,7 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $entityId = '1',
         $message = 'Sulu is awesome',
         $threadTitle = 'Test Thread'
-    )
-    {
+    ) {
         /** @var ThreadInterface $thread */
         $thread = $this->testPostComment($type, $entityId);
 
@@ -192,15 +190,85 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $client = $this->createWebsiteClient();
         $client->request(
             'POST',
-            '_api/threads/' . $type . '-' . $entityId . '/comment/' . $comment->getId() . '.json',
+            '_api/threads/' . $type . '-' . $entityId . '/comments/' . $comment->getId() . '.json',
             ['message' => 'New message']
         );
 
         $response = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals('New message', $response['message']);
 
+        $this->getEntityManager()->clear();
+
         $thread = $this->getContainer()->get('sulu.repository.thread')->findThread($type, $entityId);
-        $this->asserEquals('New message', $thread->getComments()->first()->getMessage());
+        $this->assertEquals('New message', $thread->getComments()->first()->getMessage());
+    }
+
+    public function testPutCommentWithReferrer($type = 'blog', $entityId = '1')
+    {
+        $thread = $this->testPostComment($type, $entityId);
+        $comment = $thread->getComments()->first();
+
+        $client = $this->createWebsiteClient();
+        $client->request(
+            'POST',
+            '_api/threads/' . $type . '-' . $entityId . '/comments/' . $comment->getId() . '?referrer=https://sulu.io',
+            ['message' => 'New message']
+        );
+
+        /** @var RedirectResponse $response */
+        $response = $client->getResponse();
+        $this->assertHttpStatusCode(302, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertEquals('https://sulu.io', $response->getTargetUrl());
+
+        $this->getEntityManager()->clear();
+
+        $thread = $this->getContainer()->get('sulu.repository.thread')->findThread($type, $entityId);
+        $this->assertEquals('New message', $thread->getComments()->first()->getMessage());
+    }
+
+    public function testDeleteComment($type = 'blog', $entityId = '1')
+    {
+        $thread = $this->testPostComment($type, $entityId);
+        $comment = $thread->getComments()->first();
+
+        $client = $this->createWebsiteClient();
+        $client->request(
+            'DELETE',
+            '_api/threads/' . $type . '-' . $entityId . '/comments/' . $comment->getId() . '.json'
+        );
+
+        /* Todo: Check if this is correct. */
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals('', $response);
+
+        $this->getEntityManager()->clear();
+
+        $thread = $this->getContainer()->get('sulu.repository.thread')->findThread($type, $entityId);
+        $this->assertEquals(0, $thread->getComments()->count());
+    }
+
+    public function testDeleteCommitWithReferrer($type = 'blog', $entityId = '1')
+    {
+        $thread = $this->testPostComment($type, $entityId);
+        $comment = $thread->getComments()->first();
+
+        $client = $this->createWebsiteClient();
+        $client->request(
+            'DELETE',
+            '_api/threads/' . $type . '-' . $entityId . '/comments/' . $comment->getId() . '?referrer=https://sulu.io'
+        );
+
+        /** @var RedirectResponse $response */
+        $response = $client->getResponse();
+        $this->assertHttpStatusCode(302, $response);
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertEquals('https://sulu.io', $response->getTargetUrl());
+
+        $this->getEntityManager()->clear();
+
+        $thread = $this->getContainer()->get('sulu.repository.thread')->findThread($type, $entityId);
+        $this->assertEquals(0, $thread->getComments()->count());
     }
 
     public function testGetComments($type = 'blog', $entityId = '1')

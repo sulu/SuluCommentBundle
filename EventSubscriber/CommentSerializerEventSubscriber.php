@@ -47,16 +47,11 @@ class CommentSerializerEventSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param ObjectEvent $event
-     *
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
-     */
     public function onPostSerialize(ObjectEvent $event)
     {
         /** @var Comment $comment */
         $comment = $event->getObject();
-        if (!$comment instanceof Comment || !$creator = $comment->getCreator() || !$currentRequest = $this->requestStack->getCurrentRequest()) {
+        if (!$comment instanceof Comment || !$creator = $comment->getCreator()) {
             return;
         }
 
@@ -65,7 +60,7 @@ class CommentSerializerEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $avatar = $this->mediaManager->getById($avatar->getId(), $currentRequest->getLocale());
+        $avatar = $this->mediaManager->getById($avatar->getId(), $this->requestStack->getCurrentRequest()->getLocale());
 
         $event->getVisitor()->addData('creatorAvatar', $event->getContext()->accept([
             'id' => $avatar->getId(),

@@ -56,6 +56,8 @@ class CommentSerializerEventSubscriber implements EventSubscriberInterface
         }
 
         $contact = $creator->getContact();
+        $event->getVisitor()->addData('creatorId', $contact->getId());
+        
         if (!$avatar = $contact->getAvatar()) {
             return;
         }

@@ -5,11 +5,10 @@
     "license": "MIT",
     "require": {
         "php": "^7.1",
-        "doctrine/doctrine-bundle": "^1.6",
         "sulu/sulu": "^2.0 || dev-develop",
-        "symfony/form": "^3.4 || ^4.0"
     },
     "require-dev": {
+        "doctrine/doctrine-bundle": "^1.6",
         "jackalope/jackalope-doctrine-dbal": "^1.2.5",
         "jangregor/phpstan-prophecy": "^0.4.1",
         "massive/search-bundle": "^0.16 || ^0.17",
@@ -19,15 +18,14 @@
         "phpstan/phpstan-symfony": "^0.11.6",
         "thecodingmachine/phpstan-strict-rules": "^0.11.2",
         "phpunit/phpunit": "^7.0",
+        "sulu/document-manager": "@dev",
         "symfony/browser-kit": "^3.4 || ^4.0",
         "symfony/dotenv": "^3.4 || ^4.0",
+        "symfony/form": "^3.4 || ^4.0",
         "symfony/monolog-bundle": "^3.1",
         "symfony/security-bundle": "^3.4 || ^4.0",
         "symfony/stopwatch": "^3.4 ||  ^4.0",
         "zendframework/zendsearch": "@dev"
-    },
-    "conflict": {
-        "sulu/sulu": "<2.0.0-alpha1"
     },
     "keywords": [],
     "authors": [

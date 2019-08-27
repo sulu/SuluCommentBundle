@@ -27,7 +27,7 @@
         "zendframework/zendsearch": "@dev"
     },
     "conflict": {
-        "sulu/sulu": "<2.0.0-RC1"
+        "sulu/sulu": "<2.0.0-alpha1"
     },
     "keywords": [],
     "authors": [

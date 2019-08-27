@@ -33,8 +33,7 @@ install:
   - ./Tests/Application/bin/console doctrine:schema:update --force
 
 script:
-  - if [[ $PHPSTAN = true ]]; then ./Tests/Application/bin/console cache:warmup --env dev; fi
-  - if [[ $PHPSTAN = true ]]; then ./vendor/bin/phpstan analyze .; fi
+  - if [[ $PHPSTAN = true ]]; then composer phpstan; fi
   - ./vendor/bin/phpunit $CODE_COVERAGE
 
 after_script:

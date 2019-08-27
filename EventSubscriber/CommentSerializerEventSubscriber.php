@@ -47,8 +47,15 @@ class CommentSerializerEventSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onPostSerialize(ObjectEvent $event)
+    public function onPostSerialize(ObjectEvent $event): void
     {
+        $context = $event->getContext();
+
+        if (!$context->attributes->containsKey('groups')
+            || !in_array('commentWithAvatar', $context->attributes->get('groups')->get())) {
+            return;
+        }
+
         /** @var Comment $comment */
         $comment = $event->getObject();
         if (!$comment instanceof Comment || !$creator = $comment->getCreator()) {
@@ -57,12 +64,19 @@ class CommentSerializerEventSubscriber implements EventSubscriberInterface
 
         $contact = $creator->getContact();
         $event->getVisitor()->addData('creatorId', $contact->getId());
-        
+
         if (!$avatar = $contact->getAvatar()) {
             return;
         }
 
-        $avatar = $this->mediaManager->getById($avatar->getId(), $this->requestStack->getCurrentRequest()->getLocale());
+        $locale = 'en';
+        $request = $this->requestStack->getCurrentRequest();
+
+        if ($request) {
+            $locale = $request->getLocale();
+        }
+
+        $avatar = $this->mediaManager->getById($avatar->getId(), $locale);
 
         $event->getVisitor()->addData('creatorAvatar', $event->getContext()->accept([
             'id' => $avatar->getId(),

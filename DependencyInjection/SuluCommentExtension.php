@@ -92,6 +92,7 @@ class SuluCommentExtension extends Extension implements PrependExtensionInterfac
         $container->setParameter('sulu_comment.types', $config['types']);
         $container->setParameter('sulu_comment.default_templates', $config['default_templates']);
         $container->setParameter('sulu_comment.nested_comments', $config['nested_comments']);
+        $container->setParameter('sulu_comment.serializer_groups', $config['serializer']['groups']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

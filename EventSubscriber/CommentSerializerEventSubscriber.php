@@ -83,7 +83,7 @@ class CommentSerializerEventSubscriber implements EventSubscriberInterface
             'title' => $avatar->getTitle(),
             'description' => $avatar->getDescription(),
             'credits' => $avatar->getCredits(),
-            'credits' => $avatar->getCopyright(),
+            'copyright' => $avatar->getCopyright(),
             'name' => $avatar->getName(),
             'formats' => $avatar->getFormats(),
             'url' => $avatar->getUrl(),

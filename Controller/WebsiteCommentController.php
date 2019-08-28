@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CommentBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
@@ -205,6 +206,17 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         }
 
         return new Response();
+    }
+
+    protected function view($data = null, $statusCode = null, array $headers = [])
+    {
+        $view = parent::view($data, $statusCode, $headers);
+
+        $context = new Context();
+        $context->setGroups($this->getParameter('sulu_comment.serializer_groups'));
+        $view->setContext($context);
+
+        return $view;
     }
 
     /**

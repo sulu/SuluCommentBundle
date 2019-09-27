@@ -56,8 +56,7 @@ class CommentAdmin extends Admin
         RouteBuilderFactoryInterface $routeBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->routeBuilderFactory = $routeBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->translator = $translator;

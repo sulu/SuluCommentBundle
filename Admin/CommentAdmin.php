@@ -12,9 +12,12 @@
 namespace Sulu\Bundle\CommentBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
 use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Navigation\Navigation;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
+use Sulu\Bundle\AdminBundle\Admin\Routing\TogglerToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -59,10 +62,8 @@ class CommentAdmin extends Admin
         $this->translator = $translator;
     }
 
-    public function getNavigation(): Navigation
+    public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        $rootNavigationItem = $this->getNavigationItemRoot();
-
         $commentModule = new NavigationItem('sulu_comment.comments');
         $commentModule->setPosition(21);
         $commentModule->setIcon('su-comment');
@@ -84,33 +85,33 @@ class CommentAdmin extends Admin
         }
 
         if ($commentModule->hasChildren()) {
-            $rootNavigationItem->addChild($commentModule);
+            $navigationItemCollection->add($commentModule);
         }
-
-        return new Navigation($rootNavigationItem);
     }
 
-    public function getRoutes(): array
+    public function configureRoutes(RouteCollection $routeCollection): void
     {
         $formToolbarActions = [
-            'sulu_admin.save',
-            'sulu_admin.delete',
+            new ToolbarAction('sulu_admin.save'),
+            new ToolbarAction('sulu_admin.delete'),
         ];
 
         /** @var array $commentFormToolbarActions */
-        $commentFormToolbarActions = array_merge($formToolbarActions, ['sulu_admin.toggler' => [
-            'label' => $this->translator->trans('sulu_admin.publish', [], 'admin'),
-            'property' => 'published',
-            'activate' => 'publish',
-            'deactivate' => 'unpublish',
-        ]]);
+        $commentFormToolbarActions = array_merge($formToolbarActions, [
+            new TogglerToolbarAction(
+                $this->translator->trans('sulu_admin.publish', [], 'admin'),
+                'published',
+                'publish',
+                'unpublish'
+            ),
+        ]);
 
         $listToolbarActions = [
-            'sulu_admin.delete',
-            'sulu_admin.export',
+            new ToolbarAction('sulu_admin.delete'),
+            new ToolbarAction('sulu_admin.export'),
         ];
 
-        return [
+        $routeCollection->add(
             $this->routeBuilderFactory->createListRouteBuilder(static::COMMENT_LIST_ROUTE, '/comments')
                 ->setResourceKey('comments')
                 ->setListKey('comments')
@@ -119,18 +120,21 @@ class CommentAdmin extends Admin
                 ->setEditRoute(static::COMMENT_EDIT_FORM_ROUTE)
                 ->enableSearching()
                 ->addToolbarActions($listToolbarActions)
-                ->getRoute(),
+        );
+        $routeCollection->add(
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::COMMENT_EDIT_FORM_ROUTE, '/comments/:id')
                 ->setResourceKey('comments')
                 ->setBackRoute(static::COMMENT_LIST_ROUTE)
-                ->getRoute(),
+        );
+        $routeCollection->add(
             $this->routeBuilderFactory->createFormRouteBuilder(static::COMMENT_EDIT_FORM_DETAILS_ROUTE, '/details')
                 ->setResourceKey('comments')
                 ->setFormKey('comment_details')
                 ->setTabTitle('sulu_admin.details')
                 ->addToolbarActions($commentFormToolbarActions)
                 ->setParent(static::COMMENT_EDIT_FORM_ROUTE)
-                ->getRoute(),
+        );
+        $routeCollection->add(
             $this->routeBuilderFactory->createListRouteBuilder(static::THREAD_LIST_ROUTE, '/threads')
                 ->setResourceKey('threads')
                 ->setListKey('threads')
@@ -139,19 +143,20 @@ class CommentAdmin extends Admin
                 ->setEditRoute(static::THREAD_EDIT_FORM_ROUTE)
                 ->enableSearching()
                 ->addToolbarActions($listToolbarActions)
-                ->getRoute(),
+        );
+        $routeCollection->add(
             $this->routeBuilderFactory->createResourceTabRouteBuilder(static::THREAD_EDIT_FORM_ROUTE, '/threads/:id')
                 ->setResourceKey('threads')
                 ->setBackRoute(static::THREAD_LIST_ROUTE)
-                ->getRoute(),
+        );
+        $routeCollection->add(
             $this->routeBuilderFactory->createFormRouteBuilder(static::THREAD_EDIT_FORM_DETAILS_ROUTE, '/details')
                 ->setResourceKey('threads')
                 ->setFormKey('thread_details')
                 ->setTabTitle('sulu_admin.details')
                 ->addToolbarActions($formToolbarActions)
                 ->setParent(static::THREAD_EDIT_FORM_ROUTE)
-                ->getRoute(),
-        ];
+        );
     }
 
     public function getSecurityContexts()

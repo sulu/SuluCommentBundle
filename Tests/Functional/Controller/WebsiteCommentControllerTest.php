@@ -77,7 +77,7 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $threadTitle = 'Test Thread'
     ) {
         /** @var ThreadInterface $thread */
-        $thread = $this->testPostComment($type, $entityId);
+        $thread = $this->postComment($type, $entityId);
 
         /** @var CommentInterface $parent */
         $parent = $thread->getComments()->first();
@@ -166,8 +166,8 @@ class WebsiteCommentControllerTest extends SuluTestCase
 
     public function testPostCommentMultiple($type = 'blog', $entityId = '1')
     {
-        $thread1 = $this->testPostComment($type, $entityId);
-        $thread2 = $this->testPostComment($type, $entityId);
+        $thread1 = $this->postComment($type, $entityId);
+        $thread2 = $this->postComment($type, $entityId);
 
         $this->assertEquals($thread1->getId(), $thread2->getId());
 
@@ -176,15 +176,15 @@ class WebsiteCommentControllerTest extends SuluTestCase
 
     public function testPostCommentDifferent($type = 'blog', $entityId = '1')
     {
-        $thread1 = $this->testPostComment($type, $entityId);
-        $thread2 = $this->testPostComment('article', '123-123-123');
+        $thread1 = $this->postComment($type, $entityId);
+        $thread2 = $this->postComment('article', '123-123-123');
 
         $this->assertNotEquals($thread1->getId(), $thread2->getId());
     }
 
     public function testPutComment($type = 'blog', $entityId = '1')
     {
-        $thread = $this->testPostComment($type, $entityId);
+        $thread = $this->postComment($type, $entityId);
         $comment = $thread->getComments()->first();
 
         $client = $this->createWebsiteClient();
@@ -205,7 +205,7 @@ class WebsiteCommentControllerTest extends SuluTestCase
 
     public function testPutCommentWithReferrer($type = 'blog', $entityId = '1')
     {
-        $thread = $this->testPostComment($type, $entityId);
+        $thread = $this->postComment($type, $entityId);
         $comment = $thread->getComments()->first();
 
         $client = $this->createWebsiteClient();
@@ -229,7 +229,7 @@ class WebsiteCommentControllerTest extends SuluTestCase
 
     public function testDeleteComment($type = 'blog', $entityId = '1')
     {
-        $thread = $this->testPostComment($type, $entityId);
+        $thread = $this->postComment($type, $entityId);
         $comment = $thread->getComments()->first();
 
         $client = $this->createWebsiteClient();
@@ -250,7 +250,7 @@ class WebsiteCommentControllerTest extends SuluTestCase
 
     public function testDeleteCommitWithReferrer($type = 'blog', $entityId = '1')
     {
-        $thread = $this->testPostComment($type, $entityId);
+        $thread = $this->postComment($type, $entityId);
         $comment = $thread->getComments()->first();
 
         $client = $this->createWebsiteClient();
@@ -273,10 +273,10 @@ class WebsiteCommentControllerTest extends SuluTestCase
 
     public function testGetComments($type = 'blog', $entityId = '1')
     {
-        $this->testPostComment($type, $entityId);
+        $this->postComment($type, $entityId);
         sleep(1);
-        $this->testPostComment($type, $entityId, 'My new Comment');
-        $this->testPostComment('article', '123-123-123');
+        $this->postComment($type, $entityId, 'My new Comment');
+        $this->postComment('article', '123-123-123');
 
         $client = $this->createWebsiteClient();
         $client->request(
@@ -292,5 +292,23 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $this->assertEquals('My new Comment', $response[0]['message']);
         $this->assertEquals(CommentInterface::STATE_PUBLISHED, $response[1]['state']);
         $this->assertEquals('Sulu is awesome', $response[1]['message']);
+    }
+
+    private function postComment(
+        $type = 'blog',
+        $entityId = '1',
+        $message = 'Sulu is awesome',
+        $threadTitle = 'Test Thread'
+    ) {
+        $client = $this->createWebsiteClient();
+        $client->request(
+            'POST',
+            '_api/threads/' . $type . '-' . $entityId . '/comments.json',
+            ['message' => $message, 'threadTitle' => $threadTitle]
+        );
+
+        $thread = $this->getContainer()->get('sulu.repository.thread')->findThread($type, $entityId);
+
+        return $thread;
     }
 }

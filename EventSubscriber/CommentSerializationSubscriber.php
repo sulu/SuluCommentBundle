@@ -14,11 +14,14 @@ namespace Sulu\Bundle\CommentBundle\EventSubscriber;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\CommentBundle\Entity\Comment;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class CommentSerializerEventSubscriber implements EventSubscriberInterface
+class CommentSerializationSubscriber implements EventSubscriberInterface
 {
     /**
      * @var MediaManagerInterface
@@ -51,8 +54,8 @@ class CommentSerializerEventSubscriber implements EventSubscriberInterface
     {
         $context = $event->getContext();
 
-        if (!$context->attributes->containsKey('groups')
-            || !in_array('commentWithAvatar', $context->attributes->get('groups')->get())) {
+        if (!$context->hasAttribute('groups')
+            || !in_array('commentWithAvatar', $context->getAttribute('groups'))) {
             return;
         }
 
@@ -62,23 +65,24 @@ class CommentSerializerEventSubscriber implements EventSubscriberInterface
             return;
         }
 
+        /** @var SerializationVisitorInterface $visitor */
+        $visitor = $event->getVisitor();
+
         $contact = $creator->getContact();
-        $event->getVisitor()->addData('creatorId', $contact->getId());
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'creatorId', $contact->getId()),
+            $contact->getId()
+        );
 
         if (!$avatar = $contact->getAvatar()) {
             return;
         }
 
-        $locale = 'en';
         $request = $this->requestStack->getCurrentRequest();
-
-        if ($request) {
-            $locale = $request->getLocale();
-        }
+        $locale = $request ? $request->getLocale() : 'en';
 
         $avatar = $this->mediaManager->getById($avatar->getId(), $locale);
-
-        $event->getVisitor()->addData('creatorAvatar', $event->getContext()->accept([
+        $serializedAvatar = [
             'id' => $avatar->getId(),
             'title' => $avatar->getTitle(),
             'description' => $avatar->getDescription(),
@@ -87,6 +91,10 @@ class CommentSerializerEventSubscriber implements EventSubscriberInterface
             'name' => $avatar->getName(),
             'formats' => $avatar->getFormats(),
             'url' => $avatar->getUrl(),
-        ]));
+        ];
+        $visitor->visitProperty(
+            new StaticPropertyMetadata('', 'creatorAvatar', $serializedAvatar),
+            $serializedAvatar
+        );
     }
 }

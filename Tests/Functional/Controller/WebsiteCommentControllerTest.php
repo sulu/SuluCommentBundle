@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class WebsiteCommentControllerTest extends SuluTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->purgeDatabase();
     }

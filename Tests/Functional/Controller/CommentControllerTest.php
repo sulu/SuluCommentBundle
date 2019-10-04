@@ -26,7 +26,7 @@ class CommentControllerTest extends SuluTestCase
      */
     private $entityManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
 

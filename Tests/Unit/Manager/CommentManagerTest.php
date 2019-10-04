@@ -55,7 +55,7 @@ class CommentManagerTest extends TestCase
      */
     private $comment;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->threadRepository = $this->prophesize(ThreadRepositoryInterface::class);
         $this->commentRepository = $this->prophesize(CommentRepositoryInterface::class);

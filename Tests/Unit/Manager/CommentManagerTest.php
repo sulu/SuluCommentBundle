@@ -90,7 +90,7 @@ class CommentManagerTest extends TestCase
         $dispatcher = $this->dispatcher;
         $thread = $this->thread;
 
-        $this->dispatcher->dispatch(Events::PRE_PERSIST_EVENT, Argument::type(CommentEvent::class))
+        $this->dispatcher->dispatch(Argument::type(CommentEvent::class), Events::PRE_PERSIST_EVENT)
             ->shouldBeCalledTimes(1)
             ->will(
                 function() use ($commentRepository, $comment, $dispatcher, $thread) {
@@ -100,8 +100,8 @@ class CommentManagerTest extends TestCase
                         ->will(
                             function() use ($dispatcher, $thread) {
                                 $dispatcher->dispatch(
-                                    Events::POST_PERSIST_EVENT,
-                                    Argument::type(CommentEvent::class)
+                                    Argument::type(CommentEvent::class),
+                                    Events::POST_PERSIST_EVENT
                                 )->shouldBeCalledTimes(1);
                             }
                         );
@@ -123,7 +123,7 @@ class CommentManagerTest extends TestCase
         $dispatcher = $this->dispatcher;
         $thread = $this->thread;
 
-        $this->dispatcher->dispatch(Events::PRE_PERSIST_EVENT, Argument::type(CommentEvent::class))
+        $this->dispatcher->dispatch(Argument::type(CommentEvent::class), Events::PRE_PERSIST_EVENT)
             ->shouldBeCalledTimes(1)
             ->will(
                 function() use ($commentRepository, $comment, $dispatcher, $thread) {
@@ -133,8 +133,8 @@ class CommentManagerTest extends TestCase
                         ->will(
                             function() use ($dispatcher, $thread) {
                                 $dispatcher->dispatch(
-                                    Events::POST_PERSIST_EVENT,
-                                    Argument::type(CommentEvent::class)
+                                    Argument::type(CommentEvent::class),
+                                    Events::POST_PERSIST_EVENT
                                 )->shouldBeCalledTimes(1);
                             }
                         );
@@ -153,12 +153,12 @@ class CommentManagerTest extends TestCase
         $comment->getThread()->willReturn($this->thread->reveal());
 
         $this->dispatcher->dispatch(
-            Events::PRE_UPDATE_EVENT,
             Argument::that(
                 function(CommentEvent $event) use ($comment) {
                     return $event->getComment() === $comment->reveal();
                 }
-            )
+            ),
+            Events::PRE_UPDATE_EVENT
         )->shouldBeCalled();
 
         $this->assertEquals($comment->reveal(), $this->commentManager->update($comment->reveal()));
@@ -169,12 +169,12 @@ class CommentManagerTest extends TestCase
         $thread = $this->thread;
 
         $this->dispatcher->dispatch(
-            Events::THREAD_PRE_UPDATE_EVENT,
             Argument::that(
                 function(ThreadEvent $event) use ($thread) {
                     return $event->getThread() === $thread->reveal();
                 }
-            )
+            ),
+            Events::THREAD_PRE_UPDATE_EVENT
         )->shouldBeCalled();
 
         $this->assertEquals($thread->reveal(), $this->commentManager->updateThread($thread->reveal()));
@@ -200,21 +200,21 @@ class CommentManagerTest extends TestCase
             $this->commentRepository->delete($comment->reveal())->shouldBeCalled();
 
             $this->dispatcher->dispatch(
-                Events::PRE_DELETE_EVENT,
                 Argument::that(
                     function(CommentEvent $event) use ($comment) {
                         return $event->getComment() === $comment->reveal();
                     }
-                )
+                ),
+                Events::PRE_DELETE_EVENT
             )->will(
                 function() use ($comment, $dispatcher) {
                     $dispatcher->dispatch(
-                        Events::POST_DELETE_EVENT,
                         Argument::that(
                             function(CommentEvent $event) use ($comment) {
                                 return $event->getComment() === $comment->reveal();
                             }
-                        )
+                        ),
+                        Events::POST_DELETE_EVENT
                     )->shouldBeCalledTimes(1);
                 }
             )->shouldBeCalledTimes(1);
@@ -245,21 +245,21 @@ class CommentManagerTest extends TestCase
             $this->commentRepository->delete($comment->reveal())->shouldBeCalled();
 
             $this->dispatcher->dispatch(
-                Events::PRE_DELETE_EVENT,
                 Argument::that(
                     function(CommentEvent $event) use ($comment) {
                         return $event->getComment() === $comment->reveal();
                     }
-                )
+                ),
+                Events::PRE_DELETE_EVENT
             )->will(
                 function() use ($comment, $dispatcher) {
                     $dispatcher->dispatch(
-                        Events::POST_DELETE_EVENT,
                         Argument::that(
                             function(CommentEvent $event) use ($comment) {
                                 return $event->getComment() === $comment->reveal();
                             }
-                        )
+                        ),
+                        Events::POST_DELETE_EVENT
                     )->shouldBeCalledTimes(1);
                 }
             )->shouldBeCalledTimes(1);
@@ -287,21 +287,21 @@ class CommentManagerTest extends TestCase
             $this->threadRepository->delete($thread->reveal())->shouldBeCalled();
 
             $this->dispatcher->dispatch(
-                Events::THREAD_PRE_DELETE_EVENT,
                 Argument::that(
                     function(ThreadEvent $event) use ($thread) {
                         return $event->getThread() === $thread->reveal();
                     }
-                )
+                ),
+                Events::THREAD_PRE_DELETE_EVENT
             )->will(
                 function() use ($thread, $dispatcher) {
                     $dispatcher->dispatch(
-                        Events::THREAD_POST_DELETE_EVENT,
                         Argument::that(
                             function(ThreadEvent $event) use ($thread) {
                                 return $event->getThread() === $thread->reveal();
                             }
-                        )
+                        ),
+                        Events::THREAD_POST_DELETE_EVENT
                     )->shouldBeCalledTimes(1);
                 }
             )->shouldBeCalledTimes(1);
@@ -327,21 +327,21 @@ class CommentManagerTest extends TestCase
             $this->threadRepository->delete($thread->reveal())->shouldBeCalled();
 
             $this->dispatcher->dispatch(
-                Events::THREAD_PRE_DELETE_EVENT,
                 Argument::that(
                     function(ThreadEvent $event) use ($thread) {
                         return $event->getThread() === $thread->reveal();
                     }
-                )
+                ),
+                Events::THREAD_PRE_DELETE_EVENT
             )->will(
                 function() use ($thread, $dispatcher) {
                     $dispatcher->dispatch(
-                        Events::THREAD_POST_DELETE_EVENT,
                         Argument::that(
                             function(ThreadEvent $event) use ($thread) {
                                 return $event->getThread() === $thread->reveal();
                             }
-                        )
+                        ),
+                        Events::THREAD_POST_DELETE_EVENT
                     )->shouldBeCalledTimes(1);
                 }
             )->shouldBeCalledTimes(1);
@@ -362,12 +362,12 @@ class CommentManagerTest extends TestCase
 
         $comment = $this->comment;
         $this->dispatcher->dispatch(
-            Events::PUBLISH_EVENT,
             Argument::that(
                 function(CommentEvent $event) use ($comment) {
                     return $event->getComment() === $comment->reveal();
                 }
-            )
+            ),
+            Events::PUBLISH_EVENT
         )->shouldBeCalledTimes(1);
 
         $this->assertEquals($this->comment->reveal(), $this->commentManager->publish($this->comment->reveal()));
@@ -380,12 +380,12 @@ class CommentManagerTest extends TestCase
 
         $comment = $this->comment;
         $this->dispatcher->dispatch(
-            Events::PUBLISH_EVENT,
             Argument::that(
                 function(CommentEvent $event) use ($comment) {
                     return $event->getComment() === $comment->reveal();
                 }
-            )
+            ),
+            Events::PUBLISH_EVENT
         )->shouldNotBeCalled();
 
         $this->assertEquals($this->comment->reveal(), $this->commentManager->publish($this->comment->reveal()));
@@ -399,12 +399,12 @@ class CommentManagerTest extends TestCase
 
         $comment = $this->comment;
         $this->dispatcher->dispatch(
-            Events::UNPUBLISH_EVENT,
             Argument::that(
                 function(CommentEvent $event) use ($comment) {
                     return $event->getComment() === $comment->reveal();
                 }
-            )
+            ),
+            Events::UNPUBLISH_EVENT
         )->shouldBeCalledTimes(1);
 
         $this->assertEquals($this->comment->reveal(), $this->commentManager->unpublish($this->comment->reveal()));
@@ -417,12 +417,12 @@ class CommentManagerTest extends TestCase
 
         $comment = $this->comment;
         $this->dispatcher->dispatch(
-            Events::UNPUBLISH_EVENT,
             Argument::that(
                 function(CommentEvent $event) use ($comment) {
                     return $event->getComment() === $comment->reveal();
                 }
-            )
+            ),
+            Events::UNPUBLISH_EVENT
         )->shouldNotBeCalled();
 
         $this->assertEquals($this->comment->reveal(), $this->commentManager->unpublish($this->comment->reveal()));

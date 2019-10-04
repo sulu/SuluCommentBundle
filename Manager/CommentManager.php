@@ -72,10 +72,10 @@ class CommentManager implements CommentManagerInterface
             $thread->setTitle($threadTitle);
         }
 
-        $this->dispatcher->dispatch(Events::PRE_PERSIST_EVENT, new CommentEvent($type, $entityId, $comment, $thread));
+        $this->dispatcher->dispatch(new CommentEvent($type, $entityId, $comment, $thread), Events::PRE_PERSIST_EVENT);
         $this->commentRepository->persist($comment);
         $thread = $thread->addComment($comment);
-        $this->dispatcher->dispatch(Events::POST_PERSIST_EVENT, new CommentEvent($type, $entityId, $comment, $thread));
+        $this->dispatcher->dispatch(new CommentEvent($type, $entityId, $comment, $thread), Events::POST_PERSIST_EVENT);
 
         return $thread;
     }
@@ -84,8 +84,8 @@ class CommentManager implements CommentManagerInterface
     {
         $thread = $comment->getThread();
         $this->dispatcher->dispatch(
-            Events::PRE_UPDATE_EVENT,
-            new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread)
+            new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread),
+            Events::PRE_UPDATE_EVENT
         );
 
         return $comment;
@@ -105,7 +105,7 @@ class CommentManager implements CommentManagerInterface
 
     public function updateThread(ThreadInterface $thread): ThreadInterface
     {
-        $this->dispatcher->dispatch(Events::THREAD_PRE_UPDATE_EVENT, new ThreadEvent($thread));
+        $this->dispatcher->dispatch(new ThreadEvent($thread), Events::THREAD_PRE_UPDATE_EVENT);
 
         return $thread;
     }
@@ -132,8 +132,8 @@ class CommentManager implements CommentManagerInterface
 
         $thread = $comment->getThread();
         $this->dispatcher->dispatch(
-            Events::PUBLISH_EVENT,
-            new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread)
+            new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread),
+            Events::PUBLISH_EVENT
         );
 
         return $comment;
@@ -149,8 +149,8 @@ class CommentManager implements CommentManagerInterface
 
         $thread = $comment->getThread();
         $this->dispatcher->dispatch(
-            Events::UNPUBLISH_EVENT,
-            new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread)
+            new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread),
+            Events::UNPUBLISH_EVENT
         );
 
         return $comment;
@@ -160,21 +160,21 @@ class CommentManager implements CommentManagerInterface
     {
         $thread = $comment->getThread();
         $preEvent = new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread);
-        $this->dispatcher->dispatch(Events::PRE_DELETE_EVENT, $preEvent);
+        $this->dispatcher->dispatch($preEvent, Events::PRE_DELETE_EVENT);
 
         $thread->removeComment($comment);
         $this->commentRepository->delete($comment);
 
         $postEvent = new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread);
-        $this->dispatcher->dispatch(Events::POST_DELETE_EVENT, $postEvent);
+        $this->dispatcher->dispatch($postEvent, Events::POST_DELETE_EVENT);
     }
 
     private function deleteThread(ThreadInterface $thread): void
     {
-        $this->dispatcher->dispatch(Events::THREAD_PRE_DELETE_EVENT, new ThreadEvent($thread));
+        $this->dispatcher->dispatch(new ThreadEvent($thread), Events::THREAD_PRE_DELETE_EVENT);
 
         $this->threadRepository->delete($thread);
 
-        $this->dispatcher->dispatch(Events::THREAD_POST_DELETE_EVENT, new ThreadEvent($thread));
+        $this->dispatcher->dispatch(new ThreadEvent($thread), Events::THREAD_POST_DELETE_EVENT);
     }
 }

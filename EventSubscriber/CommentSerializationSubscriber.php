@@ -17,7 +17,6 @@ use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\CommentBundle\Entity\Comment;
-use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 

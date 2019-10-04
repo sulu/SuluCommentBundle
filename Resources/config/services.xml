@@ -4,6 +4,26 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service
+            id="sulu_security.website_comment_controller"
+            class="Sulu\Bundle\CommentBundle\Controller\WebsiteCommentController"
+            public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="sulu_comment.manager" />
+            <argument type="service" id="sulu.repository.comment" />
+            <argument type="service" id="form.factory" />
+            <argument type="service" id="twig" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument>%sulu.model.comment.class%</argument>
+            <argument>%sulu_comment.types%</argument>
+            <argument>%sulu_comment.default_templates%</argument>
+            <argument>%sulu_comment.serializer_groups%</argument>
+            <argument>%sulu_comment.nested_comments%</argument>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
         <service id="sulu_comment.admin" class="Sulu\Bundle\CommentBundle\Admin\CommentAdmin">
             <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface"/>
             <argument type="service" id="sulu_security.security_checker"/>

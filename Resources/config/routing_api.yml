@@ -1,7 +1,7 @@
 sulu_comment.comments:
     type: rest
     name_prefix: sulu_comment.
-    resource: Sulu\Bundle\CommentBundle\Controller\CommentController
+    resource: sulu_security.comment_controller
     options:
         expose: true
 

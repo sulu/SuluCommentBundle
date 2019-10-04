@@ -5,6 +5,23 @@
 
     <services>
         <service
+            id="sulu_security.comment_controller"
+            class="Sulu\Bundle\CommentBundle\Controller\CommentController"
+            public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="sulu_core.doctrine_rest_helper" />
+            <argument type="service" id="sulu_core.doctrine_list_builder_factory" />
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory" />
+            <argument type="service" id="sulu.repository.comment" />
+            <argument type="service" id="sulu_comment.manager" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument>%sulu.model.comment.class%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service
             id="sulu_security.website_comment_controller"
             class="Sulu\Bundle\CommentBundle\Controller\WebsiteCommentController"
             public="true"

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CommentBundle\Controller;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
@@ -19,18 +18,12 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
-use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\CommentBundle\Entity\Comment;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
-use Sulu\Bundle\CommentBundle\Entity\CommentRepository;
 use Sulu\Bundle\CommentBundle\Entity\CommentRepositoryInterface;
 use Sulu\Bundle\CommentBundle\Form\Type\CommentType;
 use Sulu\Bundle\CommentBundle\Manager\CommentManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
-use Sulu\Component\Rest\RestController;
-use Sulu\Component\Rest\RestHelperInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerTrait;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -238,7 +231,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         $message = $request->request->get('message');
 
         /** @var Comment $comment */
-        $comment = $this->commentRepository->findCommentById((int)$commentId);
+        $comment = $this->commentRepository->findCommentById((int) $commentId);
         $comment->setMessage($message);
         $this->entityManager->flush();
 

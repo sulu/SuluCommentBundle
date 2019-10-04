@@ -11,30 +11,90 @@
 
 namespace Sulu\Bundle\CommentBundle\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
+use Sulu\Bundle\CommentBundle\Entity\ThreadRepositoryInterface;
+use Sulu\Bundle\CommentBundle\Manager\CommentManagerInterface;
+use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ThreadController extends RestController implements ClassResourceInterface
+class ThreadController extends AbstractRestController implements ClassResourceInterface
 {
     use RequestParametersTrait;
 
+    /**
+     * @var RestHelperInterface
+     */
+    private $restHelper;
+
+    /**
+     * @var DoctrineListBuilderFactoryInterface
+     */
+    private $doctrineListBuilderFactory;
+
+    /**
+     * @var FieldDescriptorFactoryInterface
+     */
+    private $fieldDescriptorFactory;
+
+    /**
+     * @var ThreadRepositoryInterface
+     */
+    private $threadRepository;
+
+    /**
+     * @var CommentManagerInterface
+     */
+    private $commentManager;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var string
+     */
+    private $threadClass;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        RestHelperInterface $restHelper,
+        DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
+        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        ThreadRepositoryInterface $threadRepository,
+        CommentManagerInterface $commentManager,
+        EntityManagerInterface $entityManager,
+        string $threadClass
+    ) {
+        parent::__construct($viewHandler);
+
+        $this->restHelper = $restHelper;
+        $this->doctrineListBuilderFactory = $doctrineListBuilderFactory;
+        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
+        $this->threadRepository = $threadRepository;
+        $this->commentManager = $commentManager;
+        $this->entityManager = $entityManager;
+        $this->threadClass = $threadClass;
+    }
+
     public function cgetAction(Request $request): Response
     {
-        $restHelper = $this->get('sulu_core.doctrine_rest_helper');
-        $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-        $listBuilder = $factory->create($this->getParameter('sulu.model.thread.class'));
+        $listBuilder = $this->doctrineListBuilderFactory->create($this->threadClass);
 
         /** @var FieldDescriptorInterface[] $fieldDescriptors */
-        $fieldDescriptors = $this->get('sulu_core.list_builder.field_descriptor_factory')
-            ->getFieldDescriptors('threads');
-        $restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
+        $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('threads');
+        $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         foreach ($request->query->all() as $filterKey => $filterValue) {
             if (isset($fieldDescriptors[$filterKey])) {
@@ -63,7 +123,7 @@ class ThreadController extends RestController implements ClassResourceInterface
 
     public function getAction(int $id): Response
     {
-        $thread = $this->get('sulu.repository.thread')->findThreadById($id);
+        $thread = $this->threadRepository->findThreadById($id);
         if (!$thread) {
             throw new EntityNotFoundException(ThreadInterface::class, $id);
         }
@@ -74,15 +134,15 @@ class ThreadController extends RestController implements ClassResourceInterface
     public function putAction(int $id, Request $request): Response
     {
         /** @var ThreadInterface|null $thread */
-        $thread = $this->get('sulu.repository.thread')->findThreadById($id);
+        $thread = $this->threadRepository->findThreadById($id);
         if (!$thread) {
             throw new EntityNotFoundException(ThreadInterface::class, $id);
         }
 
         $thread->setTitle($request->request->get('title'));
 
-        $this->get('sulu_comment.manager')->updateThread($thread);
-        $this->get('doctrine.orm.entity_manager')->flush();
+        $this->commentManager->updateThread($thread);
+        $this->entityManager->flush();
 
         return $this->handleView($this->view($thread));
     }
@@ -95,16 +155,16 @@ class ThreadController extends RestController implements ClassResourceInterface
             return $this->handleView($this->view(null, 204));
         }
 
-        $this->get('sulu_comment.manager')->deleteThreads($ids);
-        $this->get('doctrine.orm.entity_manager')->flush();
+        $this->commentManager->deleteThreads($ids);
+        $this->entityManager->flush();
 
         return $this->handleView($this->view(null, 204));
     }
 
     public function deleteAction(int $id): Response
     {
-        $this->get('sulu_comment.manager')->deleteThreads([$id]);
-        $this->get('doctrine.orm.entity_manager')->flush();
+        $this->commentManager->deleteThreads([$id]);
+        $this->entityManager->flush();
 
         return $this->handleView($this->view(null, 204));
     }

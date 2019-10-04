@@ -8,6 +8,6 @@ sulu_comment.comments:
 sulu_comment.threads:
     type: rest
     name_prefix: sulu_comment.
-    resource: Sulu\Bundle\CommentBundle\Controller\ThreadController
+    resource: sulu_security.thread_controller
     options:
         expose: true

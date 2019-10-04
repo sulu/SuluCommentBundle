@@ -1,13 +1,13 @@
 sulu_comment.comments:
     type: rest
     name_prefix: sulu_comment.
-    resource: sulu_security.comment_controller
+    resource: sulu_comment.comment_controller
     options:
         expose: true
 
 sulu_comment.threads:
     type: rest
     name_prefix: sulu_comment.
-    resource: sulu_security.thread_controller
+    resource: sulu_comment.thread_controller
     options:
         expose: true

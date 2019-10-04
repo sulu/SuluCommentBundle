@@ -5,7 +5,7 @@
 
     <services>
         <service
-            id="sulu_security.comment_controller"
+            id="sulu_comment.comment_controller"
             class="Sulu\Bundle\CommentBundle\Controller\CommentController"
             public="true"
         >
@@ -22,7 +22,7 @@
         </service>
 
         <service
-            id="sulu_security.thread_controller"
+            id="sulu_comment.thread_controller"
             class="Sulu\Bundle\CommentBundle\Controller\ThreadController"
             public="true"
         >
@@ -39,7 +39,7 @@
         </service>
 
         <service
-            id="sulu_security.website_comment_controller"
+            id="sulu_comment.website_comment_controller"
             class="Sulu\Bundle\CommentBundle\Controller\WebsiteCommentController"
             public="true"
         >

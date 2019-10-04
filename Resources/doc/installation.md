@@ -30,7 +30,7 @@ And `config/routes/sulu_website.yaml`:
 ```yaml
 sulu_comments:
     type: rest
-    resource: "@SuluCommentBundle/Resources/config/routing_website.xml"
+    resource: "@SuluCommentBundle/Resources/config/routing_website.yml"
 ```
 
 Follow the [Getting started](https://github.com/sulu/SuluCommentBundle/blob/master/Resources/doc/getting-started.md)

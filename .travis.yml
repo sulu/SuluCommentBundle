@@ -34,7 +34,7 @@ install:
 
 script:
   - if [[ $PHPSTAN = true ]]; then composer phpstan; fi
-  - ./vendor/bin/phpunit $CODE_COVERAGE
+  - composer phpunit -- $CODE_COVERAGE
 
 after_script:
   - if [[ -n $CODE_COVERAGE ]]; then wget https://scrutinizer-ci.com/ocular.phar ; fi

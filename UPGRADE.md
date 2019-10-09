@@ -6,7 +6,6 @@
 
 The `comment_count` property of serialized threads was renamed to `commentCount`.
 
-
 ### Add nested tree to comments
 
 Comments can now be nested - therefor the database schema has changed and can be updated by:

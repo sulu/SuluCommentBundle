@@ -24,6 +24,9 @@ security:
             http_basic: ~
             anonymous: ~
 
+sulu_test:
+    enable_test_user_provider: true
+
 sulu_security:
     checker:
         enabled: true

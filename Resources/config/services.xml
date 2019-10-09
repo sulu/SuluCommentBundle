@@ -4,8 +4,62 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service
+            id="sulu_comment.comment_controller"
+            class="Sulu\Bundle\CommentBundle\Controller\CommentController"
+            public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="sulu_core.doctrine_rest_helper" />
+            <argument type="service" id="sulu_core.doctrine_list_builder_factory" />
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory" />
+            <argument type="service" id="sulu.repository.comment" />
+            <argument type="service" id="sulu_comment.manager" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument>%sulu.model.comment.class%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service
+            id="sulu_comment.thread_controller"
+            class="Sulu\Bundle\CommentBundle\Controller\ThreadController"
+            public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="sulu_core.doctrine_rest_helper" />
+            <argument type="service" id="sulu_core.doctrine_list_builder_factory" />
+            <argument type="service" id="sulu_core.list_builder.field_descriptor_factory" />
+            <argument type="service" id="sulu.repository.thread" />
+            <argument type="service" id="sulu_comment.manager" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument>%sulu.model.thread.class%</argument>
+
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service
+            id="sulu_comment.website_comment_controller"
+            class="Sulu\Bundle\CommentBundle\Controller\WebsiteCommentController"
+            public="true"
+        >
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="sulu_comment.manager" />
+            <argument type="service" id="sulu.repository.comment" />
+            <argument type="service" id="form.factory" />
+            <argument type="service" id="twig" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument>%sulu.model.comment.class%</argument>
+            <argument>%sulu_comment.types%</argument>
+            <argument>%sulu_comment.default_templates%</argument>
+            <argument>%sulu_comment.serializer_groups%</argument>
+            <argument>%sulu_comment.nested_comments%</argument>
+
+            <tag name="sulu.context" context="website"/>
+        </service>
+
         <service id="sulu_comment.admin" class="Sulu\Bundle\CommentBundle\Admin\CommentAdmin">
-            <argument type="service" id="sulu_admin.route_factory"/>
+            <argument type="service" id="Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="translator"/>
 
@@ -32,7 +86,7 @@
             <tag name="twig.extension"/>
         </service>
 
-        <service id="Sulu\Bundle\CommentBundle\EventSubscriber\CommentSerializerEventSubscriber">
+        <service id="Sulu\Bundle\CommentBundle\EventSubscriber\CommentSerializationSubscriber">
             <argument type="service" id="sulu_media.media_manager"/>
             <argument type="service" id="request_stack"/>
 

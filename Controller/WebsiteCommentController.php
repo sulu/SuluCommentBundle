@@ -11,29 +11,108 @@
 
 namespace Sulu\Bundle\CommentBundle\Controller;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\CommentBundle\Entity\Comment;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
-use Sulu\Bundle\CommentBundle\Entity\CommentRepository;
 use Sulu\Bundle\CommentBundle\Entity\CommentRepositoryInterface;
 use Sulu\Bundle\CommentBundle\Form\Type\CommentType;
 use Sulu\Bundle\CommentBundle\Manager\CommentManagerInterface;
-use Sulu\Component\Rest\RestController;
+use Sulu\Component\Rest\AbstractRestController;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
 /**
  * @RouteResource("thread")
  * @NamePrefix("sulu_comment.")
  */
-class WebsiteCommentController extends RestController implements ClassResourceInterface
+class WebsiteCommentController extends AbstractRestController implements ClassResourceInterface
 {
+    /**
+     * @var CommentManagerInterface
+     */
+    private $commentManager;
+
+    /**
+     * @var CommentRepositoryInterface
+     */
+    private $commentRepository;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
+     * @var Environment
+     */
+    private $twig;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var string
+     */
+    private $commentClass;
+
+    /**
+     * @var array
+     */
+    private $commentTypes;
+
+    /**
+     * @var array
+     */
+    private $commentDefaultTemplates;
+
+    /**
+     * @var array
+     */
+    private $commentSerializationGroups;
+
+    /**
+     * @var bool
+     */
+    private $enableNestedCommentsDefault;
+
+    public function __construct(
+        ViewHandlerInterface $viewHandler,
+        CommentManagerInterface $commentManager,
+        CommentRepositoryInterface $commentRepository,
+        FormFactoryInterface $formFactory,
+        Environment $twig,
+        EntityManagerInterface $entityManager,
+        string $commentClass,
+        array $commentTypes,
+        array $commentDefaultTemplates,
+        array $commentSerializationGroups,
+        bool $enableNestedCommentsDefault
+    ) {
+        parent::__construct($viewHandler);
+
+        $this->commentManager = $commentManager;
+        $this->commentRepository = $commentRepository;
+        $this->formFactory = $formFactory;
+        $this->twig = $twig;
+        $this->entityManager = $entityManager;
+        $this->commentClass = $commentClass;
+        $this->commentTypes = $commentTypes;
+        $this->commentDefaultTemplates = $commentDefaultTemplates;
+        $this->commentSerializationGroups = $commentSerializationGroups;
+        $this->enableNestedCommentsDefault = $enableNestedCommentsDefault;
+    }
+
     /**
      * Returns list of comments for given thread.
      */
@@ -44,8 +123,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         $page = $request->get('page');
         $referrer = $request->get('referrer');
 
-        $commentManager = $this->get('sulu_comment.manager');
-        $comments = $commentManager->findPublishedComments(
+        $comments = $this->commentManager->findPublishedComments(
             $type,
             $entityId,
             $page ?: 1,
@@ -61,29 +139,32 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         $response->setMaxAge(0);
         $response->setSharedMaxAge(0);
 
-        $form = $this->createForm(
+        $form = $this->formFactory->create(
             CommentType::class,
             null,
             [
-                'data_class' => $this->getParameter('sulu.model.comment.class'),
+                'data_class' => $this->commentClass,
                 'threadId' => $threadId,
                 'referrer' => $referrer,
             ]
         );
 
-        return $this->render(
-            $this->getTemplate($type, 'comments'),
-            [
-                'form' => $form->createView(),
-                'nestedComments' => $this->getNestedCommentsFlag($type),
-                'commentTemplate' => $this->getTemplate($type, 'comment'),
-                'commentsTemplate' => $this->getTemplate($type, 'comments'),
-                'comments' => $comments,
-                'threadId' => $threadId,
-                'referrer' => $referrer,
-            ],
-            $response
+        $response->setContent(
+            $this->twig->render(
+                $this->getTemplate($type, 'comments'),
+                [
+                    'form' => $form->createView(),
+                    'nestedComments' => $this->getNestedCommentsEnabled($type),
+                    'commentTemplate' => $this->getTemplate($type, 'comment'),
+                    'commentsTemplate' => $this->getTemplate($type, 'comments'),
+                    'comments' => $comments,
+                    'threadId' => $threadId,
+                    'referrer' => $referrer,
+                ]
+            )
         );
+
+        return $response;
     }
 
     /**
@@ -94,21 +175,18 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
-        /** @var CommentRepositoryInterface $repository */
-        $repository = $this->get('sulu.repository.comment');
-
         /** @var CommentInterface $comment */
-        $comment = $repository->createNew();
+        $comment = $this->commentRepository->createNew();
 
         if ($parent = $request->get('parent')) {
-            $comment->setParent($repository->findCommentById($parent));
+            $comment->setParent($this->commentRepository->findCommentById($parent));
         }
 
-        $form = $this->createForm(
+        $form = $this->formFactory->create(
             CommentType::class,
             $comment,
             [
-                'data_class' => $this->getParameter('sulu.model.comment.class'),
+                'data_class' => $this->commentClass,
                 'threadId' => $threadId,
             ]
         );
@@ -121,11 +199,8 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
 
         $comment = $form->getData();
 
-        /** @var CommentManagerInterface $commentManager */
-        $commentManager = $this->get('sulu_comment.manager');
-        $commentManager->addComment($type, $entityId, $comment, $request->get('threadTitle'));
-
-        $this->get('doctrine.orm.entity_manager')->flush();
+        $this->commentManager->addComment($type, $entityId, $comment, $request->get('threadTitle'));
+        $this->entityManager->flush();
 
         if ($referrer = $request->query->get('referrer')) {
             return new RedirectResponse($referrer);
@@ -135,12 +210,14 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
             return $this->handleView($this->view($comment));
         }
 
-        return $this->render(
-            $this->getTemplate($type, 'comment'),
-            [
-                'comment' => $comment,
-                'threadId' => $threadId,
-            ]
+        return new Response(
+            $this->twig->render(
+                $this->getTemplate($type, 'comment'),
+                [
+                    'comment' => $comment,
+                    'threadId' => $threadId,
+                ]
+            )
         );
     }
 
@@ -151,20 +228,12 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
-        /** @var CommentRepositoryInterface $repository */
-        $repository = $this->get('sulu.repository.comment');
         $message = $request->request->get('message');
 
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->get('doctrine.orm.entity_manager');
-
-        /** @var CommentRepository $commentRepository */
-        $commentRepository = $entityManager->getRepository(Comment::class);
-
         /** @var Comment $comment */
-        $comment = $commentRepository->findCommentById(intval($commentId));
+        $comment = $this->commentRepository->findCommentById((int) $commentId);
         $comment->setMessage($message);
-        $entityManager->flush();
+        $this->entityManager->flush();
 
         if ($referrer = $request->query->get('referrer')) {
             return new RedirectResponse($referrer);
@@ -174,28 +243,24 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
             return $this->handleView($this->view($comment));
         }
 
-        return $this->render(
-            $this->getTemplate($type, 'comment'),
-            [
-                'comment' => $comment,
-                'threadId' => $threadId,
-            ]
+        return new Response(
+            $this->twig->render(
+                $this->getTemplate($type, 'comment'),
+                [
+                    'comment' => $comment,
+                    'threadId' => $threadId,
+                ]
+            )
         );
     }
 
     public function deleteCommentAction(string $threadId, string $commentId, Request $request): Response
     {
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->get('doctrine.orm.entity_manager');
-
-        /** @var CommentRepository $commentRepository */
-        $commentRepository = $entityManager->getRepository(Comment::class);
-        $referrer = $request->get('referrer');
         /** @var Comment $comment */
-        $comment = $commentRepository->findCommentById(intval($commentId));
+        $comment = $this->commentRepository->findCommentById(intval($commentId));
 
-        $entityManager->remove($comment);
-        $entityManager->flush();
+        $this->entityManager->remove($comment);
+        $this->entityManager->flush();
 
         if ($referrer = $request->query->get('referrer')) {
             return new RedirectResponse($referrer);
@@ -213,7 +278,7 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
         $view = parent::view($data, $statusCode, $headers);
 
         $context = new Context();
-        $context->setGroups($this->getParameter('sulu_comment.serializer_groups'));
+        $context->setGroups($this->commentSerializationGroups);
         $view->setContext($context);
 
         return $view;
@@ -236,25 +301,19 @@ class WebsiteCommentController extends RestController implements ClassResourceIn
 
     private function getTemplate(string $type, string $templateType): string
     {
-        $defaults = $this->getParameter('sulu_comment.default_templates');
-
-        $types = $this->getParameter('sulu_comment.types');
-        if (array_key_exists($type, $types)) {
-            return $types[$type]['templates'][$templateType];
+        if (array_key_exists($type, $this->commentTypes)) {
+            return $this->commentTypes[$type]['templates'][$templateType];
         }
 
-        return $defaults[$templateType];
+        return $this->commentDefaultTemplates[$templateType];
     }
 
-    private function getNestedCommentsFlag(string $type): string
+    private function getNestedCommentsEnabled(string $type): bool
     {
-        $default = $this->getParameter('sulu_comment.nested_comments');
-
-        $types = $this->getParameter('sulu_comment.types');
-        if (array_key_exists($type, $types)) {
-            return $types[$type]['nested_comments'];
+        if (array_key_exists($type, $this->commentTypes)) {
+            return $this->commentTypes[$type]['nested_comments'];
         }
 
-        return $default;
+        return $this->enableNestedCommentsDefault;
     }
 }

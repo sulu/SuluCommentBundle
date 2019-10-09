@@ -1,4 +1,4 @@
 sulu_comment:
     type: rest
-    resource: "@SuluCommentBundle/Resources/config/routing_website.xml"
+    resource: "@SuluCommentBundle/Resources/config/routing_website.yml"
     prefix: /_api

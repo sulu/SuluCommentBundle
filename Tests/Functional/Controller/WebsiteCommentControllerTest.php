@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class WebsiteCommentControllerTest extends SuluTestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->purgeDatabase();
     }
@@ -96,7 +96,7 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $this->assertEquals(CommentInterface::STATE_PUBLISHED, $response['state']);
         $this->assertEquals($message, $response['message']);
         $this->assertEquals($threadTitle, $response['thread']['title']);
-        $this->assertEquals(2, $response['thread']['comment_count']);
+        $this->assertEquals(2, $response['thread']['commentCount']);
 
         $this->getContainer()->get('doctrine.orm.default_entity_manager')->clear();
         $thread = $this->getContainer()->get('sulu.repository.thread')->findThread($type, $entityId);

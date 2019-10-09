@@ -14,10 +14,10 @@ namespace Sulu\Bundle\CommentBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteBuilderFactoryInterface;
-use Sulu\Bundle\AdminBundle\Admin\Routing\RouteCollection;
-use Sulu\Bundle\AdminBundle\Admin\Routing\TogglerToolbarAction;
-use Sulu\Bundle\AdminBundle\Admin\Routing\ToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\View\TogglerToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
+use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -28,19 +28,19 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CommentAdmin extends Admin
 {
     const COMMENT_SECURITY_CONTEXT = 'sulu.comment.comments';
-    const COMMENT_LIST_ROUTE = 'sulu_comment.comments.list';
-    const COMMENT_EDIT_FORM_ROUTE = 'sulu_comment.comments.edit_form';
-    const COMMENT_EDIT_FORM_DETAILS_ROUTE = 'sulu_comment.comments.edit_form.details';
+    const COMMENT_LIST_VIEW = 'sulu_comment.comments.list';
+    const COMMENT_EDIT_FORM_VIEW = 'sulu_comment.comments.edit_form';
+    const COMMENT_EDIT_FORM_DETAILS_VIEW = 'sulu_comment.comments.edit_form.details';
 
     const THREAD_SECURITY_CONTEXT = 'sulu.comment.threads';
-    const THREAD_LIST_ROUTE = 'sulu_comment.threads.list';
-    const THREAD_EDIT_FORM_ROUTE = 'sulu_comment.threads.edit_form';
-    const THREAD_EDIT_FORM_DETAILS_ROUTE = 'sulu_comment.threads.edit_form.details';
+    const THREAD_LIST_VIEW = 'sulu_comment.threads.list';
+    const THREAD_EDIT_FORM_VIEW = 'sulu_comment.threads.edit_form';
+    const THREAD_EDIT_FORM_DETAILS_VIEW = 'sulu_comment.threads.edit_form.details';
 
     /**
-     * @var RouteBuilderFactoryInterface
+     * @var ViewBuilderFactoryInterface
      */
-    private $routeBuilderFactory;
+    private $viewBuilderFactory;
 
     /**
      * @var SecurityCheckerInterface
@@ -53,11 +53,11 @@ class CommentAdmin extends Admin
     private $translator;
 
     public function __construct(
-        RouteBuilderFactoryInterface $routeBuilderFactory,
+        ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         TranslatorInterface $translator
     ) {
-        $this->routeBuilderFactory = $routeBuilderFactory;
+        $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
         $this->translator = $translator;
     }
@@ -71,7 +71,7 @@ class CommentAdmin extends Admin
         if ($this->securityChecker->hasPermission(self::COMMENT_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
             $comments = new NavigationItem('sulu_comment.comments');
             $comments->setPosition(10);
-            $comments->setMainRoute(static::COMMENT_LIST_ROUTE);
+            $comments->setView(static::COMMENT_LIST_VIEW);
 
             $commentModule->addChild($comments);
         }
@@ -79,7 +79,7 @@ class CommentAdmin extends Admin
         if ($this->securityChecker->hasPermission(self::THREAD_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
             $threads = new NavigationItem('sulu_comment.threads');
             $threads->setPosition(20);
-            $threads->setMainRoute(static::THREAD_LIST_ROUTE);
+            $threads->setView(static::THREAD_LIST_VIEW);
 
             $commentModule->addChild($threads);
         }
@@ -89,7 +89,7 @@ class CommentAdmin extends Admin
         }
     }
 
-    public function configureRoutes(RouteCollection $routeCollection): void
+    public function configureViews(ViewCollection $viewCollection): void
     {
         $formToolbarActions = [
             new ToolbarAction('sulu_admin.save'),
@@ -111,51 +111,52 @@ class CommentAdmin extends Admin
             new ToolbarAction('sulu_admin.export'),
         ];
 
-        $routeCollection->add(
-            $this->routeBuilderFactory->createListRouteBuilder(static::COMMENT_LIST_ROUTE, '/comments')
+        $viewCollection->add(
+            $this->viewBuilderFactory->createListViewBuilder(static::COMMENT_LIST_VIEW, '/comments')
                 ->setResourceKey('comments')
                 ->setListKey('comments')
                 ->setTitle('sulu_comment.comments')
                 ->addListAdapters(['table'])
-                ->setEditRoute(static::COMMENT_EDIT_FORM_ROUTE)
+                ->setEditView(static::COMMENT_EDIT_FORM_VIEW)
                 ->enableSearching()
                 ->addToolbarActions($listToolbarActions)
         );
-        $routeCollection->add(
-            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::COMMENT_EDIT_FORM_ROUTE, '/comments/:id')
+        $viewCollection->add(
+            $this->viewBuilderFactory->createResourceTabViewBuilder(static::COMMENT_EDIT_FORM_VIEW, '/comments/:id')
                 ->setResourceKey('comments')
-                ->setBackRoute(static::COMMENT_LIST_ROUTE)
+                ->setBackView(static::COMMENT_LIST_VIEW)
         );
-        $routeCollection->add(
-            $this->routeBuilderFactory->createFormRouteBuilder(static::COMMENT_EDIT_FORM_DETAILS_ROUTE, '/details')
+        $viewCollection->add(
+            $this->viewBuilderFactory->createFormViewBuilder(static::COMMENT_EDIT_FORM_DETAILS_VIEW, '/details')
                 ->setResourceKey('comments')
                 ->setFormKey('comment_details')
                 ->setTabTitle('sulu_admin.details')
                 ->addToolbarActions($commentFormToolbarActions)
-                ->setParent(static::COMMENT_EDIT_FORM_ROUTE)
+                ->setParent(static::COMMENT_EDIT_FORM_VIEW)
         );
-        $routeCollection->add(
-            $this->routeBuilderFactory->createListRouteBuilder(static::THREAD_LIST_ROUTE, '/threads')
+
+        $viewCollection->add(
+            $this->viewBuilderFactory->createListViewBuilder(static::THREAD_LIST_VIEW, '/threads')
                 ->setResourceKey('threads')
                 ->setListKey('threads')
                 ->setTitle('sulu_comment.threads')
                 ->addListAdapters(['table'])
-                ->setEditRoute(static::THREAD_EDIT_FORM_ROUTE)
+                ->setEditView(static::THREAD_EDIT_FORM_VIEW)
                 ->enableSearching()
                 ->addToolbarActions($listToolbarActions)
         );
-        $routeCollection->add(
-            $this->routeBuilderFactory->createResourceTabRouteBuilder(static::THREAD_EDIT_FORM_ROUTE, '/threads/:id')
+        $viewCollection->add(
+            $this->viewBuilderFactory->createResourceTabViewBuilder(static::THREAD_EDIT_FORM_VIEW, '/threads/:id')
                 ->setResourceKey('threads')
-                ->setBackRoute(static::THREAD_LIST_ROUTE)
+                ->setBackView(static::THREAD_LIST_VIEW)
         );
-        $routeCollection->add(
-            $this->routeBuilderFactory->createFormRouteBuilder(static::THREAD_EDIT_FORM_DETAILS_ROUTE, '/details')
+        $viewCollection->add(
+            $this->viewBuilderFactory->createFormViewBuilder(static::THREAD_EDIT_FORM_DETAILS_VIEW, '/details')
                 ->setResourceKey('threads')
                 ->setFormKey('thread_details')
                 ->setTabTitle('sulu_admin.details')
                 ->addToolbarActions($formToolbarActions)
-                ->setParent(static::THREAD_EDIT_FORM_ROUTE)
+                ->setParent(static::THREAD_EDIT_FORM_VIEW)
         );
     }
 

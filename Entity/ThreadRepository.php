@@ -27,7 +27,10 @@ class ThreadRepository extends EntityRepository implements ThreadRepositoryInter
 
     public function findThreadById(int $id): ?ThreadInterface
     {
-        return $this->find($id);
+        /** @var ThreadInterface|null $thread */
+        $thread = $this->find($id);
+
+        return $thread;
     }
 
     public function findThreadsByIds(array $ids): array
@@ -45,7 +48,10 @@ class ThreadRepository extends EntityRepository implements ThreadRepositoryInter
 
     public function findThread(string $type, string $entityId): ?ThreadInterface
     {
-        return $this->findOneBy(['type' => $type, 'entityId' => $entityId]);
+        /** @var ThreadInterface|null $thread */
+        $thread = $this->findOneBy(['type' => $type, 'entityId' => $entityId]);
+
+        return $thread;
     }
 
     public function delete(ThreadInterface $thread): void

@@ -5,7 +5,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
-        "sulu/sulu": "^2.0"
+        "sulu/sulu": "^2.0.4"
     },
     "require-dev": {
         "doctrine/doctrine-bundle": "^1.10",

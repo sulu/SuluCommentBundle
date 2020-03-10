@@ -90,7 +90,7 @@
             </field>
         </concatenation-property>
 
-        <concatenation-property name="changer" filter-type="string" glue=" " translation="sulu_admin.changer">
+        <concatenation-property name="changer" glue=" " translation="sulu_admin.changer">
             <field>
                 <field-name>firstName</field-name>
                 <entity-name>%sulu.model.contact.class%</entity-name>

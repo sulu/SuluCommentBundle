@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\CommentBundle\Events;
 
 use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class ThreadEvent extends Event
 {

@@ -13,7 +13,7 @@ namespace Sulu\Bundle\CommentBundle\Events;
 
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class CommentEvent extends Event
 {

@@ -19,10 +19,6 @@ sulu_comment_api:
     type: rest
     resource: "@SuluCommentBundle/Resources/config/routing_api.yml"
     prefix: /admin/api
-
-sulu_comment:
-    resource: "@SuluCommentBundle/Resources/config/routing.xml"
-    prefix: /admin/comments
 ```
 
 And `config/routes/sulu_website.yaml`:
@@ -43,18 +39,18 @@ Possible bundle configuration:
 ```yaml
 sulu_comment:
     default_templates:
-        comments:             'SuluCommentBundle:WebsiteComment:comments.html.twig'
-        comment:              'SuluCommentBundle:WebsiteComment:comment.html.twig'
-        form:                 'SuluCommentBundle:WebsiteComment:form.html.twig'
+        comments:             '@SuluComment/WebsiteComment/comments.html.twig'
+        comment:              '@SuluComment/WebsiteComment/comment.html.twig'
+        form:                 '@SuluComment/WebsiteComment/form.html.twig'
     nested_comments:          true
     types:
 
         # Prototype
         type:
             templates:
-                comments:     'SuluCommentBundle:WebsiteComment:comments.html.twig'
-                comment:      'SuluCommentBundle:WebsiteComment:comment.html.twig'
-                form:         'SuluCommentBundle:WebsiteComment:form.html.twig'
+                comments:     '@SuluComment/WebsiteComment/comments.html.twig'
+                comment:      '@SuluComment/WebsiteComment/comment.html.twig'
+                form:         '@SuluComment/WebsiteComment/form.html.twig'
             nested_comments:  true
     objects:
         comment:

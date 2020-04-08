@@ -13,8 +13,6 @@ namespace Sulu\Bundle\CommentBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
@@ -32,7 +30,6 @@ use Twig\Environment;
 
 /**
  * @RouteResource("thread")
- * @NamePrefix("sulu_comment.")
  */
 class WebsiteCommentController extends AbstractRestController implements ClassResourceInterface
 {
@@ -221,9 +218,6 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         );
     }
 
-    /**
-     * @Post("/threads/{threadId}/comments/{commentId}")
-     */
     public function putCommentAction(string $threadId, string $commentId, Request $request): Response
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);

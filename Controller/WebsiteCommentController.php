@@ -13,7 +13,6 @@ namespace Sulu\Bundle\CommentBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
@@ -32,7 +31,6 @@ use Twig\Environment;
 
 /**
  * @RouteResource("thread")
- * @NamePrefix("sulu_comment.")
  */
 class WebsiteCommentController extends AbstractRestController implements ClassResourceInterface
 {

@@ -28,15 +28,17 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('sulu_comment')
+        $treeBuilder = new TreeBuilder('sulu_comment');
+        $rootNode = $treeBuilder->getRootNode();
+
+        $rootNode
             ->children()
                 ->arrayNode('default_templates')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('comments')->defaultValue('SuluCommentBundle:WebsiteComment:comments.html.twig')->end()
-                        ->scalarNode('comment')->defaultValue('SuluCommentBundle:WebsiteComment:comment.html.twig')->end()
-                        ->scalarNode('form')->defaultValue('SuluCommentBundle:WebsiteComment:form.html.twig')->end()
+                        ->scalarNode('comments')->defaultValue('@SuluComment/WebsiteComment/comments.html.twig')->end()
+                        ->scalarNode('comment')->defaultValue('@SuluComment/WebsiteComment/comment.html.twig')->end()
+                        ->scalarNode('form')->defaultValue('@SuluComment/WebsiteComment/form.html.twig')->end()
                     ->end()
                 ->end()
                 ->arrayNode('serializer')
@@ -57,9 +59,9 @@ class Configuration implements ConfigurationInterface
                             ->arrayNode('templates')
                                 ->addDefaultsIfNotSet()
                                 ->children()
-                                    ->scalarNode('comments')->defaultValue('SuluCommentBundle:WebsiteComment:comments.html.twig')->end()
-                                    ->scalarNode('comment')->defaultValue('SuluCommentBundle:WebsiteComment:comment.html.twig')->end()
-                                    ->scalarNode('form')->defaultValue('SuluCommentBundle:WebsiteComment:form.html.twig')->end()
+                                    ->scalarNode('comments')->defaultValue('@SuluComment/WebsiteComment/comments.html.twig')->end()
+                                    ->scalarNode('comment')->defaultValue('@SuluComment/WebsiteComment/comment.html.twig')->end()
+                                    ->scalarNode('form')->defaultValue('@SuluComment/WebsiteComment/form.html.twig')->end()
                                 ->end()
                             ->end()
                             ->booleanNode('nested_comments')->defaultTrue()->end()

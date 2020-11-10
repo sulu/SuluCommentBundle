@@ -101,10 +101,11 @@ class CommentController extends AbstractRestController implements ClassResourceI
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('comments');
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
-        if ($request->query->get('threadType')) {
+        $threadType = $request->query->get('threadType', '');
+        if ($threadType) {
             $listBuilder->in(
                 $fieldDescriptors['threadType'],
-                array_filter(explode(',', $request->query->get('threadType')))
+                array_filter(explode(',', $threadType))
             );
 
             $request->query->remove('threadType');
@@ -158,8 +159,11 @@ class CommentController extends AbstractRestController implements ClassResourceI
 
     public function cdeleteAction(Request $request): Response
     {
+        /** @var string $ids */
+        $ids = $request->query->get('ids', '');
+
         /** @var int[] $ids */
-        $ids = array_filter(explode(',', $request->query->get('ids')));
+        $ids = array_filter(explode(',', $ids));
         if (0 === count($ids)) {
             return $this->handleView($this->view(null, 204));
         }

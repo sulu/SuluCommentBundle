@@ -149,8 +149,11 @@ class ThreadController extends AbstractRestController implements ClassResourceIn
 
     public function cdeleteAction(Request $request): Response
     {
+        /** @var string $ids */
+        $ids = $request->query->get('ids', '');
+
         /** @var int[] $ids */
-        $ids = array_filter(explode(',', $request->query->get('ids')));
+        $ids = array_filter(explode(',', $ids));
         if (0 === count($ids)) {
             return $this->handleView($this->view(null, 204));
         }

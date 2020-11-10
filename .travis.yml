@@ -23,7 +23,7 @@ matrix:
 
 before_install:
   - phpenv config-add Tests/travis.php.ini
-  - composer self-update
+  - composer self-update --2
 
 install:
   - if [[ -z $CODE_COVERAGE ]]; then phpenv config-rm xdebug.ini ; fi

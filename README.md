@@ -23,17 +23,17 @@ and code are not stable yet (pre 1.0).
 * PHP `^7.2`
 * Sulu `^2.0`
 
-For detailed requirements see [composer.json](https://github.com/sulu/SuluCommentBundle/blob/master/composer.json).
+For detailed requirements see [composer.json](https://github.com/sulu/SuluCommentBundle/blob/1.0/composer.json).
 
 ## Documentation
 
 The the Documentation is stored in the
-[Resources/doc/](https://github.com/sulu/SuluCommentBundle/blob/master/Resources/doc) folder.
+[Resources/doc/](https://github.com/sulu/SuluCommentBundle/blob/1.0/Resources/doc) folder.
 
 ## Installation
 
 All the installation instructions are located in the
-[Documentation](https://github.com/sulu/SuluCommentBundle/blob/master/Resources/doc/installation.md).
+[Documentation](https://github.com/sulu/SuluCommentBundle/blob/1.0/Resources/doc/installation.md).
 
 ## License
 

@@ -1,9 +1,15 @@
 # SuluCommentBundle
 
-[![Build Status](https://travis-ci.org/sulu/SuluCommentBundle.svg)](https://travis-ci.org/sulu/SuluCommentBundle)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sulu/SuluCommentBundle/badges/quality-score.png)](https://scrutinizer-ci.com/g/sulu/SuluCommentBundle/)
-[![Code Coverage](https://scrutinizer-ci.com/g/sulu/SuluCommentBundle/badges/coverage.png)](https://scrutinizer-ci.com/g/sulu/SuluCommentBundle/)
-[![StyleCI](https://styleci.io/repos/25727590/shield)](https://styleci.io/repos/25727590)
+<p align="center">
+    <a href="https://sulu.io/" target="_blank">
+        <img width="30%" src="https://sulu.io/uploads/media/800x/00/230-Official%20Bundle%20Seal.svg?v=2-6&inline=1" alt="Official Sulu Bundle Badge">
+    </a>
+</p>
+<p align="center">
+    <a href="https://github.com/sulu/SuluCommentBundle/actions" target="_blank">
+        <img src="https://img.shields.io/github/workflow/status/sulu/SuluCommentBundle/Test%20application/1.0.svg?label=test-workflow" alt="Test workflow status">
+    </a>
+</p>
 
 The SuluCommentBundle adds support for adding comments to different types of entities (pages, articles, custom) in Sulu.
 

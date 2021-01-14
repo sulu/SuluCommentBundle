@@ -38,7 +38,7 @@ class AppKernel extends SuluTestKernel
         );
 
         if (self::CONTEXT_ADMIN !== $this->getContext()) {
-            $bundles[] = new \FOS\RestBundle\FOSRestBundle();
+            $bundles[] = new \Symfony\Bundle\SecurityBundle\SecurityBundle();
         }
 
         return $bundles;

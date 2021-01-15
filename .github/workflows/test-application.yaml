@@ -13,8 +13,7 @@ jobs:
         runs-on: ubuntu-latest
 
         env:
-            DATABASE_URL: 'mysql://root@127.0.0.1/sulu_redirect_test?serverVersion=5.7'
-            SYMFONY_DEPRECATIONS_HELPER: weak
+            DATABASE_URL: 'mysql://root:root@127.0.0.1/sulu_redirect_test?serverVersion=5.7'
 
         strategy:
             fail-fast: false
@@ -24,17 +23,21 @@ jobs:
                       lint: false
                       composer-flags: '--prefer-lowest --prefer-dist --no-interaction'
                       tools: 'composer:v1'
+                      env:
+                          SYMFONY_DEPRECATIONS_HELPER: disabled
 
                     - php-version: '7.4'
                       lint: true
                       composer-flags: '--prefer-dist --no-interaction'
                       tools: 'composer:v2'
+                      env:
+                          SYMFONY_DEPRECATIONS_HELPER: weak
 
         services:
             mysql:
                 image: mysql:5.7
                 env:
-                    MYSQL_ALLOW_EMPTY_PASSWORD: true
+                    MYSQL_ROOT_PASSWORD: root
                 ports:
                     - 3306:3306
                 options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
@@ -74,3 +77,4 @@ jobs:
 
             - name: Execute test cases
               run: composer test
+              env: ${{ matrix.env }}

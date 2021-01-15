@@ -98,7 +98,7 @@ class CommentManagerTest extends TestCase
                     $commentRepository->persist($comment->reveal())
                         ->shouldBeCalledTimes(1)
                         ->will(
-                            function() use ($dispatcher, $thread) {
+                            function() use ($dispatcher) {
                                 $dispatcher->dispatch(
                                     Argument::type(CommentEvent::class),
                                     Events::POST_PERSIST_EVENT
@@ -131,7 +131,7 @@ class CommentManagerTest extends TestCase
                     $commentRepository->persist($comment->reveal())
                         ->shouldBeCalledTimes(1)
                         ->will(
-                            function() use ($dispatcher, $thread) {
+                            function() use ($dispatcher) {
                                 $dispatcher->dispatch(
                                     Argument::type(CommentEvent::class),
                                     Events::POST_PERSIST_EVENT

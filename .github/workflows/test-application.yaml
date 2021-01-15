@@ -13,29 +13,23 @@ jobs:
         runs-on: ubuntu-latest
 
         env:
-            SYMFONY__DATABASE__DRIVER: pdo_mysql
-            SYMFONY__DATABASE__VERSION: 5.7
-            SYMFONY__DATABASE__HOST: 127.0.0.1
-            SYMFONY__DATABASE__PORT: 3306
-            SYMFONY__DATABASE__NAME: sulu_test
-            SYMFONY__DATABASE__USER: root
-            SYMFONY__DATABASE__PASSWORD: root
+            DATABASE_URL: 'mysql://root:root@127.0.0.1/sulu_comment_test?serverVersion=5.7'
 
         strategy:
             fail-fast: false
             matrix:
                 include:
-                    - php-version: '5.5'
-                      composer-flags: '--prefer-dist --no-interaction'
-                      tools: 'composer:v1'
+                    - php-version: '7.2'
                       lint: false
+                      composer-flags: '--prefer-lowest --prefer-dist --no-interaction'
+                      tools: 'composer:v1'
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: disabled
 
-                    - php-version: '7.2'
+                    - php-version: '7.4'
+                      lint: true
                       composer-flags: '--prefer-dist --no-interaction'
                       tools: 'composer:v2'
-                      lint: true
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
 
@@ -72,21 +66,18 @@ jobs:
                       ${{ runner.os }}-composer-
 
             - name: Install dependencies
-              run: |
-                  composer validate --strict
-                  composer update ${{ matrix.composer-flags }}
+              run: composer update ${{ matrix.composer-flags }}
+              env: ${{ matrix.env }}
 
-            - name: Create database
-              run: |
-                  Tests/app/console doctrine:database:create
-                  Tests/app/console doctrine:schema:update --force
+            - name: Bootstrap test environment
+              run: composer bootstrap-test-environment
               env: ${{ matrix.env }}
 
             - name: Lint code
               if: ${{ matrix.lint }}
-              run: ./Tests/app/console lint:twig Resources/views --env test
+              run: composer lint
               env: ${{ matrix.env }}
 
             - name: Execute test cases
-              run: time vendor/bin/phpunit
+              run: composer test
               env: ${{ matrix.env }}

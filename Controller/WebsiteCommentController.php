@@ -226,7 +226,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
-        $message = $request->request->get('message');
+        $message = (string) $request->request->get('message');
 
         /** @var Comment $comment */
         $comment = $this->commentRepository->findCommentById((int) $commentId);

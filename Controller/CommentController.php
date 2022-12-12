@@ -149,7 +149,7 @@ class CommentController extends AbstractRestController implements ClassResourceI
             throw new EntityNotFoundException(CommentInterface::class, $id);
         }
 
-        $comment->setMessage($request->request->get('message'));
+        $comment->setMessage((string) $request->request->get('message'));
 
         $this->commentManager->update($comment);
         $this->entityManager->flush();

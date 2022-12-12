@@ -47,7 +47,7 @@ class Thread implements ThreadInterface, AuditableInterface
     protected $commentCount = 0;
 
     /**
-     * @var Collection
+     * @var Collection<int, CommentInterface>
      */
     protected $comments;
 
@@ -71,6 +71,9 @@ class Thread implements ThreadInterface, AuditableInterface
      */
     protected $creator;
 
+    /**
+     * @param null|Collection<int, CommentInterface> $comments
+     */
     public function __construct(string $type, string $entityId, Collection $comments = null, int $commentCount = 0)
     {
         $this->type = $type;

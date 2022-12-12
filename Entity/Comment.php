@@ -61,7 +61,7 @@ class Comment implements CommentInterface, AuditableInterface
     protected $parent;
 
     /**
-     * @var Collection|CommentInterface[]
+     * @var Collection<int, CommentInterface>
      */
     protected $children;
 

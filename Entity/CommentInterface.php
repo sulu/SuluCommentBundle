@@ -43,8 +43,14 @@ interface CommentInterface
 
     public function getDepth(): int;
 
+    /**
+     * @return Collection<int, CommentInterface>
+     */
     public function getChildren(): Collection;
 
+    /**
+     * @return Collection<int, CommentInterface>
+     */
     public function getPublishedChildren(): Collection;
 
     public function getCreatorFullName(): string;

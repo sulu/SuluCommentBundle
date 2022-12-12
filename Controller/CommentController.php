@@ -101,7 +101,7 @@ class CommentController extends AbstractRestController implements ClassResourceI
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('comments');
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
-        $threadType = $request->query->get('threadType', '');
+        $threadType = (string) $request->query->get('threadType', '');
         if ($threadType) {
             $listBuilder->in(
                 $fieldDescriptors['threadType'],

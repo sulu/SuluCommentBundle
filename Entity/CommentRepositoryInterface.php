@@ -13,6 +13,9 @@ namespace Sulu\Bundle\CommentBundle\Entity;
 
 use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
+/**
+ * @extends RepositoryInterface<CommentInterface>
+ */
 interface CommentRepositoryInterface extends RepositoryInterface
 {
     /**

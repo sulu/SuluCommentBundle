@@ -21,4 +21,4 @@ parameters:
     doctrine:
         objectManagerLoader: Tests/phpstan/object-manager.php
     ignoreErrors:
-        - '#Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch()#'
+        - '#Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\)#'

@@ -1,0 +1,151 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:where\\(\\) expects string, array\\|bool\\|float\\|int\\|string given\\.$#"
+			count: 1
+			path: Controller/CommentController.php
+
+		-
+			message: "#^Parameter \\#3 \\$route of class Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListRepresentation constructor expects string, mixed given\\.$#"
+			count: 1
+			path: Controller/CommentController.php
+
+		-
+			message: "#^Parameter \\#2 \\$str of function explode expects string, mixed given\\.$#"
+			count: 1
+			path: Controller/ThreadController.php
+
+		-
+			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:where\\(\\) expects string, array\\|bool\\|float\\|int\\|string given\\.$#"
+			count: 1
+			path: Controller/ThreadController.php
+
+		-
+			message: "#^Parameter \\#3 \\$route of class Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListRepresentation constructor expects string, mixed given\\.$#"
+			count: 1
+			path: Controller/ThreadController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:__construct\\(\\) has parameter \\$commentDefaultTemplates with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:__construct\\(\\) has parameter \\$commentSerializationGroups with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:__construct\\(\\) has parameter \\$commentTypes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:view\\(\\) has parameter \\$data with no type specified\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:view\\(\\) has parameter \\$headers with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:view\\(\\) has parameter \\$statusCode with no type specified\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentRepositoryInterface\\:\\:findCommentById\\(\\) expects int, mixed given\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Parameter \\#3 \\$comment of method Sulu\\\\Bundle\\\\CommentBundle\\\\Manager\\\\CommentManagerInterface\\:\\:addComment\\(\\) expects Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface, mixed given\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Parameter \\#3 \\$page of method Sulu\\\\Bundle\\\\CommentBundle\\\\Manager\\\\CommentManagerInterface\\:\\:findPublishedComments\\(\\) expects int, mixed given\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Parameter \\#4 \\$threadTitle of method Sulu\\\\Bundle\\\\CommentBundle\\\\Manager\\\\CommentManagerInterface\\:\\:addComment\\(\\) expects string\\|null, mixed given\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:\\$commentDefaultTemplates type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:\\$commentSerializationGroups type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:\\$commentTypes type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\:\\:\\$message \\(string\\) on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: Entity/Comment.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentRepository\\:\\:createNew\\(\\) should return Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface but returns object\\.$#"
+			count: 1
+			path: Entity/CommentRepository.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentRepository\\:\\:findCommentById\\(\\) should return Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\|null but returns mixed\\.$#"
+			count: 1
+			path: Entity/CommentRepository.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentRepository\\:\\:findComments\\(\\) should return array\\<Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\> but returns mixed\\.$#"
+			count: 1
+			path: Entity/CommentRepository.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentRepository\\:\\:findCommentsByIds\\(\\) should return array\\<Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\> but returns mixed\\.$#"
+			count: 1
+			path: Entity/CommentRepository.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentRepository\\:\\:findPublishedComments\\(\\) should return array\\<Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\> but returns mixed\\.$#"
+			count: 1
+			path: Entity/CommentRepository.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Thread\\:\\:\\$changer type mapping mismatch\\: database can contain Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null but property expects Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\.$#"
+			count: 1
+			path: Entity/Thread.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Thread\\:\\:\\$creator type mapping mismatch\\: database can contain Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null but property expects Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\.$#"
+			count: 1
+			path: Entity/Thread.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Thread\\:\\:\\$title type mapping mismatch\\: database can contain string\\|null but property expects string\\.$#"
+			count: 1
+			path: Entity/Thread.php
+
+		-
+			message: "#^Call to an undefined method Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\:\\:getContact\\(\\)\\.$#"
+			count: 1
+			path: EventSubscriber/CommentSerializationSubscriber.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\EventSubscriber\\\\CommentSerializationSubscriber\\:\\:getSubscribedEvents\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: EventSubscriber/CommentSerializationSubscriber.php
+
+		-
+			message: "#^Parameter \\#2 \\$haystack of function in_array expects array, mixed given\\.$#"
+			count: 1
+			path: EventSubscriber/CommentSerializationSubscriber.php

@@ -139,7 +139,7 @@ class ThreadController extends AbstractRestController implements ClassResourceIn
             throw new EntityNotFoundException(ThreadInterface::class, $id);
         }
 
-        $thread->setTitle($request->request->get('title'));
+        $thread->setTitle((string) $request->request->get('title'));
 
         $this->commentManager->updateThread($thread);
         $this->entityManager->flush();

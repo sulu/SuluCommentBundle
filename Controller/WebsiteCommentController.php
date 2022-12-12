@@ -200,7 +200,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         $this->commentManager->addComment($type, $entityId, $comment, $request->get('threadTitle'));
         $this->entityManager->flush();
 
-        if ($referrer = $request->query->get('referrer')) {
+        if ($referrer = (string) $request->query->get('referrer')) {
             return new RedirectResponse($referrer);
         }
 
@@ -233,7 +233,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         $comment->setMessage($message);
         $this->entityManager->flush();
 
-        if ($referrer = $request->query->get('referrer')) {
+        if ($referrer = (string) $request->query->get('referrer')) {
             return new RedirectResponse($referrer);
         }
 
@@ -260,7 +260,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         $this->entityManager->remove($comment);
         $this->entityManager->flush();
 
-        if ($referrer = $request->query->get('referrer')) {
+        if ($referrer = (string) $request->query->get('referrer')) {
             return new RedirectResponse($referrer);
         }
 

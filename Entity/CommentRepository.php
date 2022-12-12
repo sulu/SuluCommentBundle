@@ -100,6 +100,9 @@ class CommentRepository extends NestedTreeRepository implements CommentRepositor
         $this->getEntityManager()->remove($comment);
     }
 
+    /**
+     * @return CommentInterface
+     */
     public function createNew()
     {
         $className = $this->getClassName();

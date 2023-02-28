@@ -161,26 +161,6 @@ class CommentManager implements CommentManagerInterface
         return $comment;
     }
 
-    /**
-     * Returns flag "hasNextPage".
-     * It combines the limit/query-count with the page and page-size.
-     */
-    public function hasNextPage($queryResult, ?int $limit, int $page, ?int $pageSize): bool
-    {
-        $count = count($queryResult);
-
-        if (null === $pageSize || $pageSize > 20) {
-            $pageSize = 20;
-        }
-
-        $offset = ($page - 1) * $pageSize;
-        if ($limit && $offset + $pageSize > $limit) {
-            return false;
-        }
-
-        return $count > ($page * $pageSize);
-    }
-
     private function deleteComment(CommentInterface $comment): void
     {
         $thread = $comment->getThread();

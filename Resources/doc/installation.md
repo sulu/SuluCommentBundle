@@ -41,7 +41,6 @@ sulu_comment:
     default_templates:
         comments:             '@SuluComment/WebsiteComment/comments.html.twig'
         comment:              '@SuluComment/WebsiteComment/comment.html.twig'
-        form:                 '@SuluComment/WebsiteComment/form.html.twig'
     nested_comments:          true
     types:
 
@@ -50,7 +49,6 @@ sulu_comment:
             templates:
                 comments:     '@SuluComment/WebsiteComment/comments.html.twig'
                 comment:      '@SuluComment/WebsiteComment/comment.html.twig'
-                form:         '@SuluComment/WebsiteComment/form.html.twig'
             nested_comments:  true
     objects:
         comment:

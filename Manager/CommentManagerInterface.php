@@ -26,6 +26,8 @@ interface CommentManagerInterface
      */
     public function findPublishedComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array;
 
+    public function countPublishedComments(string $type, string $entityId): int;
+
     public function addComment(
         string $type,
         string $entityId,

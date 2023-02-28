@@ -120,13 +120,16 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
 
         $page = $request->get('page');
         $referrer = $request->get('referrer');
+        $pageSize = $request->get('pageSize') ?? 20;
 
         $comments = $this->commentManager->findPublishedComments(
             $type,
             $entityId,
             $page ?: 1,
-            $page ? 20 : null
+            $page ? $pageSize : null
         );
+
+        $totalComments = $this->commentManager->countPublishedComments($type, $entityId);
 
         if ('json' === $request->getRequestFormat()) {
             return $this->handleView($this->view($comments));
@@ -158,6 +161,9 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
                     'comments' => $comments,
                     'threadId' => $threadId,
                     'referrer' => $referrer,
+                    'totalComments' => $totalComments,
+                    'page' => $page ?: 1,
+                    'pageSize' => $page ? $pageSize : null,
                 ]
             )
         );

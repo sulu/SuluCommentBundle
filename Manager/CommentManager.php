@@ -57,6 +57,11 @@ class CommentManager implements CommentManagerInterface
         return $this->commentRepository->findPublishedComments($type, $entityId, $page, $pageSize);
     }
 
+    public function countPublishedComments(string $type, string $entityId): int
+    {
+        return $this->commentRepository->countPublishedComments($type, $entityId);
+    }
+
     public function addComment(
         string $type,
         string $entityId,
@@ -154,6 +159,26 @@ class CommentManager implements CommentManagerInterface
         );
 
         return $comment;
+    }
+
+    /**
+     * Returns flag "hasNextPage".
+     * It combines the limit/query-count with the page and page-size.
+     */
+    public function hasNextPage($queryResult, ?int $limit, int $page, ?int $pageSize): bool
+    {
+        $count = count($queryResult);
+
+        if (null === $pageSize || $pageSize > 20) {
+            $pageSize = 20;
+        }
+
+        $offset = ($page - 1) * $pageSize;
+        if ($limit && $offset + $pageSize > $limit) {
+            return false;
+        }
+
+        return $count > ($page * $pageSize);
     }
 
     private function deleteComment(CommentInterface $comment): void

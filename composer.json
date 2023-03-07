@@ -21,6 +21,7 @@
         "jangregor/phpstan-prophecy": "^0.5.1",
         "massive/search-bundle": "^2.0.0",
         "php-ffmpeg/php-ffmpeg": "^0.13 || ^0.14",
+        "phpspec/prophecy": "^1.17",
         "phpstan/phpstan": "^0.12",
         "phpstan/phpstan-doctrine": "^0.12",
         "phpstan/phpstan-phpunit": "^0.12",

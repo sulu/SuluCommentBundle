@@ -1,0 +1,222 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^PHPDoc tag @var for variable \\$commentFormToolbarActions has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Admin/CommentAdmin.php
+
+		-
+			message: "#^Parameter \\#1 \\$message of method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\:\\:setMessage\\(\\) expects string, bool\\|float\\|int\\|string\\|null given\\.$#"
+			count: 1
+			path: Controller/CommentController.php
+
+		-
+			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:where\\(\\) expects string, array\\<bool\\|float\\|int\\|string\\>\\|bool\\|float\\|int\\|string given\\.$#"
+			count: 1
+			path: Controller/CommentController.php
+
+		-
+			message: "#^Parameter \\#1 \\$title of method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\ThreadInterface\\:\\:setTitle\\(\\) expects string, bool\\|float\\|int\\|string\\|null given\\.$#"
+			count: 1
+			path: Controller/ThreadController.php
+
+		-
+			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:where\\(\\) expects string, array\\<bool\\|float\\|int\\|string\\>\\|bool\\|float\\|int\\|string given\\.$#"
+			count: 1
+			path: Controller/ThreadController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:__construct\\(\\) has parameter \\$commentDefaultTemplates with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:__construct\\(\\) has parameter \\$commentSerializationGroups with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:__construct\\(\\) has parameter \\$commentTypes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:view\\(\\) has parameter \\$data with no typehint specified\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:view\\(\\) has parameter \\$headers with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:view\\(\\) has parameter \\$statusCode with no typehint specified\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Parameter \\#1 \\$message of method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\:\\:setMessage\\(\\) expects string, bool\\|float\\|int\\|string\\|null given\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:\\$commentDefaultTemplates type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:\\$commentSerializationGroups type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:\\$commentTypes type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\DependencyInjection\\\\SuluCommentExtension\\:\\:load\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: DependencyInjection/SuluCommentExtension.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\DependencyInjection\\\\SuluCommentExtension\\:\\:prepend\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: DependencyInjection/SuluCommentExtension.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\:\\:getChildren\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: Entity/Comment.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\:\\:getPublishedChildren\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: Entity/Comment.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\:\\:\\$children type mapping mismatch\\: property can contain Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\> but database expects Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\>\\.$#"
+			count: 1
+			path: Entity/Comment.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\:\\:\\$children with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: Entity/Comment.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\:\\:\\$parent type mapping mismatch\\: property can contain Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\|null but database expects Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\|null\\.$#"
+			count: 1
+			path: Entity/Comment.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\:\\:\\$thread type mapping mismatch\\: property can contain Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\ThreadInterface\\|null but database expects Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Thread\\|null\\.$#"
+			count: 1
+			path: Entity/Comment.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\:\\:getChildren\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: Entity/CommentInterface.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\:\\:getPublishedChildren\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: Entity/CommentInterface.php
+
+		-
+			message: "#^Interface Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentRepositoryInterface extends generic interface Sulu\\\\Component\\\\Persistence\\\\Repository\\\\RepositoryInterface but does not specify its types\\: T$#"
+			count: 1
+			path: Entity/CommentRepositoryInterface.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Thread\\:\\:__construct\\(\\) has parameter \\$comments with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection but does not specify its types\\: TKey, T$#"
+			count: 1
+			path: Entity/Thread.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Thread\\:\\:getComments\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: Entity/Thread.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Thread\\:\\:\\$changer type mapping mismatch\\: database can contain Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\User\\|null but property expects Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\.$#"
+			count: 1
+			path: Entity/Thread.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Thread\\:\\:\\$changer type mapping mismatch\\: property can contain Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface but database expects Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\User\\|null\\.$#"
+			count: 1
+			path: Entity/Thread.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Thread\\:\\:\\$comments type mapping mismatch\\: property can contain Doctrine\\\\Common\\\\Collections\\\\Collection but database expects Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\>\\.$#"
+			count: 1
+			path: Entity/Thread.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Thread\\:\\:\\$comments with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: Entity/Thread.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Thread\\:\\:\\$creator type mapping mismatch\\: database can contain Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\User\\|null but property expects Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\.$#"
+			count: 1
+			path: Entity/Thread.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Thread\\:\\:\\$creator type mapping mismatch\\: property can contain Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface but database expects Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\User\\|null\\.$#"
+			count: 1
+			path: Entity/Thread.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Thread\\:\\:\\$title type mapping mismatch\\: database can contain string\\|null but property expects string\\.$#"
+			count: 1
+			path: Entity/Thread.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\ThreadInterface\\:\\:getComments\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: Entity/ThreadInterface.php
+
+		-
+			message: "#^Class Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\ThreadRepository extends generic class Doctrine\\\\ORM\\\\EntityRepository but does not specify its types\\: TEntityClass$#"
+			count: 1
+			path: Entity/ThreadRepository.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\ThreadRepository\\:\\:createNew\\(\\) should return Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\ThreadInterface but returns object\\.$#"
+			count: 1
+			path: Entity/ThreadRepository.php
+
+		-
+			message: "#^Call to an undefined method Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\:\\:getContact\\(\\)\\.$#"
+			count: 1
+			path: EventSubscriber/CommentSerializationSubscriber.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\EventSubscriber\\\\CommentSerializationSubscriber\\:\\:getSubscribedEvents\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: EventSubscriber/CommentSerializationSubscriber.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Form\\\\Type\\\\CommentType\\:\\:buildForm\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: Form/Type/CommentType.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Form\\\\Type\\\\CommentType\\:\\:configureOptions\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: Form/Type/CommentType.php
+
+		-
+			message: "#^Method Symfony\\\\Contracts\\\\EventDispatcher\\\\EventDispatcherInterface\\:\\:dispatch\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			count: 10
+			path: Manager/CommentManager.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\SuluCommentBundle\\:\\:build\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: SuluCommentBundle.php
+

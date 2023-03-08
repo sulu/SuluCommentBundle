@@ -60,6 +60,21 @@ class CommentRepository extends NestedTreeRepository implements CommentRepositor
         return $query->getResult();
     }
 
+    public function countPublishedComments(string $type, string $entityId): int
+    {
+        $queryBuilder = $this->createQueryBuilder('c')
+            ->select('count(c.id)')
+            ->join('c.thread', 't')
+            ->where('c.state = :state')
+            ->andWhere('c.parent IS NULL')
+            ->andWhere('t.type = :type AND t.entityId = :entityId')
+            ->setParameter('state', CommentInterface::STATE_PUBLISHED)
+            ->setParameter('type', $type)
+            ->setParameter('entityId', $entityId);
+
+        return $queryBuilder->getQuery()->getSingleScalarResult();
+    }
+
     public function findCommentsByIds(array $ids): array
     {
         $query = $this->createQueryBuilder('c')

@@ -57,6 +57,11 @@ class CommentManager implements CommentManagerInterface
         return $this->commentRepository->findPublishedComments($type, $entityId, $page, $pageSize);
     }
 
+    public function countPublishedComments(string $type, string $entityId): int
+    {
+        return $this->commentRepository->countPublishedComments($type, $entityId);
+    }
+
     public function addComment(
         string $type,
         string $entityId,

@@ -25,6 +25,8 @@ interface CommentRepositoryInterface extends RepositoryInterface
      */
     public function findPublishedComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array;
 
+    public function countPublishedComments(string $type, string $entityId): int;
+
     /**
      * @param int[] $ids
      *

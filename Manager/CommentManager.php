@@ -55,19 +55,14 @@ class CommentManager implements CommentManagerInterface
         $this->commentEventCollector = $commentEventCollector;
     }
 
-    public function findComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array
+    public function findComments(string $type, string $entityId, int $limit = 10, int $offset = 0): array
     {
-        return $this->commentRepository->findComments($type, $entityId, $page, $pageSize);
+        return $this->commentRepository->findComments($type, $entityId, $limit, $offset);
     }
 
-    public function findPublishedComments(
-        string $type,
-        string $entityId,
-        int $page = 1,
-        ?int $pageSize = null,
-        int $offset = 0
-    ): array {
-        return $this->commentRepository->findPublishedComments($type, $entityId, $page, $pageSize, $offset);
+    public function findPublishedComments(string $type, string $entityId, int $limit = 10, int $offset = 0): array
+    {
+        return $this->commentRepository->findPublishedComments($type, $entityId, $limit, $offset);
     }
 
     public function countPublishedComments(string $type, string $entityId): int

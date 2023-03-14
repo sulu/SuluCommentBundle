@@ -118,17 +118,31 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
-        $page = $request->get('page');
+        $limit = $request->query->getInt('limit') ?? 10;
+        $offset = $request->query->getInt('offset') ?? 0;
+
+        $pageSize = $request->get('pageSize') ?? 10;
+        if ($pageSize) {
+            @\trigger_deprecation('sulu/comment-bundle', '2.x', 'The usage of the "pageSize" parameter is deprecated.
+        Please use "limit" and "offset instead.');
+            $limit = $pageSize;
+        }
+
+        $page = $request->get('page') ?? null;
+        if ($page) {
+            @\trigger_deprecation('sulu/comment-bundle', '2.x', 'The usage of the "page" parameter is deprecated.
+            Please use "limit" and "offset instead.');
+
+            $offset = ($page - 1) * $limit;
+        }
+
         $referrer = $request->get('referrer');
-        $pageSize = $request->get('pageSize') ?? 20;
-        $pageOffset = $request->get('offset') ?? 0;
 
         $comments = $this->commentManager->findPublishedComments(
             $type,
             $entityId,
-            $page ?: 1,
-            $page ? $pageSize : null,
-            $pageOffset
+            $limit,
+            $offset
         );
 
         $totalComments = $this->commentManager->countPublishedComments($type, $entityId);
@@ -178,6 +192,9 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         return $response;
     }
 
+    /**
+     * @return string[]
+     */
     protected function getAdditionalContentData(Request $request): array
     {
         return [];

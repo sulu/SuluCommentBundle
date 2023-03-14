@@ -201,6 +201,11 @@ parameters:
 			path: EventSubscriber/CommentSerializationSubscriber.php
 
 		-
+			message: "#^Method Symfony\\\\Contracts\\\\EventDispatcher\\\\EventDispatcherInterface\\:\\:dispatch\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			count: 1
+			path: Events/CommentEventCollector.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Form\\\\Type\\\\CommentType\\:\\:buildForm\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Form/Type/CommentType.php
@@ -212,7 +217,7 @@ parameters:
 
 		-
 			message: "#^Method Symfony\\\\Contracts\\\\EventDispatcher\\\\EventDispatcherInterface\\:\\:dispatch\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 10
+			count: 7
 			path: Manager/CommentManager.php
 
 		-

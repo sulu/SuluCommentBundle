@@ -78,7 +78,7 @@ class CommentManagerTest extends TestCase
 
     public function testFindComments($type = 'article', $entityId = '123-123-123')
     {
-        $this->commentRepository->findComments($type, $entityId, 1, null)->shouldBeCalled()->willReturn([]);
+        $this->commentRepository->findComments($type, $entityId, 10, 0)->shouldBeCalled()->willReturn([]);
 
         $comments = $this->commentManager->findComments($type, $entityId);
         $this->assertEquals([], $comments);

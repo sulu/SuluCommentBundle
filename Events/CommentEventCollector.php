@@ -22,7 +22,7 @@ class CommentEventCollector implements CommentEventCollectorInterface
     private $eventDispatcher;
 
     /**
-     * @var Event[]
+     * @var array<array{event: Event, eventName: string}>
      */
     private $eventsToBeDispatched = [];
 

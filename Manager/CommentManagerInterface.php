@@ -19,18 +19,12 @@ interface CommentManagerInterface
     /**
      * @return CommentInterface[]
      */
-    public function findComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array;
+    public function findComments(string $type, string $entityId, int $limit = 10, int $offset = 0): array;
 
     /**
      * @return CommentInterface[]
      */
-    public function findPublishedComments(
-        string $type,
-        string $entityId,
-        int $page = 1,
-        ?int $pageSize = null,
-        int $offset = 0
-    ): array;
+    public function findPublishedComments(string $type, string $entityId, int $limit = 10, int $offset = 0): array;
 
     public function countPublishedComments(string $type, string $entityId): int;
 

@@ -144,7 +144,7 @@ class CommentManager implements CommentManagerInterface
         $comment->publish();
 
         $thread = $comment->getThread();
-        $this->dispatcher->dispatch(
+        $this->commentEventCollector->collect(
             new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread),
             Events::PUBLISH_EVENT
         );
@@ -161,7 +161,7 @@ class CommentManager implements CommentManagerInterface
         $comment->unpublish();
 
         $thread = $comment->getThread();
-        $this->dispatcher->dispatch(
+        $this->commentEventCollector->collect(
             new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread),
             Events::UNPUBLISH_EVENT
         );

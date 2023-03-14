@@ -3,7 +3,7 @@
 namespace Sulu\Bundle\CommentBundle\Events;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class CommentEventCollector implements CommentEventCollectorInterface
 {
@@ -13,7 +13,7 @@ class CommentEventCollector implements CommentEventCollectorInterface
     private $eventDispatcher;
 
     /**
-     * @var CommentEvent[]
+     * @var Event[]
      */
     private $eventsToBeDispatched = [];
 
@@ -23,7 +23,7 @@ class CommentEventCollector implements CommentEventCollectorInterface
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function collect(CommentEvent $commentEvent, string $commentEventName): void
+    public function collect(Event $commentEvent, string $commentEventName): void
     {
         $this->eventsToBeDispatched[] = ['event' => $commentEvent, 'eventName' => $commentEventName];
     }
@@ -35,7 +35,6 @@ class CommentEventCollector implements CommentEventCollectorInterface
 
     public function dispatch(): void
     {
-        $batchIdentifier = uniqid('', true);
         $batchEvents = $this->eventsToBeDispatched;
 
         $this->eventsToBeDispatched = [];

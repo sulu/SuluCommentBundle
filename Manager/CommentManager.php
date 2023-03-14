@@ -184,7 +184,7 @@ class CommentManager implements CommentManagerInterface
         $this->commentRepository->delete($comment);
 
         $postEvent = new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread);
-        $this->dispatcher->dispatch($postEvent, Events::POST_DELETE_EVENT);
+        $this->commentEventCollector->collect($postEvent, Events::POST_DELETE_EVENT);
     }
 
     private function deleteThread(ThreadInterface $thread): void
@@ -193,6 +193,6 @@ class CommentManager implements CommentManagerInterface
 
         $this->threadRepository->delete($thread);
 
-        $this->dispatcher->dispatch(new ThreadEvent($thread), Events::THREAD_POST_DELETE_EVENT);
+        $this->commentEventCollector->collect(new ThreadEvent($thread), Events::THREAD_POST_DELETE_EVENT);
     }
 }

@@ -2,9 +2,11 @@
 
 namespace Sulu\Bundle\CommentBundle\Events;
 
+use Symfony\Contracts\EventDispatcher\Event;
+
 interface CommentEventCollectorInterface
 {
-    public function collect(CommentEvent $commentEvent, string $commentEventName): void;
+    public function collect(Event $commentEvent, string $commentEventName): void;
 
     public function clear(): void;
 

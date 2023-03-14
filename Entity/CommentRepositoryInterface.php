@@ -23,7 +23,13 @@ interface CommentRepositoryInterface extends RepositoryInterface
     /**
      * @return CommentInterface[]
      */
-    public function findPublishedComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array;
+    public function findPublishedComments(
+        string $type,
+        string $entityId,
+        int $page = 1,
+        ?int $pageSize = null,
+        int $offset = 0
+    ): array;
 
     public function countPublishedComments(string $type, string $entityId): int;
 

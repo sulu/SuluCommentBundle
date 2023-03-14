@@ -36,8 +36,13 @@ class CommentRepository extends NestedTreeRepository implements CommentRepositor
         return $query->getResult();
     }
 
-    public function findPublishedComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array
-    {
+    public function findPublishedComments(
+        string $type,
+        string $entityId,
+        int $page = 1,
+        ?int $pageSize = null,
+        int $offset = 0
+    ): array {
         $queryBuilder = $this->createQueryBuilder('c')
             ->join('c.thread', 't')
             ->leftJoin('c.creator', 'creator')
@@ -54,7 +59,9 @@ class CommentRepository extends NestedTreeRepository implements CommentRepositor
 
         if ($pageSize) {
             $query->setMaxResults($pageSize);
-            $query->setFirstResult(($page - 1) * $pageSize);
+            $query->setFirstResult(($page - 1) * $pageSize + $offset);
+        } elseif ($offset) {
+            $query->setFirstResult($offset);
         }
 
         return $query->getResult();

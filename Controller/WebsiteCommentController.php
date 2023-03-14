@@ -121,12 +121,14 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         $page = $request->get('page');
         $referrer = $request->get('referrer');
         $pageSize = $request->get('pageSize') ?? 20;
+        $pageOffset = $request->get('offset') ?? 0;
 
         $comments = $this->commentManager->findPublishedComments(
             $type,
             $entityId,
             $page ?: 1,
-            $page ? $pageSize : null
+            $page ? $pageSize : null,
+            $pageOffset
         );
 
         $totalComments = $this->commentManager->countPublishedComments($type, $entityId);
@@ -150,20 +152,56 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
             ]
         );
 
+        $contentData = array_merge(
+            [
+                'form' => $form->createView(),
+                'nestedComments' => $this->getNestedCommentsEnabled($type),
+                'commentTemplate' => $this->getTemplate($type, 'comment'),
+                'commentsTemplate' => $this->getTemplate($type, 'comments'),
+                'comments' => $comments,
+                'threadId' => $threadId,
+                'referrer' => $referrer,
+                'totalComments' => $totalComments,
+                'page' => $page ?: 1,
+                'pageSize' => $page ? $pageSize : null,
+            ],
+            $this->getAdditionalContentData($request)
+        );
+
         $response->setContent(
             $this->twig->render(
                 $this->getTemplate($type, 'comments'),
+                $contentData
+            )
+        );
+
+        return $response;
+    }
+
+    protected function getAdditionalContentData(Request $request):array {
+        return [];
+    }
+
+    public function cgetCountAction(string $threadId, Request $request): Response
+    {
+        list($type, $entityId) = $this->getThreadIdParts($threadId);
+
+        $totalComments = $this->commentManager->countPublishedComments($type, $entityId);
+
+        if ('json' === $request->getRequestFormat()) {
+            return $this->handleView($this->view($totalComments));
+        }
+
+        $response = new Response();
+        $response->setPrivate();
+        $response->setMaxAge(0);
+        $response->setSharedMaxAge(0);
+
+        $response->setContent(
+            $this->twig->render(
+                $this->getTemplate($type, 'count'),
                 [
-                    'form' => $form->createView(),
-                    'nestedComments' => $this->getNestedCommentsEnabled($type),
-                    'commentTemplate' => $this->getTemplate($type, 'comment'),
-                    'commentsTemplate' => $this->getTemplate($type, 'comments'),
-                    'comments' => $comments,
-                    'threadId' => $threadId,
-                    'referrer' => $referrer,
                     'totalComments' => $totalComments,
-                    'page' => $page ?: 1,
-                    'pageSize' => $page ? $pageSize : null,
                 ]
             )
         );
@@ -235,7 +273,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         $message = $request->request->get('message');
 
         /** @var Comment $comment */
-        $comment = $this->commentRepository->findCommentById((int) $commentId);
+        $comment = $this->commentRepository->findCommentById((int)$commentId);
         $comment->setMessage($message);
         $this->entityManager->flush();
 

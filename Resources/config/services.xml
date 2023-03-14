@@ -4,6 +4,8 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="Sulu\Bundle\CommentBundle\Entity\CommentRepositoryInterface" alias="sulu.repository.comment"/>
+
         <service
             id="sulu_comment.comment_controller"
             class="Sulu\Bundle\CommentBundle\Controller\CommentController"
@@ -38,6 +40,9 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+
+
+
         <service
             id="sulu_comment.website_comment_controller"
             class="Sulu\Bundle\CommentBundle\Controller\WebsiteCommentController"
@@ -67,10 +72,13 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service id="Sulu\Bundle\CommentBundle\Manager\CommentManagerInterface" alias="sulu_comment.manager"/>
+
         <service id="sulu_comment.manager" class="Sulu\Bundle\CommentBundle\Manager\CommentManager" public="true">
             <argument type="service" id="sulu.repository.thread"/>
             <argument type="service" id="sulu.repository.comment"/>
             <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="Sulu\Bundle\CommentBundle\Events\CommentEventCollector"/>
         </service>
 
         <service id="Sulu\Bundle\CommentBundle\Form\Type\CommentType">
@@ -91,6 +99,18 @@
             <argument type="service" id="request_stack"/>
 
             <tag name="jms_serializer.event_subscriber"/>
+        </service>
+
+        <service id="Sulu\Bundle\CommentBundle\Events\CommentEventCollector">
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <service id="Sulu\Bundle\CommentBundle\Events\CommentEventCollectorInterface" alias="Sulu\Bundle\CommentBundle\Events\CommentEventCollector"/>
+
+        <service id="Sulu\Bundle\CommentBundle\Events\CommentEventCollectorSubscriber">
+            <argument type="service" id="Sulu\Bundle\CommentBundle\Events\CommentEventCollectorInterface"/>
+
+            <tag name="doctrine.event_subscriber" priority="-256"/>
         </service>
     </services>
 </container>

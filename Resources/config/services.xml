@@ -40,9 +40,6 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-
-
-
         <service
             id="sulu_comment.website_comment_controller"
             class="Sulu\Bundle\CommentBundle\Controller\WebsiteCommentController"

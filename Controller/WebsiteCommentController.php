@@ -178,7 +178,8 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         return $response;
     }
 
-    protected function getAdditionalContentData(Request $request):array {
+    protected function getAdditionalContentData(Request $request): array
+    {
         return [];
     }
 
@@ -273,7 +274,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         $message = $request->request->get('message');
 
         /** @var Comment $comment */
-        $comment = $this->commentRepository->findCommentById((int)$commentId);
+        $comment = $this->commentRepository->findCommentById((int) $commentId);
         $comment->setMessage($message);
         $this->entityManager->flush();
 

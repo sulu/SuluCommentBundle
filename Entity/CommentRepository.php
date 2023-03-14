@@ -16,7 +16,7 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class CommentRepository extends NestedTreeRepository implements CommentRepositoryInterface
 {
-    public function findComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array
+    public function findComments(string $type, string $entityId, int $limit = 10, int $offset = 0): array
     {
         $query = $this->createQueryBuilder('c')
             ->join('c.thread', 't')
@@ -28,16 +28,23 @@ class CommentRepository extends NestedTreeRepository implements CommentRepositor
             ->orderBy('c.created', 'DESC')
             ->getQuery();
 
-        if ($pageSize) {
-            $query->setMaxResults($pageSize);
-            $query->setFirstResult(($page - 1) * $pageSize);
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        if ($offset) {
+            $query->setFirstResult($offset);
         }
 
         return $query->getResult();
     }
 
-    public function findPublishedComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array
-    {
+    public function findPublishedComments(
+        string $type,
+        string $entityId,
+        int $limit = 10,
+        int $offset = 0
+    ): array {
         $queryBuilder = $this->createQueryBuilder('c')
             ->join('c.thread', 't')
             ->leftJoin('c.creator', 'creator')
@@ -52,9 +59,12 @@ class CommentRepository extends NestedTreeRepository implements CommentRepositor
 
         $query = $queryBuilder->getQuery();
 
-        if ($pageSize) {
-            $query->setMaxResults($pageSize);
-            $query->setFirstResult(($page - 1) * $pageSize);
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        if ($offset) {
+            $query->setFirstResult($offset);
         }
 
         return $query->getResult();

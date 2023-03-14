@@ -18,6 +18,7 @@ use Sulu\Bundle\CommentBundle\Entity\CommentRepositoryInterface;
 use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
 use Sulu\Bundle\CommentBundle\Entity\ThreadRepositoryInterface;
 use Sulu\Bundle\CommentBundle\Events\CommentEvent;
+use Sulu\Bundle\CommentBundle\Events\CommentEventCollector;
 use Sulu\Bundle\CommentBundle\Events\Events;
 use Sulu\Bundle\CommentBundle\Events\ThreadEvent;
 use Sulu\Bundle\CommentBundle\Manager\CommentManager;
@@ -60,6 +61,7 @@ class CommentManagerTest extends TestCase
         $this->threadRepository = $this->prophesize(ThreadRepositoryInterface::class);
         $this->commentRepository = $this->prophesize(CommentRepositoryInterface::class);
         $this->dispatcher = $this->prophesize(EventDispatcherInterface::class);
+        $this->commentEventCollector = new CommentEventCollector($this->dispatcher->reveal());
 
         $this->thread = $this->prophesize(ThreadInterface::class);
         $this->thread->getType()->willReturn('test');
@@ -69,13 +71,14 @@ class CommentManagerTest extends TestCase
         $this->commentManager = new CommentManager(
             $this->threadRepository->reveal(),
             $this->commentRepository->reveal(),
-            $this->dispatcher->reveal()
+            $this->dispatcher->reveal(),
+            $this->commentEventCollector
         );
     }
 
     public function testFindComments($type = 'article', $entityId = '123-123-123')
     {
-        $this->commentRepository->findComments($type, $entityId, 1, null)->shouldBeCalled()->willReturn([]);
+        $this->commentRepository->findComments($type, $entityId, 10, 0)->shouldBeCalled()->willReturn([]);
 
         $comments = $this->commentManager->findComments($type, $entityId);
         $this->assertEquals([], $comments);
@@ -110,6 +113,7 @@ class CommentManagerTest extends TestCase
 
         $thread->setTitle(Argument::any())->shouldNotBeCalled();
         $thread = $this->commentManager->addComment($type, $entityId, $this->comment->reveal());
+        $this->commentEventCollector->dispatch(); // simulate flush of the comments
 
         $this->assertEquals($this->thread->reveal(), $thread);
     }
@@ -143,6 +147,7 @@ class CommentManagerTest extends TestCase
 
         $thread->setTitle('Test')->shouldBeCalled();
         $thread = $this->commentManager->addComment($type, $entityId, $this->comment->reveal(), 'Test');
+        $this->commentEventCollector->dispatch(); // simulate flush of the comments
 
         $this->assertEquals($this->thread->reveal(), $thread);
     }
@@ -162,6 +167,7 @@ class CommentManagerTest extends TestCase
         )->shouldBeCalled();
 
         $this->assertEquals($comment->reveal(), $this->commentManager->update($comment->reveal()));
+        $this->commentEventCollector->dispatch(); // simulate flush of the comments
     }
 
     public function testUpdateThread()
@@ -178,6 +184,7 @@ class CommentManagerTest extends TestCase
         )->shouldBeCalled();
 
         $this->assertEquals($thread->reveal(), $this->commentManager->updateThread($thread->reveal()));
+        $this->commentEventCollector->dispatch(); // simulate flush of the comments
     }
 
     public function testDelete()
@@ -225,6 +232,7 @@ class CommentManagerTest extends TestCase
         $this->commentRepository->findCommentsByIds([1, 2, 3])->willReturn($commentsReveal);
 
         $this->commentManager->delete([1, 2, 3]);
+        $this->commentEventCollector->dispatch(); // simulate flush of the comments
     }
 
     public function testDeleteOne()
@@ -270,6 +278,7 @@ class CommentManagerTest extends TestCase
         $this->commentRepository->findCommentsByIds([1])->willReturn($commentsReveal);
 
         $this->commentManager->delete([1]);
+        $this->commentEventCollector->dispatch(); // simulate flush of the comments
     }
 
     public function testDeleteThread()
@@ -312,6 +321,7 @@ class CommentManagerTest extends TestCase
         $this->threadRepository->findThreadsByIds([1, 2, 3])->willReturn($threadsReveal);
 
         $this->commentManager->deleteThreads([1, 2, 3]);
+        $this->commentEventCollector->dispatch(); // simulate flush of the comments
     }
 
     public function testDeleteThreadOne()
@@ -352,6 +362,7 @@ class CommentManagerTest extends TestCase
         $this->threadRepository->findThreadsByIds([1])->willReturn($threadsReveal);
 
         $this->commentManager->deleteThreads([1]);
+        $this->commentEventCollector->dispatch(); // simulate flush of the comments
     }
 
     public function testPublish()
@@ -371,6 +382,7 @@ class CommentManagerTest extends TestCase
         )->shouldBeCalledTimes(1);
 
         $this->assertEquals($this->comment->reveal(), $this->commentManager->publish($this->comment->reveal()));
+        $this->commentEventCollector->dispatch(); // simulate flush of the comments
     }
 
     public function testPublishIsAlreadyPublished()
@@ -389,6 +401,7 @@ class CommentManagerTest extends TestCase
         )->shouldNotBeCalled();
 
         $this->assertEquals($this->comment->reveal(), $this->commentManager->publish($this->comment->reveal()));
+        $this->commentEventCollector->dispatch(); // simulate flush of the comments
     }
 
     public function testUnpublish()
@@ -408,6 +421,7 @@ class CommentManagerTest extends TestCase
         )->shouldBeCalledTimes(1);
 
         $this->assertEquals($this->comment->reveal(), $this->commentManager->unpublish($this->comment->reveal()));
+        $this->commentEventCollector->dispatch(); // simulate flush of the comments
     }
 
     public function testUnpublishIsAlreadyUnpublished()
@@ -426,5 +440,6 @@ class CommentManagerTest extends TestCase
         )->shouldNotBeCalled();
 
         $this->assertEquals($this->comment->reveal(), $this->commentManager->unpublish($this->comment->reveal()));
+        $this->commentEventCollector->dispatch(); // simulate flush of the comments
     }
 }

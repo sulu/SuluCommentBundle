@@ -16,6 +16,7 @@ use Sulu\Bundle\CommentBundle\Entity\CommentRepositoryInterface;
 use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
 use Sulu\Bundle\CommentBundle\Entity\ThreadRepositoryInterface;
 use Sulu\Bundle\CommentBundle\Events\CommentEvent;
+use Sulu\Bundle\CommentBundle\Events\CommentEventCollectorInterface;
 use Sulu\Bundle\CommentBundle\Events\Events;
 use Sulu\Bundle\CommentBundle\Events\ThreadEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -37,24 +38,31 @@ class CommentManager implements CommentManagerInterface
      */
     private $dispatcher;
 
+    /**
+     * @var CommentEventCollectorInterface
+     */
+    private $commentEventCollector;
+
     public function __construct(
         ThreadRepositoryInterface $threadRepository,
         CommentRepositoryInterface $commentRepository,
-        EventDispatcherInterface $dispatcher
+        EventDispatcherInterface $dispatcher,
+        CommentEventCollectorInterface $commentEventCollector
     ) {
         $this->threadRepository = $threadRepository;
         $this->commentRepository = $commentRepository;
         $this->dispatcher = $dispatcher;
+        $this->commentEventCollector = $commentEventCollector;
     }
 
-    public function findComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array
+    public function findComments(string $type, string $entityId, int $limit = 10, int $offset = 0): array
     {
-        return $this->commentRepository->findComments($type, $entityId, $page, $pageSize);
+        return $this->commentRepository->findComments($type, $entityId, $limit, $offset);
     }
 
-    public function findPublishedComments(string $type, string $entityId, int $page = 1, ?int $pageSize = null): array
+    public function findPublishedComments(string $type, string $entityId, int $limit = 10, int $offset = 0): array
     {
-        return $this->commentRepository->findPublishedComments($type, $entityId, $page, $pageSize);
+        return $this->commentRepository->findPublishedComments($type, $entityId, $limit, $offset);
     }
 
     public function countPublishedComments(string $type, string $entityId): int
@@ -80,7 +88,7 @@ class CommentManager implements CommentManagerInterface
         $this->dispatcher->dispatch(new CommentEvent($type, $entityId, $comment, $thread), Events::PRE_PERSIST_EVENT);
         $this->commentRepository->persist($comment);
         $thread = $thread->addComment($comment);
-        $this->dispatcher->dispatch(new CommentEvent($type, $entityId, $comment, $thread), Events::POST_PERSIST_EVENT);
+        $this->commentEventCollector->collect(new CommentEvent($type, $entityId, $comment, $thread), Events::POST_PERSIST_EVENT);
 
         return $thread;
     }
@@ -136,7 +144,7 @@ class CommentManager implements CommentManagerInterface
         $comment->publish();
 
         $thread = $comment->getThread();
-        $this->dispatcher->dispatch(
+        $this->commentEventCollector->collect(
             new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread),
             Events::PUBLISH_EVENT
         );
@@ -153,7 +161,7 @@ class CommentManager implements CommentManagerInterface
         $comment->unpublish();
 
         $thread = $comment->getThread();
-        $this->dispatcher->dispatch(
+        $this->commentEventCollector->collect(
             new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread),
             Events::UNPUBLISH_EVENT
         );
@@ -171,7 +179,7 @@ class CommentManager implements CommentManagerInterface
         $this->commentRepository->delete($comment);
 
         $postEvent = new CommentEvent($thread->getType(), $thread->getEntityId(), $comment, $thread);
-        $this->dispatcher->dispatch($postEvent, Events::POST_DELETE_EVENT);
+        $this->commentEventCollector->collect($postEvent, Events::POST_DELETE_EVENT);
     }
 
     private function deleteThread(ThreadInterface $thread): void
@@ -180,6 +188,6 @@ class CommentManager implements CommentManagerInterface
 
         $this->threadRepository->delete($thread);
 
-        $this->dispatcher->dispatch(new ThreadEvent($thread), Events::THREAD_POST_DELETE_EVENT);
+        $this->commentEventCollector->collect(new ThreadEvent($thread), Events::THREAD_POST_DELETE_EVENT);
     }
 }

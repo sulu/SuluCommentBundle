@@ -118,15 +118,31 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
+        $limit = $request->query->getInt('limit') ?? 10;
+        $offset = $request->query->getInt('offset') ?? 0;
+
+        $pageSize = $request->get('pageSize');
+        if ($pageSize) {
+            @\trigger_deprecation('sulu/comment-bundle', '2.x', 'The usage of the "pageSize" parameter is deprecated.
+        Please use "limit" and "offset instead.');
+            $limit = $pageSize;
+        }
+
         $page = $request->get('page');
+        if ($page) {
+            @\trigger_deprecation('sulu/comment-bundle', '2.x', 'The usage of the "page" parameter is deprecated.
+            Please use "limit" and "offset instead.');
+
+            $offset = ($page - 1) * $limit;
+        }
+
         $referrer = $request->get('referrer');
-        $pageSize = $request->get('pageSize') ?? 20;
 
         $comments = $this->commentManager->findPublishedComments(
             $type,
             $entityId,
-            $page ?: 1,
-            $page ? $pageSize : null
+            $limit,
+            $offset
         );
 
         $totalComments = $this->commentManager->countPublishedComments($type, $entityId);
@@ -150,20 +166,60 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
             ]
         );
 
+        $contentData = array_merge(
+            [
+                'form' => $form->createView(),
+                'nestedComments' => $this->getNestedCommentsEnabled($type),
+                'commentTemplate' => $this->getTemplate($type, 'comment'),
+                'commentsTemplate' => $this->getTemplate($type, 'comments'),
+                'comments' => $comments,
+                'threadId' => $threadId,
+                'referrer' => $referrer,
+                'totalComments' => $totalComments,
+                'page' => $page ?: 1,
+                'pageSize' => $page ? $pageSize : null,
+            ],
+            $this->getAdditionalContentData($request)
+        );
+
         $response->setContent(
             $this->twig->render(
                 $this->getTemplate($type, 'comments'),
+                $contentData
+            )
+        );
+
+        return $response;
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getAdditionalContentData(Request $request): array
+    {
+        return [];
+    }
+
+    public function cgetCountAction(string $threadId, Request $request): Response
+    {
+        list($type, $entityId) = $this->getThreadIdParts($threadId);
+
+        $totalComments = $this->commentManager->countPublishedComments($type, $entityId);
+
+        if ('json' === $request->getRequestFormat()) {
+            return $this->handleView($this->view($totalComments));
+        }
+
+        $response = new Response();
+        $response->setPrivate();
+        $response->setMaxAge(0);
+        $response->setSharedMaxAge(0);
+
+        $response->setContent(
+            $this->twig->render(
+                $this->getTemplate($type, 'count'),
                 [
-                    'form' => $form->createView(),
-                    'nestedComments' => $this->getNestedCommentsEnabled($type),
-                    'commentTemplate' => $this->getTemplate($type, 'comment'),
-                    'commentsTemplate' => $this->getTemplate($type, 'comments'),
-                    'comments' => $comments,
-                    'threadId' => $threadId,
-                    'referrer' => $referrer,
                     'totalComments' => $totalComments,
-                    'page' => $page ?: 1,
-                    'pageSize' => $page ? $pageSize : null,
                 ]
             )
         );

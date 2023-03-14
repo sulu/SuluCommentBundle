@@ -121,14 +121,14 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         $limit = $request->query->getInt('limit') ?? 10;
         $offset = $request->query->getInt('offset') ?? 0;
 
-        $pageSize = $request->get('pageSize') ?? 10;
+        $pageSize = $request->get('pageSize');
         if ($pageSize) {
             @\trigger_deprecation('sulu/comment-bundle', '2.x', 'The usage of the "pageSize" parameter is deprecated.
         Please use "limit" and "offset instead.');
             $limit = $pageSize;
         }
 
-        $page = $request->get('page') ?? null;
+        $page = $request->get('page');
         if ($page) {
             @\trigger_deprecation('sulu/comment-bundle', '2.x', 'The usage of the "page" parameter is deprecated.
             Please use "limit" and "offset instead.');

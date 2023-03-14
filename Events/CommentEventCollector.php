@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\CommentBundle\Events;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class CommentEventCollector implements CommentEventCollectorInterface

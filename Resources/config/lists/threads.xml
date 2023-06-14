@@ -27,7 +27,7 @@
     </joins>
 
     <properties>
-        <property name="id" translation="sulu_admin.id" type="integer">
+        <property name="id" translation="sulu_admin.id">
             <field-name>id</field-name>
             <entity-name>%sulu.model.thread.class%</entity-name>
         </property>

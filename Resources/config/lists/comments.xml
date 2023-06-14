@@ -34,7 +34,7 @@
     </joins>
 
     <properties>
-        <property name="id" translation="sulu_admin.id" type="integer">
+        <property name="id" translation="sulu_admin.id">
             <field-name>id</field-name>
             <entity-name>%sulu.model.comment.class%</entity-name>
         </property>

@@ -15,9 +15,9 @@ use Doctrine\Common\Collections\Collection;
 
 interface CommentInterface
 {
-    const STATE_UNPUBLISHED = 0;
+    public const STATE_UNPUBLISHED = 0;
 
-    const STATE_PUBLISHED = 1;
+    public const STATE_PUBLISHED = 1;
 
     public function getId(): int;
 

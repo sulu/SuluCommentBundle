@@ -31,6 +31,13 @@ jobs:
                       dependency-versions: 'highest'
                       tools: 'composer:v2'
                       env:
+                          SYMFONY_DEPRECATIONS_HELPER: disabled
+
+                    - php-version: '8.0'
+                      lint: true
+                      dependency-versions: 'highest'
+                      tools: 'composer:v2'
+                      env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
 
         services:

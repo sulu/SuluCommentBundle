@@ -113,15 +113,17 @@ class CommentController extends AbstractRestController implements ClassResourceI
 
         foreach ($request->query->all() as $filterKey => $filterValue) {
             if (isset($fieldDescriptors[$filterKey])) {
-                $listBuilder->where($fieldDescriptors[$filterKey], $filterValue);
+                $listBuilder->where($fieldDescriptors[$filterKey], (string) $filterValue);
             }
         }
 
+        /** @var string $route */
+        $route = $request->attributes->get('_route');
         $results = $listBuilder->execute();
         $list = new ListRepresentation(
             $results,
             'comments',
-            $request->attributes->get('_route'),
+            $route,
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),

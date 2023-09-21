@@ -98,20 +98,23 @@ class ThreadController extends AbstractRestController implements ClassResourceIn
 
         foreach ($request->query->all() as $filterKey => $filterValue) {
             if (isset($fieldDescriptors[$filterKey])) {
-                $listBuilder->where($fieldDescriptors[$filterKey], $filterValue);
+                $listBuilder->where($fieldDescriptors[$filterKey], (string) $filterValue);
             }
         }
 
+        /** @var string $typeParameter */
         $typeParameter = $request->get('types');
         if ($typeParameter) {
             $listBuilder->in($fieldDescriptors['type'], array_filter(explode(',', $typeParameter)));
         }
 
         $items = $listBuilder->execute();
+        /** @var string $route */
+        $route = $request->attributes->get('_route');
         $list = new ListRepresentation(
             $items,
             'threads',
-            $request->attributes->get('_route'),
+            $route,
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),

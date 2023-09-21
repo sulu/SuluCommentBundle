@@ -118,8 +118,8 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
-        $limit = $request->query->getInt('limit') ?? 10;
-        $offset = $request->query->getInt('offset') ?? 0;
+        $limit = $request->query->getInt('limit', 10);
+        $offset = $request->query->getInt('offset', 0);
 
         $pageSize = $request->get('pageSize');
         if ($pageSize) {

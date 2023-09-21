@@ -3,7 +3,7 @@ parameters:
     database.url: '%env(resolve:DATABASE_URL)%'
 
 framework:
-    router: { resource: "%kernel.root_dir%/config/routing_website.yml" }
+    router: { resource: "%kernel.project_dir%/config/routing_website.yml" }
 
 security:
     access_decision_manager:

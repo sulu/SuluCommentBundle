@@ -10,10 +10,11 @@ with this source code in the file LICENSE.
 EOF;
 
 $finder = PhpCsFixer\Finder::create()
-    ->exclude(['var/cache'])
+    ->exclude(['var/cache', 'tests/Resources/cache', 'node_modules'])
     ->in(__DIR__);
 
-return PhpCsFixer\Config::create()
+$config = new PhpCsFixer\Config();
+$config->setRiskyAllowed(true)
     ->setRules([
         '@Symfony' => true,
         'array_syntax' => ['syntax' => 'short'],
@@ -26,3 +27,5 @@ return PhpCsFixer\Config::create()
         'phpdoc_types_order' => false,
     ])
     ->setFinder($finder);
+
+return $config;

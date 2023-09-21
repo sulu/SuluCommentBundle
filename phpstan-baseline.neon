@@ -6,22 +6,22 @@ parameters:
 			path: Admin/CommentAdmin.php
 
 		-
+			message: "#^Cannot cast array\\|bool\\|float\\|int\\|string to string\\.$#"
+			count: 1
+			path: Controller/CommentController.php
+
+		-
 			message: "#^Parameter \\#1 \\$message of method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\:\\:setMessage\\(\\) expects string, bool\\|float\\|int\\|string\\|null given\\.$#"
 			count: 1
 			path: Controller/CommentController.php
 
 		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:where\\(\\) expects string, array\\<bool\\|float\\|int\\|string\\>\\|bool\\|float\\|int\\|string given\\.$#"
-			count: 1
-			path: Controller/CommentController.php
-
-		-
-			message: "#^Parameter \\#1 \\$title of method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\ThreadInterface\\:\\:setTitle\\(\\) expects string, bool\\|float\\|int\\|string\\|null given\\.$#"
+			message: "#^Cannot cast array\\|bool\\|float\\|int\\|string to string\\.$#"
 			count: 1
 			path: Controller/ThreadController.php
 
 		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:where\\(\\) expects string, array\\<bool\\|float\\|int\\|string\\>\\|bool\\|float\\|int\\|string given\\.$#"
+			message: "#^Parameter \\#1 \\$title of method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\ThreadInterface\\:\\:setTitle\\(\\) expects string, bool\\|float\\|int\\|string\\|null given\\.$#"
 			count: 1
 			path: Controller/ThreadController.php
 
@@ -41,7 +41,7 @@ parameters:
 			path: Controller/WebsiteCommentController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:view\\(\\) has parameter \\$data with no typehint specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:view\\(\\) has parameter \\$data with no type specified\\.$#"
 			count: 1
 			path: Controller/WebsiteCommentController.php
 
@@ -51,12 +51,32 @@ parameters:
 			path: Controller/WebsiteCommentController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:view\\(\\) has parameter \\$statusCode with no typehint specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Controller\\\\WebsiteCommentController\\:\\:view\\(\\) has parameter \\$statusCode with no type specified\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentRepositoryInterface\\:\\:findCommentById\\(\\) expects int, mixed given\\.$#"
 			count: 1
 			path: Controller/WebsiteCommentController.php
 
 		-
 			message: "#^Parameter \\#1 \\$message of method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\:\\:setMessage\\(\\) expects string, bool\\|float\\|int\\|string\\|null given\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Parameter \\#3 \\$comment of method Sulu\\\\Bundle\\\\CommentBundle\\\\Manager\\\\CommentManagerInterface\\:\\:addComment\\(\\) expects Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface, mixed given\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Parameter \\#3 \\$limit of method Sulu\\\\Bundle\\\\CommentBundle\\\\Manager\\\\CommentManagerInterface\\:\\:findPublishedComments\\(\\) expects int, mixed given\\.$#"
+			count: 1
+			path: Controller/WebsiteCommentController.php
+
+		-
+			message: "#^Parameter \\#4 \\$threadTitle of method Sulu\\\\Bundle\\\\CommentBundle\\\\Manager\\\\CommentManagerInterface\\:\\:addComment\\(\\) expects string\\|null, mixed given\\.$#"
 			count: 1
 			path: Controller/WebsiteCommentController.php
 
@@ -76,12 +96,12 @@ parameters:
 			path: Controller/WebsiteCommentController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\DependencyInjection\\\\SuluCommentExtension\\:\\:load\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\DependencyInjection\\\\SuluCommentExtension\\:\\:load\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: DependencyInjection/SuluCommentExtension.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\DependencyInjection\\\\SuluCommentExtension\\:\\:prepend\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\DependencyInjection\\\\SuluCommentExtension\\:\\:prepend\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: DependencyInjection/SuluCommentExtension.php
 
@@ -96,12 +116,22 @@ parameters:
 			path: Entity/Comment.php
 
 		-
+			message: "#^Parameter \\#1 \\$p of method Doctrine\\\\Common\\\\Collections\\\\Collection\\<\\(int\\|string\\),mixed\\>\\:\\:filter\\(\\) expects Closure\\(mixed\\)\\: bool, Closure\\(Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\)\\: bool given\\.$#"
+			count: 1
+			path: Entity/Comment.php
+
+		-
 			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\:\\:\\$children type mapping mismatch\\: property can contain Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\> but database expects Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\>\\.$#"
 			count: 1
 			path: Entity/Comment.php
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\:\\:\\$children with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: Entity/Comment.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\:\\:\\$message \\(string\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: Entity/Comment.php
 
@@ -124,6 +154,31 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\:\\:getPublishedChildren\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
 			count: 1
 			path: Entity/CommentInterface.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentRepository\\:\\:countPublishedComments\\(\\) should return int but returns bool\\|float\\|int\\|string\\|null\\.$#"
+			count: 1
+			path: Entity/CommentRepository.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentRepository\\:\\:findCommentById\\(\\) should return Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\|null but returns mixed\\.$#"
+			count: 1
+			path: Entity/CommentRepository.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentRepository\\:\\:findComments\\(\\) should return array\\<Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\> but returns mixed\\.$#"
+			count: 1
+			path: Entity/CommentRepository.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentRepository\\:\\:findCommentsByIds\\(\\) should return array\\<Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\> but returns mixed\\.$#"
+			count: 1
+			path: Entity/CommentRepository.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentRepository\\:\\:findPublishedComments\\(\\) should return array\\<Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentInterface\\> but returns mixed\\.$#"
+			count: 1
+			path: Entity/CommentRepository.php
 
 		-
 			message: "#^Interface Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\CommentRepositoryInterface extends generic interface Sulu\\\\Component\\\\Persistence\\\\Repository\\\\RepositoryInterface but does not specify its types\\: T$#"
@@ -191,6 +246,11 @@ parameters:
 			path: Entity/ThreadRepository.php
 
 		-
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\ThreadRepository\\:\\:findThreadsByIds\\(\\) should return array\\<Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\ThreadInterface\\> but returns mixed\\.$#"
+			count: 1
+			path: Entity/ThreadRepository.php
+
+		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\:\\:getContact\\(\\)\\.$#"
 			count: 1
 			path: EventSubscriber/CommentSerializationSubscriber.php
@@ -201,27 +261,22 @@ parameters:
 			path: EventSubscriber/CommentSerializationSubscriber.php
 
 		-
-			message: "#^Method Symfony\\\\Contracts\\\\EventDispatcher\\\\EventDispatcherInterface\\:\\:dispatch\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			message: "#^Parameter \\#2 \\$haystack of function in_array expects array, mixed given\\.$#"
 			count: 1
-			path: Events/CommentEventCollector.php
+			path: EventSubscriber/CommentSerializationSubscriber.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Form\\\\Type\\\\CommentType\\:\\:buildForm\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: Form/Type/CommentType.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Form\\\\Type\\\\CommentType\\:\\:configureOptions\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Form\\\\Type\\\\CommentType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Form/Type/CommentType.php
 
 		-
-			message: "#^Method Symfony\\\\Contracts\\\\EventDispatcher\\\\EventDispatcherInterface\\:\\:dispatch\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 5
-			path: Manager/CommentManager.php
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Form\\\\Type\\\\CommentType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: Form/Type/CommentType.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\SuluCommentBundle\\:\\:build\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\SuluCommentBundle\\:\\:build\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: SuluCommentBundle.php
 

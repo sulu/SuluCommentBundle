@@ -27,15 +27,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class CommentAdmin extends Admin
 {
-    const COMMENT_SECURITY_CONTEXT = 'sulu.comment.comments';
-    const COMMENT_LIST_VIEW = 'sulu_comment.comments.list';
-    const COMMENT_EDIT_FORM_VIEW = 'sulu_comment.comments.edit_form';
-    const COMMENT_EDIT_FORM_DETAILS_VIEW = 'sulu_comment.comments.edit_form.details';
+    public const COMMENT_SECURITY_CONTEXT = 'sulu.comment.comments';
+    public const COMMENT_LIST_VIEW = 'sulu_comment.comments.list';
+    public const COMMENT_EDIT_FORM_VIEW = 'sulu_comment.comments.edit_form';
+    public const COMMENT_EDIT_FORM_DETAILS_VIEW = 'sulu_comment.comments.edit_form.details';
 
-    const THREAD_SECURITY_CONTEXT = 'sulu.comment.threads';
-    const THREAD_LIST_VIEW = 'sulu_comment.threads.list';
-    const THREAD_EDIT_FORM_VIEW = 'sulu_comment.threads.edit_form';
-    const THREAD_EDIT_FORM_DETAILS_VIEW = 'sulu_comment.threads.edit_form.details';
+    public const THREAD_SECURITY_CONTEXT = 'sulu.comment.threads';
+    public const THREAD_LIST_VIEW = 'sulu_comment.threads.list';
+    public const THREAD_EDIT_FORM_VIEW = 'sulu_comment.threads.edit_form';
+    public const THREAD_EDIT_FORM_DETAILS_VIEW = 'sulu_comment.threads.edit_form.details';
 
     /**
      * @var ViewBuilderFactoryInterface

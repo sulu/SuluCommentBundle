@@ -13,25 +13,25 @@ namespace Sulu\Bundle\CommentBundle\Events;
 
 final class Events
 {
-    const PRE_PERSIST_EVENT = 'sulu_comment.pre_persist';
+    public const PRE_PERSIST_EVENT = 'sulu_comment.pre_persist';
 
-    const POST_PERSIST_EVENT = 'sulu_comment.post_persist';
+    public const POST_PERSIST_EVENT = 'sulu_comment.post_persist';
 
-    const PRE_DELETE_EVENT = 'sulu_comment.pre_delete';
+    public const PRE_DELETE_EVENT = 'sulu_comment.pre_delete';
 
-    const POST_DELETE_EVENT = 'sulu_comment.post_delete';
+    public const POST_DELETE_EVENT = 'sulu_comment.post_delete';
 
-    const PRE_UPDATE_EVENT = 'sulu_comment.pre_update';
+    public const PRE_UPDATE_EVENT = 'sulu_comment.pre_update';
 
-    const PUBLISH_EVENT = 'sulu_comment.publish';
+    public const PUBLISH_EVENT = 'sulu_comment.publish';
 
-    const UNPUBLISH_EVENT = 'sulu_comment.unpublish';
+    public const UNPUBLISH_EVENT = 'sulu_comment.unpublish';
 
-    const THREAD_PRE_UPDATE_EVENT = 'sulu_comment.thread.pre_update';
+    public const THREAD_PRE_UPDATE_EVENT = 'sulu_comment.thread.pre_update';
 
-    const THREAD_PRE_DELETE_EVENT = 'sulu_comment.thread.pre_delete';
+    public const THREAD_PRE_DELETE_EVENT = 'sulu_comment.thread.pre_delete';
 
-    const THREAD_POST_DELETE_EVENT = 'sulu_comment.thread.post_delete';
+    public const THREAD_POST_DELETE_EVENT = 'sulu_comment.thread.post_delete';
 
     /**
      * Private constructor.

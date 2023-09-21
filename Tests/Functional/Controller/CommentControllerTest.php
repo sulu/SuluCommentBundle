@@ -18,6 +18,7 @@ use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\CommentBundle\Entity\Thread;
 use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class CommentControllerTest extends SuluTestCase
 {
@@ -26,8 +27,14 @@ class CommentControllerTest extends SuluTestCase
      */
     private $entityManager;
 
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     protected function setUp(): void
     {
+        $this->client = $this->createAuthenticatedClient();
         $this->entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
 
         $this->purgeDatabase();
@@ -40,11 +47,10 @@ class CommentControllerTest extends SuluTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/comments/' . $comment->getId());
+        $this->client->request('GET', '/api/comments/' . $comment->getId());
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $data = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $data = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals($comment->getId(), $data['id']);
         $this->assertEquals($comment->getMessage(), $data['message']);
@@ -59,11 +65,10 @@ class CommentControllerTest extends SuluTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/comments');
+        $this->client->request('GET', '/api/comments');
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $data = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $data = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertCount(3, $data['_embedded']['comments']);
     }
@@ -78,11 +83,10 @@ class CommentControllerTest extends SuluTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/comments?state=' . CommentInterface::STATE_UNPUBLISHED);
+        $this->client->request('GET', '/api/comments?state=' . CommentInterface::STATE_UNPUBLISHED);
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $data = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $data = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertCount(1, $data['_embedded']['comments']);
     }
@@ -99,11 +103,10 @@ class CommentControllerTest extends SuluTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/comments?threadType=test-1,test-2');
+        $this->client->request('GET', '/api/comments?threadType=test-1,test-2');
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $data = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $data = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertCount(2, $data['_embedded']['comments']);
     }
@@ -115,11 +118,10 @@ class CommentControllerTest extends SuluTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('PUT', '/api/comments/' . $comment->getId(), ['message' => 'My new Message']);
+        $this->client->request('PUT', '/api/comments/' . $comment->getId(), ['message' => 'My new Message']);
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
-        $data = json_decode($client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $data = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals($comment->getId(), $data['id']);
         $this->assertEquals('My new Message', $data['message']);
@@ -132,10 +134,9 @@ class CommentControllerTest extends SuluTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('DELETE', '/api/comments/' . $comment->getId());
+        $this->client->request('DELETE', '/api/comments/' . $comment->getId());
 
-        $this->assertHttpStatusCode(204, $client->getResponse());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         $this->assertNull($this->entityManager->find(CommentInterface::class, $comment->getId()));
     }
@@ -151,8 +152,7 @@ class CommentControllerTest extends SuluTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        $client = $this->createAuthenticatedClient();
-        $client->request(
+        $this->client->request(
             'DELETE',
             '/api/comments?ids=' . implode(
                 ',',
@@ -165,7 +165,7 @@ class CommentControllerTest extends SuluTestCase
             )
         );
 
-        $this->assertHttpStatusCode(204, $client->getResponse());
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
 
         foreach ([$comments[0], $comments[1]] as $comment) {
             $this->assertNull($this->entityManager->find(CommentInterface::class, $comment->getId()));
@@ -183,9 +183,8 @@ class CommentControllerTest extends SuluTestCase
 
         $this->assertFalse($comment->isPublished());
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('POST', '/api/comments/' . $comment->getId() . '?action=publish');
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->client->request('POST', '/api/comments/' . $comment->getId() . '?action=publish');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $result = $this->entityManager->find(CommentInterface::class, $comment->getId());
         $this->assertTrue($result->isPublished());
@@ -200,9 +199,8 @@ class CommentControllerTest extends SuluTestCase
 
         $this->assertTrue($comment->isPublished());
 
-        $client = $this->createAuthenticatedClient();
-        $client->request('POST', '/api/comments/' . $comment->getId() . '?action=unpublish');
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->client->request('POST', '/api/comments/' . $comment->getId() . '?action=unpublish');
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $result = $this->entityManager->find(CommentInterface::class, $comment->getId());
         $this->assertFalse($result->isPublished());

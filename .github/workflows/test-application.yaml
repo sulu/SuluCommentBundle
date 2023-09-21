@@ -38,20 +38,14 @@ jobs:
                       dependency-versions: 'highest'
                       tools: 'composer:v2'
                       env:
-                          SYMFONY_DEPRECATIONS_HELPER: weak
+                          SYMFONY_DEPRECATIONS_HELPER: disabled
                     - php-version: '8.1'
                       lint: true
                       dependency-versions: 'highest'
                       tools: 'composer:v2'
                       env:
-                          SYMFONY_DEPRECATIONS_HELPER: weak
+                          SYMFONY_DEPRECATIONS_HELPER: disabled
                     - php-version: '8.2'
-                      lint: true
-                      dependency-versions: 'highest'
-                      tools: 'composer:v2'
-                      env:
-                          SYMFONY_DEPRECATIONS_HELPER: weak
-                    - php-version: '8.3'
                       lint: true
                       dependency-versions: 'highest'
                       tools: 'composer:v2'

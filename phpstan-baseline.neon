@@ -96,16 +96,6 @@ parameters:
 			path: Controller/WebsiteCommentController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\DependencyInjection\\\\SuluCommentExtension\\:\\:load\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: DependencyInjection/SuluCommentExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\DependencyInjection\\\\SuluCommentExtension\\:\\:prepend\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: DependencyInjection/SuluCommentExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Entity\\\\Comment\\:\\:getChildren\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
 			count: 1
 			path: Entity/Comment.php
@@ -269,14 +259,4 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Form\\\\Type\\\\CommentType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Form/Type/CommentType.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\Form\\\\Type\\\\CommentType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Form/Type/CommentType.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CommentBundle\\\\SuluCommentBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: SuluCommentBundle.php
 

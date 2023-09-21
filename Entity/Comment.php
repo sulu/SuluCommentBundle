@@ -146,7 +146,7 @@ class Comment implements CommentInterface, AuditableInterface
         return $this->parent;
     }
 
-    public function setParent(?CommentInterface $parent = null): CommentInterface
+    public function setParent(CommentInterface $parent = null): CommentInterface
     {
         $this->parent = $parent;
 

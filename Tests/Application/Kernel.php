@@ -20,7 +20,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 class Kernel extends SuluTestKernel
 {
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         $bundles = parent::registerBundles();
         $bundles[] = new SuluCommentBundle();
@@ -40,7 +40,7 @@ class Kernel extends SuluTestKernel
         $loader->load(__DIR__ . '/config/config_' . $context . '.yml');
     }
 
-    protected function getKernelParameters()
+    protected function getKernelParameters(): array
     {
         $parameters = parent::getKernelParameters();
 

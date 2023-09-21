@@ -25,10 +25,7 @@ class SuluCommentExtension extends Extension implements PrependExtensionInterfac
 {
     use PersistenceExtensionTrait;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         if ($container->hasExtension('jms_serializer')) {
             $container->prependExtensionConfig(
@@ -79,10 +76,7 @@ class SuluCommentExtension extends Extension implements PrependExtensionInterfac
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);

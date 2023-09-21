@@ -9,7 +9,7 @@ security:
     access_decision_manager:
         strategy: affirmative
 
-    encoders:
+    password_hashers:
         Sulu\Bundle\SecurityBundle\Entity\User: plaintext
 
     providers:
@@ -22,7 +22,6 @@ security:
     firewalls:
         test:
             http_basic: ~
-            anonymous: ~
 
 sulu_test:
     enable_test_user_provider: true

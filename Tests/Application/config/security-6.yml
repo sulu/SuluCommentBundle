@@ -1,0 +1,3 @@
+security:
+    password_hashers:
+        Sulu\Bundle\SecurityBundle\Entity\User: plaintext

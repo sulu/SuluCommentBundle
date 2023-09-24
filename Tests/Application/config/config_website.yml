@@ -9,9 +9,6 @@ security:
     access_decision_manager:
         strategy: affirmative
 
-    password_hashers:
-        Sulu\Bundle\SecurityBundle\Entity\User: plaintext
-
     providers:
         testprovider:
             id: test_user_provider

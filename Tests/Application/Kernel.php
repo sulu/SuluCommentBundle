@@ -38,6 +38,12 @@ class Kernel extends SuluTestKernel
 
         $context = $this->getContext();
         $loader->load(__DIR__ . '/config/config_' . $context . '.yml');
+
+        if (\version_compare(Kernel::VERSION, '6.0.0', '>=')) {
+            $loader->load(__DIR__ . '/config/security-6.yml');
+        } else {
+            $loader->load(__DIR__ . '/config/security-5-4.yml');
+        }
     }
 
     protected function getKernelParameters(): array

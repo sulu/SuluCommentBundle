@@ -65,7 +65,7 @@ class Comment implements CommentInterface, AuditableInterface
      */
     protected $children;
 
-    public function __construct(int $state = self::STATE_PUBLISHED, ThreadInterface $thread = null)
+    public function __construct(int $state = self::STATE_PUBLISHED, ?ThreadInterface $thread = null)
     {
         $this->state = $state;
         $this->thread = $thread;
@@ -146,7 +146,7 @@ class Comment implements CommentInterface, AuditableInterface
         return $this->parent;
     }
 
-    public function setParent(CommentInterface $parent = null): CommentInterface
+    public function setParent(?CommentInterface $parent = null): CommentInterface
     {
         $this->parent = $parent;
 

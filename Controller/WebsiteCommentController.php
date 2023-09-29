@@ -130,14 +130,14 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         /** @var null|int $pageSize */
         $pageSize = $request->get('pageSize');
         if ($pageSize) {
-            @\trigger_deprecation('sulu/comment-bundle', '2.x', 'The usage of the "pageSize" parameter is deprecated.
+            @trigger_deprecation('sulu/comment-bundle', '2.x', 'The usage of the "pageSize" parameter is deprecated.
         Please use "limit" and "offset instead.');
             $limit = $pageSize;
         }
 
         $page = $request->get('page');
         if ($page) {
-            @\trigger_deprecation('sulu/comment-bundle', '2.x', 'The usage of the "page" parameter is deprecated.
+            @trigger_deprecation('sulu/comment-bundle', '2.x', 'The usage of the "page" parameter is deprecated.
             Please use "limit" and "offset instead.');
 
             $offset = ($page - 1) * $limit;
@@ -173,7 +173,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
             ]
         );
 
-        $contentData = array_merge(
+        $contentData = \array_merge(
             [
                 'form' => $form->createView(),
                 'nestedComments' => $this->getNestedCommentsEnabled($type),
@@ -330,7 +330,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
     public function deleteCommentAction(string $threadId, string $commentId, Request $request): Response
     {
         /** @var Comment $comment */
-        $comment = $this->commentRepository->findCommentById(intval($commentId));
+        $comment = $this->commentRepository->findCommentById(\intval($commentId));
 
         $this->entityManager->remove($comment);
         $this->entityManager->flush();
@@ -371,17 +371,17 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
      */
     private function getThreadIdParts(string $threadId): array
     {
-        $pos = strpos($threadId, '-');
+        $pos = \strpos($threadId, '-');
         if (false === $pos) {
             throw new \RuntimeException('Thread id is not valid.');
         }
 
-        return [substr($threadId, 0, $pos), substr($threadId, $pos + 1)];
+        return [\substr($threadId, 0, $pos), \substr($threadId, $pos + 1)];
     }
 
     private function getTemplate(string $type, string $templateType): string
     {
-        if (array_key_exists($type, $this->commentTypes)) {
+        if (\array_key_exists($type, $this->commentTypes)) {
             /** @var array<string, string> $templates */
             $templates = $this->commentTypes[$type]['templates'];
 
@@ -393,7 +393,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
 
     private function getNestedCommentsEnabled(string $type): bool
     {
-        if (array_key_exists($type, $this->commentTypes)) {
+        if (\array_key_exists($type, $this->commentTypes)) {
             /** @var bool $result */
             $result = $this->commentTypes[$type]['nested_comments'];
 

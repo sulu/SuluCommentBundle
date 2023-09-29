@@ -106,7 +106,7 @@ class ThreadController extends AbstractRestController implements ClassResourceIn
         /** @var string $typeParameter */
         $typeParameter = $request->get('types');
         if ($typeParameter) {
-            $listBuilder->in($fieldDescriptors['type'], array_filter(explode(',', $typeParameter)));
+            $listBuilder->in($fieldDescriptors['type'], \array_filter(\explode(',', $typeParameter)));
         }
 
         $items = $listBuilder->execute();
@@ -159,8 +159,8 @@ class ThreadController extends AbstractRestController implements ClassResourceIn
         $ids = $request->query->get('ids', '');
 
         /** @var int[] $ids */
-        $ids = array_filter(explode(',', $ids));
-        if (0 === count($ids)) {
+        $ids = \array_filter(\explode(',', $ids));
+        if (0 === \count($ids)) {
             return $this->handleView($this->view(null, 204));
         }
 

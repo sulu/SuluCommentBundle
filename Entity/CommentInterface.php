@@ -39,7 +39,7 @@ interface CommentInterface
 
     public function getParent(): ?CommentInterface;
 
-    public function setParent(CommentInterface $parent = null): CommentInterface;
+    public function setParent(?CommentInterface $parent = null): CommentInterface;
 
     public function getDepth(): int;
 

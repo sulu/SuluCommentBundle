@@ -42,7 +42,7 @@ class CommentFormFactoryTwigExtension extends AbstractExtension
         ];
     }
 
-    public function createCommentForm(string $threadId, string $referrer = null, int $parent = null): FormView
+    public function createCommentForm(string $threadId, ?string $referrer = null, ?int $parent = null): FormView
     {
         $form = $this->formFactory->create(
             CommentType::class,

@@ -32,7 +32,7 @@ interface CommentManagerInterface
         string $type,
         string $entityId,
         CommentInterface $comment,
-        string $threadTitle = null
+        ?string $threadTitle = null
     ): ThreadInterface;
 
     public function update(CommentInterface $comment): CommentInterface;

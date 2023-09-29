@@ -58,7 +58,7 @@ class WebsiteCommentControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(CommentInterface::STATE_PUBLISHED, $response['state']);
         $this->assertEquals($message, $response['message']);
@@ -96,7 +96,7 @@ class WebsiteCommentControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(CommentInterface::STATE_PUBLISHED, $response['state']);
         $this->assertEquals($message, $response['message']);
@@ -196,7 +196,7 @@ class WebsiteCommentControllerTest extends SuluTestCase
             ['message' => 'New message']
         );
 
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals('New message', $response['message']);
 
         $this->getEntityManager()->clear();
@@ -239,7 +239,7 @@ class WebsiteCommentControllerTest extends SuluTestCase
         );
 
         /* Todo: Check if this is correct. */
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals('', $response);
 
         $this->getEntityManager()->clear();
@@ -273,7 +273,7 @@ class WebsiteCommentControllerTest extends SuluTestCase
     public function testGetComments($type = 'blog', $entityId = '1')
     {
         $this->postComment($type, $entityId);
-        sleep(1);
+        \sleep(1);
         $this->postComment($type, $entityId, 'My new Comment');
         $this->postComment('article', '123-123-123');
 
@@ -284,7 +284,7 @@ class WebsiteCommentControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertCount(2, $response);
         $this->assertEquals(CommentInterface::STATE_PUBLISHED, $response[0]['state']);
         $this->assertEquals('My new Comment', $response[0]['message']);

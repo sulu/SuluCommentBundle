@@ -50,7 +50,7 @@ class CommentControllerTest extends SuluTestCase
         $this->client->request('GET', '/api/comments/' . $comment->getId());
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals($comment->getId(), $data['id']);
         $this->assertEquals($comment->getMessage(), $data['message']);
@@ -68,7 +68,7 @@ class CommentControllerTest extends SuluTestCase
         $this->client->request('GET', '/api/comments');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertCount(3, $data['_embedded']['comments']);
     }
@@ -86,7 +86,7 @@ class CommentControllerTest extends SuluTestCase
         $this->client->request('GET', '/api/comments?state=' . CommentInterface::STATE_UNPUBLISHED);
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertCount(1, $data['_embedded']['comments']);
     }
@@ -106,7 +106,7 @@ class CommentControllerTest extends SuluTestCase
         $this->client->request('GET', '/api/comments?threadType=test-1,test-2');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertCount(2, $data['_embedded']['comments']);
     }
@@ -121,7 +121,7 @@ class CommentControllerTest extends SuluTestCase
         $this->client->request('PUT', '/api/comments/' . $comment->getId(), ['message' => 'My new Message']);
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals($comment->getId(), $data['id']);
         $this->assertEquals('My new Message', $data['message']);
@@ -154,9 +154,9 @@ class CommentControllerTest extends SuluTestCase
 
         $this->client->request(
             'DELETE',
-            '/api/comments?ids=' . implode(
+            '/api/comments?ids=' . \implode(
                 ',',
-                array_map(
+                \array_map(
                     function(CommentInterface $comment) {
                         return $comment->getId();
                     },

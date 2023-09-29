@@ -105,7 +105,7 @@ class CommentController extends AbstractRestController implements ClassResourceI
         if ($threadType) {
             $listBuilder->in(
                 $fieldDescriptors['threadType'],
-                array_filter(explode(',', $threadType))
+                \array_filter(\explode(',', $threadType))
             );
 
             $request->query->remove('threadType');
@@ -168,8 +168,8 @@ class CommentController extends AbstractRestController implements ClassResourceI
         $ids = $request->query->get('ids', '');
 
         /** @var int[] $ids */
-        $ids = array_filter(explode(',', $ids));
-        if (0 === count($ids)) {
+        $ids = \array_filter(\explode(',', $ids));
+        if (0 === \count($ids)) {
             return $this->handleView($this->view(null, 204));
         }
 

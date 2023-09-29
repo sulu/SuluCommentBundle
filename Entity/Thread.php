@@ -74,7 +74,7 @@ class Thread implements ThreadInterface, AuditableInterface
     /**
      * @param Collection<int, CommentInterface>|null $comments
      */
-    public function __construct(string $type, string $entityId, Collection $comments = null, int $commentCount = 0)
+    public function __construct(string $type, string $entityId, ?Collection $comments = null, int $commentCount = 0)
     {
         $this->type = $type;
         $this->entityId = $entityId;

@@ -58,7 +58,7 @@ class CommentSerializationSubscriber implements EventSubscriberInterface
         $context = $event->getContext();
         /** @var mixed[] $groups */
         $groups = $context->hasAttribute('groups') ? $context->getAttribute('groups') : [];
-        if (!in_array('commentWithAvatar', $groups)) {
+        if (!\in_array('commentWithAvatar', $groups)) {
             return;
         }
 

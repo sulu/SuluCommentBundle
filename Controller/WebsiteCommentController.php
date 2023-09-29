@@ -355,7 +355,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
      */
     protected function view($data = null, $statusCode = null, array $headers = [])
     {
-        $view = parent::view($data, intval($statusCode), $headers);
+        $view = parent::view($data, $statusCode ? (int) $statusCode : null, $headers);
 
         $context = new Context();
         $context->setGroups($this->commentSerializationGroups);

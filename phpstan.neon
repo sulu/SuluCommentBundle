@@ -6,7 +6,6 @@ includes:
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-phpunit/rules.neon
     - vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
-    - phpstan-baseline.neon
 
 parameters:
     paths:
@@ -21,3 +20,6 @@ parameters:
         console_application_loader: Tests/phpstan/console-application.php
     doctrine:
         objectManagerLoader: Tests/phpstan/object-manager.php
+    ignoreErrors:
+        - "#^Property .* type mapping mismatch\\: property can contain .* but database .*$#"
+        - "#^Property .* type mapping mismatch\\: database can contain .* but property .*$#"

@@ -31,7 +31,7 @@ class Comment implements CommentInterface, AuditableInterface
     protected $state = self::STATE_PUBLISHED;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $message;
 
@@ -61,7 +61,7 @@ class Comment implements CommentInterface, AuditableInterface
     protected $parent;
 
     /**
-     * @var Collection|CommentInterface[]
+     * @var Collection<int, CommentInterface>|CommentInterface[]
      */
     protected $children;
 

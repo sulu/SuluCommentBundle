@@ -105,23 +105,26 @@ class CommentController extends AbstractRestController implements ClassResourceI
         if ($threadType) {
             $listBuilder->in(
                 $fieldDescriptors['threadType'],
-                array_filter(explode(',', $threadType))
+                \array_filter(\explode(',', $threadType))
             );
 
             $request->query->remove('threadType');
         }
 
+        /** @var string $filterValue */
         foreach ($request->query->all() as $filterKey => $filterValue) {
             if (isset($fieldDescriptors[$filterKey])) {
                 $listBuilder->where($fieldDescriptors[$filterKey], $filterValue);
             }
         }
 
+        /** @var string $route */
+        $route = $request->attributes->get('_route');
         $results = $listBuilder->execute();
         $list = new ListRepresentation(
             $results,
             'comments',
-            $request->attributes->get('_route'),
+            $route,
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),
@@ -149,7 +152,9 @@ class CommentController extends AbstractRestController implements ClassResourceI
             throw new EntityNotFoundException(CommentInterface::class, $id);
         }
 
-        $comment->setMessage($request->request->get('message'));
+        /** @var string $message */
+        $message = $request->request->get('message');
+        $comment->setMessage($message);
 
         $this->commentManager->update($comment);
         $this->entityManager->flush();
@@ -163,8 +168,8 @@ class CommentController extends AbstractRestController implements ClassResourceI
         $ids = $request->query->get('ids', '');
 
         /** @var int[] $ids */
-        $ids = array_filter(explode(',', $ids));
-        if (0 === count($ids)) {
+        $ids = \array_filter(\explode(',', $ids));
+        if (0 === \count($ids)) {
             return $this->handleView($this->view(null, 204));
         }
 

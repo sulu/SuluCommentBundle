@@ -31,7 +31,7 @@ class Comment implements CommentInterface, AuditableInterface
     protected $state = self::STATE_PUBLISHED;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $message;
 
@@ -61,11 +61,11 @@ class Comment implements CommentInterface, AuditableInterface
     protected $parent;
 
     /**
-     * @var Collection|CommentInterface[]
+     * @var Collection<int, CommentInterface>|CommentInterface[]
      */
     protected $children;
 
-    public function __construct(int $state = self::STATE_PUBLISHED, ThreadInterface $thread = null)
+    public function __construct(int $state = self::STATE_PUBLISHED, ?ThreadInterface $thread = null)
     {
         $this->state = $state;
         $this->thread = $thread;

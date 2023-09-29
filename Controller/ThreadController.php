@@ -96,22 +96,26 @@ class ThreadController extends AbstractRestController implements ClassResourceIn
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('threads');
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
+        /** @var string $filterValue */
         foreach ($request->query->all() as $filterKey => $filterValue) {
             if (isset($fieldDescriptors[$filterKey])) {
                 $listBuilder->where($fieldDescriptors[$filterKey], $filterValue);
             }
         }
 
+        /** @var string $typeParameter */
         $typeParameter = $request->get('types');
         if ($typeParameter) {
-            $listBuilder->in($fieldDescriptors['type'], array_filter(explode(',', $typeParameter)));
+            $listBuilder->in($fieldDescriptors['type'], \array_filter(\explode(',', $typeParameter)));
         }
 
         $items = $listBuilder->execute();
+        /** @var string $route */
+        $route = $request->attributes->get('_route');
         $list = new ListRepresentation(
             $items,
             'threads',
-            $request->attributes->get('_route'),
+            $route,
             $request->query->all(),
             $listBuilder->getCurrentPage(),
             $listBuilder->getLimit(),
@@ -139,7 +143,9 @@ class ThreadController extends AbstractRestController implements ClassResourceIn
             throw new EntityNotFoundException(ThreadInterface::class, $id);
         }
 
-        $thread->setTitle($request->request->get('title'));
+        /** @var string $title */
+        $title = $request->request->get('title');
+        $thread->setTitle($title);
 
         $this->commentManager->updateThread($thread);
         $this->entityManager->flush();
@@ -153,8 +159,8 @@ class ThreadController extends AbstractRestController implements ClassResourceIn
         $ids = $request->query->get('ids', '');
 
         /** @var int[] $ids */
-        $ids = array_filter(explode(',', $ids));
-        if (0 === count($ids)) {
+        $ids = \array_filter(\explode(',', $ids));
+        if (0 === \count($ids)) {
             return $this->handleView($this->view(null, 204));
         }
 

@@ -1,0 +1,3 @@
+security:
+    encoders:
+        Sulu\Bundle\SecurityBundle\Entity\User: plaintext

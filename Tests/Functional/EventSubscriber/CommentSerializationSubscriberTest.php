@@ -27,7 +27,7 @@ class CommentSerializationSubscriberTest extends SuluTestCase
         $comment->setMessage('test-message');
 
         $jsonResult = self::getContainer()->get('jms_serializer')->serialize($comment, 'json');
-        $arrayResult = json_decode($jsonResult, true);
+        $arrayResult = \json_decode($jsonResult, true);
 
         $this->assertTrue($arrayResult['published']);
         $this->assertSame('test-message', $arrayResult['message']);
@@ -41,7 +41,7 @@ class CommentSerializationSubscriberTest extends SuluTestCase
 
         $context = SerializationContext::create()->setGroups(['Default', 'commentWithAvatar']);
         $jsonResult = self::getContainer()->get('jms_serializer')->serialize($comment, 'json', $context);
-        $arrayResult = json_decode($jsonResult, true);
+        $arrayResult = \json_decode($jsonResult, true);
 
         $this->assertTrue($arrayResult['published']);
         $this->assertSame('test-message', $arrayResult['message']);
@@ -57,7 +57,7 @@ class CommentSerializationSubscriberTest extends SuluTestCase
 
         $context = SerializationContext::create()->setGroups(['Default', 'commentWithAvatar']);
         $jsonResult = self::getContainer()->get('jms_serializer')->serialize($comment, 'json', $context);
-        $arrayResult = json_decode($jsonResult, true);
+        $arrayResult = \json_decode($jsonResult, true);
 
         $this->assertTrue($arrayResult['published']);
         $this->assertSame('test-message', $arrayResult['message']);

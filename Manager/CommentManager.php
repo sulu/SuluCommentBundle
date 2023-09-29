@@ -74,7 +74,7 @@ class CommentManager implements CommentManagerInterface
         string $type,
         string $entityId,
         CommentInterface $comment,
-        string $threadTitle = null
+        ?string $threadTitle = null
     ): ThreadInterface {
         $thread = $this->threadRepository->findThread($type, $entityId);
         if (!$thread) {
@@ -106,7 +106,7 @@ class CommentManager implements CommentManagerInterface
 
     public function delete(array $ids): void
     {
-        if (!is_array($ids)) {
+        if (!\is_array($ids)) {
             $ids = [$ids];
         }
 
@@ -125,7 +125,7 @@ class CommentManager implements CommentManagerInterface
 
     public function deleteThreads(array $ids): void
     {
-        if (!is_array($ids)) {
+        if (!\is_array($ids)) {
             $ids = [$ids];
         }
 

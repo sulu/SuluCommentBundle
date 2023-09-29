@@ -15,9 +15,9 @@ use Doctrine\Common\Collections\Collection;
 
 interface CommentInterface
 {
-    const STATE_UNPUBLISHED = 0;
+    public const STATE_UNPUBLISHED = 0;
 
-    const STATE_PUBLISHED = 1;
+    public const STATE_PUBLISHED = 1;
 
     public function getId(): int;
 
@@ -39,12 +39,18 @@ interface CommentInterface
 
     public function getParent(): ?CommentInterface;
 
-    public function setParent(CommentInterface $parent = null): CommentInterface;
+    public function setParent(?CommentInterface $parent = null): CommentInterface;
 
     public function getDepth(): int;
 
+    /**
+     * @return Collection<int, CommentInterface>
+     */
     public function getChildren(): Collection;
 
+    /**
+     * @return Collection<int, CommentInterface>
+     */
     public function getPublishedChildren(): Collection;
 
     public function getCreatorFullName(): string;

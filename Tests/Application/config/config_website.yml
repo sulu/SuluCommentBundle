@@ -3,14 +3,11 @@ parameters:
     database.url: '%env(resolve:DATABASE_URL)%'
 
 framework:
-    router: { resource: "%kernel.root_dir%/config/routing_website.yml" }
+    router: { resource: "%kernel.project_dir%/config/routing_website.yml" }
 
 security:
     access_decision_manager:
         strategy: affirmative
-
-    encoders:
-        Sulu\Bundle\SecurityBundle\Entity\User: plaintext
 
     providers:
         testprovider:
@@ -22,7 +19,6 @@ security:
     firewalls:
         test:
             http_basic: ~
-            anonymous: ~
 
 sulu_test:
     enable_test_user_provider: true

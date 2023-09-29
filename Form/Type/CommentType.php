@@ -31,7 +31,7 @@ class CommentType extends AbstractType
         $this->router = $router;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $attributes = ['threadId' => $options['threadId']];
         if ($options['referrer']) {
@@ -47,7 +47,7 @@ class CommentType extends AbstractType
         $builder->add('submit', SubmitType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired('threadId');
         $resolver->setDefault('referrer', null);

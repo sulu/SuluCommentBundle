@@ -14,6 +14,7 @@ namespace Functional\Controller;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\CommentBundle\Entity\ThreadInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -21,8 +22,14 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class WebsiteCommentControllerTest extends SuluTestCase
 {
+    /**
+     * @var KernelBrowser
+     */
+    private $client;
+
     protected function setUp(): void
     {
+        $this->client = $this->createAuthenticatedWebsiteClient();
         $this->purgeDatabase();
     }
 
@@ -43,16 +50,15 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $message = 'Sulu is awesome',
         $threadTitle = 'Test Thread'
     ) {
-        $client = $this->createWebsiteClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '_api/threads/' . $type . '-' . $entityId . '/comments.json',
             ['message' => $message, 'threadTitle' => $threadTitle]
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(CommentInterface::STATE_PUBLISHED, $response['state']);
         $this->assertEquals($message, $response['message']);
@@ -82,16 +88,15 @@ class WebsiteCommentControllerTest extends SuluTestCase
         /** @var CommentInterface $parent */
         $parent = $thread->getComments()->first();
 
-        $client = $this->createWebsiteClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '_api/threads/' . $type . '-' . $entityId . '/comments.json?parent=' . $parent->getId(),
             ['message' => $message, 'threadTitle' => $threadTitle]
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(CommentInterface::STATE_PUBLISHED, $response['state']);
         $this->assertEquals($message, $response['message']);
@@ -119,15 +124,14 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $message = 'Sulu is awesome',
         $threadTitle = 'Test Thread'
     ) {
-        $client = $this->createWebsiteClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '_api/threads/' . $type . '-' . $entityId . '/comments?referrer=https://sulu.io',
             ['message' => $message, 'threadTitle' => $threadTitle]
         );
 
         /** @var RedirectResponse $response */
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(302, $response);
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertEquals('https://sulu.io', $response->getTargetUrl());
@@ -154,14 +158,13 @@ class WebsiteCommentControllerTest extends SuluTestCase
      */
     public function testPostAuditable($field, $type = 'blog', $entityId = '1')
     {
-        $client = $this->createWebsiteClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '_api/threads/' . $type . '-' . $entityId . '/comments.json',
             ['message' => 'Sulu is awesome', 'threadTitle' => 'Test Thread', $field => 1]
         );
 
-        $this->assertHttpStatusCode(400, $client->getResponse());
+        $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
     public function testPostCommentMultiple($type = 'blog', $entityId = '1')
@@ -187,14 +190,13 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $thread = $this->postComment($type, $entityId);
         $comment = $thread->getComments()->first();
 
-        $client = $this->createWebsiteClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '_api/threads/' . $type . '-' . $entityId . '/comments/' . $comment->getId() . '.json',
             ['message' => 'New message']
         );
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals('New message', $response['message']);
 
         $this->getEntityManager()->clear();
@@ -208,15 +210,14 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $thread = $this->postComment($type, $entityId);
         $comment = $thread->getComments()->first();
 
-        $client = $this->createWebsiteClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '_api/threads/' . $type . '-' . $entityId . '/comments/' . $comment->getId() . '?referrer=https://sulu.io',
             ['message' => 'New message']
         );
 
         /** @var RedirectResponse $response */
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(302, $response);
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertEquals('https://sulu.io', $response->getTargetUrl());
@@ -232,14 +233,13 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $thread = $this->postComment($type, $entityId);
         $comment = $thread->getComments()->first();
 
-        $client = $this->createWebsiteClient();
-        $client->request(
+        $this->client->request(
             'DELETE',
             '_api/threads/' . $type . '-' . $entityId . '/comments/' . $comment->getId() . '.json'
         );
 
         /* Todo: Check if this is correct. */
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals('', $response);
 
         $this->getEntityManager()->clear();
@@ -253,14 +253,13 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $thread = $this->postComment($type, $entityId);
         $comment = $thread->getComments()->first();
 
-        $client = $this->createWebsiteClient();
-        $client->request(
+        $this->client->request(
             'DELETE',
             '_api/threads/' . $type . '-' . $entityId . '/comments/' . $comment->getId() . '?referrer=https://sulu.io'
         );
 
         /** @var RedirectResponse $response */
-        $response = $client->getResponse();
+        $response = $this->client->getResponse();
         $this->assertHttpStatusCode(302, $response);
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertEquals('https://sulu.io', $response->getTargetUrl());
@@ -274,19 +273,18 @@ class WebsiteCommentControllerTest extends SuluTestCase
     public function testGetComments($type = 'blog', $entityId = '1')
     {
         $this->postComment($type, $entityId);
-        sleep(1);
+        \sleep(1);
         $this->postComment($type, $entityId, 'My new Comment');
         $this->postComment('article', '123-123-123');
 
-        $client = $this->createWebsiteClient();
-        $client->request(
+        $this->client->request(
             'GET',
             '_api/threads/' . $type . '-' . $entityId . '/comments.json'
         );
 
-        $this->assertHttpStatusCode(200, $client->getResponse());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = json_decode($client->getResponse()->getContent(), true);
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertCount(2, $response);
         $this->assertEquals(CommentInterface::STATE_PUBLISHED, $response[0]['state']);
         $this->assertEquals('My new Comment', $response[0]['message']);
@@ -300,14 +298,16 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $message = 'Sulu is awesome',
         $threadTitle = 'Test Thread'
     ) {
-        $client = $this->createWebsiteClient();
-        $client->request(
+        $this->client->request(
             'POST',
             '_api/threads/' . $type . '-' . $entityId . '/comments.json',
             ['message' => $message, 'threadTitle' => $threadTitle]
         );
 
         $thread = $this->getContainer()->get('sulu.repository.thread')->findThread($type, $entityId);
+
+        // client has to be restarted for the next request to work
+        $this->client->restart();
 
         return $thread;
     }

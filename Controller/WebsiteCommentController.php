@@ -16,6 +16,7 @@ use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\CommentBundle\Entity\Comment;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
@@ -65,17 +66,17 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
     private $commentClass;
 
     /**
-     * @var array
+     * @var array<string, array<string, mixed|mixed[]>>
      */
     private $commentTypes;
 
     /**
-     * @var array
+     * @var array<string, string>
      */
     private $commentDefaultTemplates;
 
     /**
-     * @var array
+     * @var array<string>
      */
     private $commentSerializationGroups;
 
@@ -84,6 +85,11 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
      */
     private $enableNestedCommentsDefault;
 
+    /**
+     * @param array<string, array<string, mixed|mixed[]>> $commentTypes
+     * @param array<string, string> $commentDefaultTemplates
+     * @param array<string> $commentSerializationGroups
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         CommentManagerInterface $commentManager,
@@ -118,19 +124,20 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
-        $limit = $request->query->getInt('limit') ?? 10;
-        $offset = $request->query->getInt('offset') ?? 0;
+        $limit = $request->query->getInt('limit', 10);
+        $offset = $request->query->getInt('offset', 0);
 
+        /** @var null|int $pageSize */
         $pageSize = $request->get('pageSize');
         if ($pageSize) {
-            @\trigger_deprecation('sulu/comment-bundle', '2.x', 'The usage of the "pageSize" parameter is deprecated.
+            @trigger_deprecation('sulu/comment-bundle', '2.x', 'The usage of the "pageSize" parameter is deprecated.
         Please use "limit" and "offset instead.');
             $limit = $pageSize;
         }
 
         $page = $request->get('page');
         if ($page) {
-            @\trigger_deprecation('sulu/comment-bundle', '2.x', 'The usage of the "page" parameter is deprecated.
+            @trigger_deprecation('sulu/comment-bundle', '2.x', 'The usage of the "page" parameter is deprecated.
             Please use "limit" and "offset instead.');
 
             $offset = ($page - 1) * $limit;
@@ -166,7 +173,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
             ]
         );
 
-        $contentData = array_merge(
+        $contentData = \array_merge(
             [
                 'form' => $form->createView(),
                 'nestedComments' => $this->getNestedCommentsEnabled($type),
@@ -238,7 +245,9 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         /** @var CommentInterface $comment */
         $comment = $this->commentRepository->createNew();
 
-        if ($parent = $request->get('parent')) {
+        /** @var null|int $parent */
+        $parent = $request->get('parent');
+        if ($parent) {
             $comment->setParent($this->commentRepository->findCommentById($parent));
         }
 
@@ -257,9 +266,12 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
             return new Response(null, 400);
         }
 
+        /** @var CommentInterface $comment */
         $comment = $form->getData();
 
-        $this->commentManager->addComment($type, $entityId, $comment, $request->get('threadTitle'));
+        /** @var string $threadTitle */
+        $threadTitle = $request->get('threadTitle');
+        $this->commentManager->addComment($type, $entityId, $comment, $threadTitle);
         $this->entityManager->flush();
 
         if ($referrer = $request->query->get('referrer')) {
@@ -288,6 +300,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
     {
         list($type, $entityId) = $this->getThreadIdParts($threadId);
 
+        /** @var string $message */
         $message = $request->request->get('message');
 
         /** @var Comment $comment */
@@ -317,7 +330,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
     public function deleteCommentAction(string $threadId, string $commentId, Request $request): Response
     {
         /** @var Comment $comment */
-        $comment = $this->commentRepository->findCommentById(intval($commentId));
+        $comment = $this->commentRepository->findCommentById(\intval($commentId));
 
         $this->entityManager->remove($comment);
         $this->entityManager->flush();
@@ -333,9 +346,16 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         return new Response();
     }
 
+    /**
+     * @param null|mixed $data
+     * @param null|string $statusCode
+     * @param mixed[] $headers
+     *
+     * @return View
+     */
     protected function view($data = null, $statusCode = null, array $headers = [])
     {
-        $view = parent::view($data, $statusCode, $headers);
+        $view = parent::view($data, $statusCode ? (int) $statusCode : null, $headers);
 
         $context = new Context();
         $context->setGroups($this->commentSerializationGroups);
@@ -351,18 +371,21 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
      */
     private function getThreadIdParts(string $threadId): array
     {
-        $pos = strpos($threadId, '-');
+        $pos = \strpos($threadId, '-');
         if (false === $pos) {
             throw new \RuntimeException('Thread id is not valid.');
         }
 
-        return [substr($threadId, 0, $pos), substr($threadId, $pos + 1)];
+        return [\substr($threadId, 0, $pos), \substr($threadId, $pos + 1)];
     }
 
     private function getTemplate(string $type, string $templateType): string
     {
-        if (array_key_exists($type, $this->commentTypes)) {
-            return $this->commentTypes[$type]['templates'][$templateType];
+        if (\array_key_exists($type, $this->commentTypes)) {
+            /** @var array<string, string> $templates */
+            $templates = $this->commentTypes[$type]['templates'];
+
+            return $templates[$templateType];
         }
 
         return $this->commentDefaultTemplates[$templateType];
@@ -370,8 +393,11 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
 
     private function getNestedCommentsEnabled(string $type): bool
     {
-        if (array_key_exists($type, $this->commentTypes)) {
-            return $this->commentTypes[$type]['nested_comments'];
+        if (\array_key_exists($type, $this->commentTypes)) {
+            /** @var bool $result */
+            $result = $this->commentTypes[$type]['nested_comments'];
+
+            return $result;
         }
 
         return $this->enableNestedCommentsDefault;

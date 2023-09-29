@@ -34,7 +34,7 @@ interface ThreadInterface
     public function setCommentCount(int $commentCount): self;
 
     /**
-     * @return CommentInterface[]|Collection
+     * @return CommentInterface[]|Collection<int, CommentInterface>
      */
     public function getComments(): Collection;
 

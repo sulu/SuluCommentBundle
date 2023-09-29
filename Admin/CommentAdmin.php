@@ -96,7 +96,6 @@ class CommentAdmin extends Admin
             new ToolbarAction('sulu_admin.delete'),
         ];
 
-        /** @var array $commentFormToolbarActions */
         $commentFormToolbarActions = array_merge($formToolbarActions, [
             new TogglerToolbarAction(
                 $this->translator->trans('sulu_admin.publish', [], 'admin'),

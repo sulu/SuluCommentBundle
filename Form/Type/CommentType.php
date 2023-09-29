@@ -31,7 +31,7 @@ class CommentType extends AbstractType
         $this->router = $router;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $attributes = ['threadId' => $options['threadId']];
         if ($options['referrer']) {

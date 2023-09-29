@@ -18,6 +18,7 @@ use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Sulu\Bundle\CommentBundle\Entity\Comment;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class CommentSerializationSubscriber implements EventSubscriberInterface
@@ -38,7 +39,10 @@ class CommentSerializationSubscriber implements EventSubscriberInterface
         $this->requestStack = $requestStack;
     }
 
-    public static function getSubscribedEvents()
+    /**
+     * @return array<int, array<string, string>>
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             [
@@ -52,9 +56,10 @@ class CommentSerializationSubscriber implements EventSubscriberInterface
     public function onPostSerialize(ObjectEvent $event): void
     {
         $context = $event->getContext();
-
+        /** @var mixed[] $groups */
+        $groups = $context->getAttribute('groups');
         if (!$context->hasAttribute('groups')
-            || !in_array('commentWithAvatar', $context->getAttribute('groups'))) {
+            || !in_array('commentWithAvatar', $groups)) {
             return;
         }
 
@@ -63,6 +68,7 @@ class CommentSerializationSubscriber implements EventSubscriberInterface
         if (!$comment instanceof Comment || !$creator = $comment->getCreator()) {
             return;
         }
+        /** @var User $creator */
 
         /** @var SerializationVisitorInterface $visitor */
         $visitor = $event->getVisitor();

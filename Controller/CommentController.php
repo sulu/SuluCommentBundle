@@ -111,9 +111,10 @@ class CommentController extends AbstractRestController implements ClassResourceI
             $request->query->remove('threadType');
         }
 
+        /** @var string $filterValue */
         foreach ($request->query->all() as $filterKey => $filterValue) {
             if (isset($fieldDescriptors[$filterKey])) {
-                $listBuilder->where($fieldDescriptors[$filterKey], (string) $filterValue);
+                $listBuilder->where($fieldDescriptors[$filterKey], $filterValue);
             }
         }
 
@@ -151,7 +152,9 @@ class CommentController extends AbstractRestController implements ClassResourceI
             throw new EntityNotFoundException(CommentInterface::class, $id);
         }
 
-        $comment->setMessage($request->request->get('message'));
+        /** @var string $message */
+        $message = $request->request->get('message');
+        $comment->setMessage($message);
 
         $this->commentManager->update($comment);
         $this->entityManager->flush();

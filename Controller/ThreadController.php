@@ -96,9 +96,10 @@ class ThreadController extends AbstractRestController implements ClassResourceIn
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('threads');
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
+        /** @var string $filterValue */
         foreach ($request->query->all() as $filterKey => $filterValue) {
             if (isset($fieldDescriptors[$filterKey])) {
-                $listBuilder->where($fieldDescriptors[$filterKey], (string) $filterValue);
+                $listBuilder->where($fieldDescriptors[$filterKey], $filterValue);
             }
         }
 
@@ -142,7 +143,9 @@ class ThreadController extends AbstractRestController implements ClassResourceIn
             throw new EntityNotFoundException(ThreadInterface::class, $id);
         }
 
-        $thread->setTitle($request->request->get('title'));
+        /** @var string $title */
+        $title = $request->request->get('title');
+        $thread->setTitle($title);
 
         $this->commentManager->updateThread($thread);
         $this->entityManager->flush();

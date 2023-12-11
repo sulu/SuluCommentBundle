@@ -31,6 +31,7 @@ class WebsiteCommentControllerTest extends SuluTestCase
     {
         $this->client = $this->createAuthenticatedWebsiteClient();
         $this->purgeDatabase();
+        $this->initPhpcr();
     }
 
     public function providePostData()
@@ -290,6 +291,20 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $this->assertEquals('My new Comment', $response[0]['message']);
         $this->assertEquals(CommentInterface::STATE_PUBLISHED, $response[1]['state']);
         $this->assertEquals('Sulu is awesome', $response[1]['message']);
+    }
+
+    public function testGetCommentsHtmlThreadTitle()
+    {
+        $crawler = $this->client->request(
+            'GET',
+            '/'
+        );
+
+        $input = $crawler->filter('input[type="hidden"]');
+
+        $this->assertSame('threadTitle', $input->attr('id'));
+        $this->assertSame('hidden', $input->attr('type'));
+        $this->assertSame('This is my title', $input->attr('value'));
     }
 
     private function postComment(

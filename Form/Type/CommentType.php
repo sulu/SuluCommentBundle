@@ -43,13 +43,14 @@ class CommentType extends AbstractType
 
         $builder->setAction($this->router->generate('sulu_comment.post_thread_comments', $attributes));
         $builder->add('message', TextareaType::class);
-        $builder->add('threadTitle', HiddenType::class, ['mapped' => false]);
+        $builder->add('threadTitle', HiddenType::class, ['mapped' => false, 'data' => $options['threadTitle']]);
         $builder->add('submit', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired('threadId');
+        $resolver->setDefault('threadTitle', '');
         $resolver->setDefault('referrer', null);
         $resolver->setDefault('parent', null);
         $resolver->setDefault('csrf_protection', false);

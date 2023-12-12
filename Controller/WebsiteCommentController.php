@@ -127,7 +127,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         $limit = $request->query->getInt('limit', 10);
         $offset = $request->query->getInt('offset', 0);
 
-        /** @var null|int $pageSize */
+        /** @var int|null $pageSize */
         $pageSize = $request->get('pageSize');
         if ($pageSize) {
             @trigger_deprecation('sulu/comment-bundle', '2.x', 'The usage of the "pageSize" parameter is deprecated.
@@ -170,6 +170,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
                 'data_class' => $this->commentClass,
                 'threadId' => $threadId,
                 'referrer' => $referrer,
+                'threadTitle' => $request->query->get('threadTitle'),
             ]
         );
 
@@ -245,7 +246,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         /** @var CommentInterface $comment */
         $comment = $this->commentRepository->createNew();
 
-        /** @var null|int $parent */
+        /** @var int|null $parent */
         $parent = $request->get('parent');
         if ($parent) {
             $comment->setParent($this->commentRepository->findCommentById($parent));
@@ -270,7 +271,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
         $comment = $form->getData();
 
         /** @var string $threadTitle */
-        $threadTitle = $request->get('threadTitle');
+        $threadTitle = $request->request->get('threadTitle', '');
         $this->commentManager->addComment($type, $entityId, $comment, $threadTitle);
         $this->entityManager->flush();
 
@@ -330,7 +331,7 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
     public function deleteCommentAction(string $threadId, string $commentId, Request $request): Response
     {
         /** @var Comment $comment */
-        $comment = $this->commentRepository->findCommentById(\intval($commentId));
+        $comment = $this->commentRepository->findCommentById((int) $commentId);
 
         $this->entityManager->remove($comment);
         $this->entityManager->flush();
@@ -347,8 +348,8 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
     }
 
     /**
-     * @param null|mixed $data
-     * @param null|string $statusCode
+     * @param mixed|null $data
+     * @param string|null $statusCode
      * @param mixed[] $headers
      *
      * @return View

@@ -34,3 +34,5 @@ Tests/Application/.env.test.local
 # php-cs-fixer
 .php-cs-fixer.cache
 php-cs-fixer
+
+.php-version

@@ -14,6 +14,9 @@ namespace Sulu\Bundle\CommentBundle\Entity;
 use Doctrine\ORM\NoResultException;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
+/**
+ * @extends NestedTreeRepository<CommentInterface>
+ */
 class CommentRepository extends NestedTreeRepository implements CommentRepositoryInterface
 {
     public function findComments(string $type, string $entityId, int $limit = 10, int $offset = 0): array

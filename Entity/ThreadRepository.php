@@ -46,6 +46,7 @@ class ThreadRepository extends EntityRepository implements ThreadRepositoryInter
             ->setParameter('ids', $ids)
             ->getQuery();
 
+        /** @var ThreadInterface[] */
         return $query->getResult();
     }
 

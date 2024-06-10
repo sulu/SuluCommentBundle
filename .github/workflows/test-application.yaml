@@ -75,6 +75,10 @@ jobs:
                   extensions: 'mysql, gd'
                   tools: ${{ matrix.tools }}
 
+            - name: Remove phpspec/prophecy-phpunit
+              if: ${{ matrix.php-version == '7.2' }}
+              run: composer remove phpspec/prophecy-phpunit --no-update --dev
+
             - name: Remove not required test tooling
               run: composer remove "*php-cs-fixer*" "*phpstan*" --no-update --dev
 

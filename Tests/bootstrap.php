@@ -19,6 +19,7 @@ if (!\file_exists($file)) {
 }
 
 require $file;
+require_once __DIR__ . '/prophecy_php_7_2.php';
 
 // Load cached env vars if the .env.local.php file exists
 // Run "composer dump-env prod" to create it (requires symfony/flex >=1.2)

@@ -39,10 +39,10 @@ class Kernel extends SuluTestKernel
         $context = $this->getContext();
         $loader->load(__DIR__ . '/config/config_' . $context . '.yml');
 
-        if (\version_compare(Kernel::VERSION, '6.0.0', '>=')) {
-            $loader->load(__DIR__ . '/config/security-6.yml');
-        } else {
+        if (\class_exists(\Symfony\Bundle\SecurityBundle\Command\UserPasswordEncoderCommand::class)) { // detect Symfony <= 5.4
             $loader->load(__DIR__ . '/config/security-5-4.yml');
+        } else {
+            $loader->load(__DIR__ . '/config/security-6.yml');
         }
     }
 

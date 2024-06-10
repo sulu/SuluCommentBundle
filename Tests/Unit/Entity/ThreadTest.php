@@ -13,11 +13,14 @@ namespace Sulu\Bundle\CommentBundle\Tests\Unit\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\CommentBundle\Entity\CommentInterface;
 use Sulu\Bundle\CommentBundle\Entity\Thread;
 
 class ThreadTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testCommentCount()
     {
         $thread = new Thread('test', 1);

@@ -22,6 +22,7 @@
         "massive/search-bundle": "^2.0.0",
         "php-ffmpeg/php-ffmpeg": "^0.14 || ^1.0",
         "phpspec/prophecy": "^1.17",
+        "phpspec/prophecy-phpunit": "^2.0",
         "phpstan/phpstan": "^1.0",
         "phpstan/phpstan-doctrine": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",

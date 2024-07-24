@@ -22,12 +22,14 @@ jobs:
                     - php-version: '7.2'
                       dependency-versions: 'lowest'
                       tools: 'composer:v2'
+                      phpunit-config: 'phpunit-9.xml.dist'
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: disabled
 
                     - php-version: '7.4'
                       dependency-versions: 'highest'
                       tools: 'composer:v2'
+                      phpunit-config: 'phpunit-9.xml.dist'
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: disabled
 
@@ -55,6 +57,13 @@ jobs:
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
 
+                    - php-version: '8.4'
+                      dependency-versions: 'highest'
+                      tools: 'composer:v2'
+                      composer-options: '--ignore-platform-reqs'
+                      env:
+                          SYMFONY_DEPRECATIONS_HELPER: weak
+
         services:
             mysql:
                 image: mysql:5.7
@@ -79,20 +88,23 @@ jobs:
               if: ${{ matrix.php-version == '7.2' }}
               run: composer remove phpspec/prophecy-phpunit --no-update --dev
 
-            - name: Remove not required test tooling
-              run: composer remove "*php-cs-fixer*" "*phpstan*" --no-update --dev
+            - name: Remove Lint Tools
+              # These tools are not required to run tests, so we are removing them to improve dependency resolving and
+              # testing lowest versions.
+              run: composer remove "*php-cs-fixer*" "*phpstan*" "*rector*" --dev --no-update
 
             - name: Install composer dependencies
               uses: ramsey/composer-install@v2
               with:
                   dependency-versions: ${{matrix.dependency-versions}}
+                  composer-options: ${{ matrix.composer-options }}
 
             - name: Bootstrap test environment
               run: composer bootstrap-test-environment
               env: ${{ matrix.env }}
 
             - name: Execute test cases
-              run: composer test
+              run: composer test -- --config ${{ matrix.phpunit-config || 'phpunit.xml.dist' }}
               env: ${{ matrix.env }}
 
     lint:

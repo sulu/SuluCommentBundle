@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit colors="true" bootstrap="Tests/bootstrap.php">
-   <testsuites>
+    <testsuites>
         <testsuite name="Sulu Comment Bundle">
             <directory>./Tests</directory>
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
-            <directory>.</directory>
-            <exclude>
-                <directory>Resources/</directory>
-                <directory>Tests/</directory>
-                <directory>vendor/</directory>
-            </exclude>
-        </whitelist>
-    </filter>
-
     <php>
         <env name="KERNEL_CLASS" value="Sulu\Bundle\CommentBundle\Tests\Application\Kernel"/>
     </php>
+
+    <source>
+        <include>
+            <directory>./</directory>
+        </include>
+        <exclude>
+            <directory>Resources/</directory>
+            <directory>Tests/</directory>
+            <directory>vendor/</directory>
+        </exclude>
+    </source>
 </phpunit>

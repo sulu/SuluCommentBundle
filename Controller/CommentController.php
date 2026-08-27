@@ -18,6 +18,7 @@ use Sulu\Bundle\CommentBundle\Entity\CommentRepositoryInterface;
 use Sulu\Bundle\CommentBundle\Manager\CommentManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
@@ -192,7 +193,7 @@ class CommentController extends AbstractRestController
      */
     public function postTriggerAction(int $id, Request $request): Response
     {
-        $action = $request->query->get('action');
+        $action = $request->query->get('action') ?? throw new MissingParameterException(self::class, 'action');
 
         $comment = $this->commentRepository->findCommentById($id);
         if (!$comment) {

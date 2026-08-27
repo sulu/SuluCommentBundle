@@ -192,7 +192,7 @@ class CommentController extends AbstractRestController
      */
     public function postTriggerAction(int $id, Request $request): Response
     {
-        $action = $this->getRequestParameter($request, 'action', true);
+        $action = $request->query->get('action');
 
         $comment = $this->commentRepository->findCommentById($id);
         if (!$comment) {

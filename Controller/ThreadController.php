@@ -106,7 +106,7 @@ class ThreadController extends AbstractRestController
         }
 
         /** @var string $typeParameter */
-        $typeParameter = $request->get('types');
+        $typeParameter = $request->query->get('types');
         if ($typeParameter) {
             $listBuilder->in($fieldDescriptors['type'], \array_filter(\explode(',', $typeParameter)));
         }

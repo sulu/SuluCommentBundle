@@ -60,7 +60,7 @@ class CommentType extends AbstractType
         $resolver->setDefault('csrf_protection', false);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

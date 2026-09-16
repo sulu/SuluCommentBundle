@@ -122,7 +122,7 @@ class WebsiteCommentController extends AbstractRestController
         $limit = $request->query->getInt('limit', 10);
         $offset = $request->query->getInt('offset', 0);
 
-        $referrer = $request->get('referrer');
+        $referrer = $request->query->get('referrer');
 
         $comments = $this->commentManager->findPublishedComments(
             $type,
@@ -224,7 +224,7 @@ class WebsiteCommentController extends AbstractRestController
         $comment = $this->commentRepository->createNew();
 
         /** @var string|null $parent */
-        $parent = $request->get('parent');
+        $parent = $request->query->get('parent');
         if ($parent) {
             $comment->setParent($this->commentRepository->findCommentById((int) $parent));
         }

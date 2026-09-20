@@ -162,6 +162,21 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
+    public function testPostInvalidHtmlRendersTheFormWithItsErrors($type = 'blog', $entityId = '1')
+    {
+        // an extra field the form does not declare makes it invalid, as testPostAuditable relies on
+        $this->client->request(
+            'POST',
+            '_api/threads/' . $type . '-' . $entityId . '/comments.html',
+            ['message' => 'Sulu is awesome', 'threadTitle' => 'Test Thread', 'created' => 1]
+        );
+
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(422, $response);
+        $this->assertStringContainsString('<form', (string) $response->getContent());
+    }
+
     public function testPostCommentMultiple($type = 'blog', $entityId = '1')
     {
         $thread1 = $this->postComment($type, $entityId);

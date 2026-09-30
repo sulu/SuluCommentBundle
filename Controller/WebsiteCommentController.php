@@ -235,13 +235,31 @@ class WebsiteCommentController extends AbstractRestController
             [
                 'data_class' => $this->commentClass,
                 'threadId' => $threadId,
+                'referrer' => $request->query->get('referrer'),
+                'parent' => $parent,
             ]
         );
 
         $form->handleRequest($request);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
-            return new Response(null, 400);
+            if ('html' !== $request->getRequestFormat()) {
+                return new Response(null, 400);
+            }
+
+            // 422 rather than 400: it is the status hotwired/turbo requires to replace a form
+            // with the errored one it gets back.
+            return new Response(
+                $this->twig->render(
+                    $this->getTemplate($type, 'form'),
+                    [
+                        'form' => $form->createView(),
+                        'threadId' => $threadId,
+                        'referrer' => $request->query->get('referrer'),
+                    ]
+                ),
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
 
         /** @var CommentInterface $comment */

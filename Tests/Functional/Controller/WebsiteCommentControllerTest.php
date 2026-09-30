@@ -177,6 +177,25 @@ class WebsiteCommentControllerTest extends SuluTestCase
         $this->assertStringContainsString('<form', (string) $response->getContent());
     }
 
+    public function testPostInvalidHtmlKeepsParentAndReferrerInTheFormAction($type = 'blog', $entityId = '1')
+    {
+        $thread = $this->postComment($type, $entityId);
+        /** @var CommentInterface $parent */
+        $parent = $thread->getComments()->first();
+
+        $this->client->request(
+            'POST',
+            '_api/threads/' . $type . '-' . $entityId . '/comments.html?parent=' . $parent->getId() . '&referrer=sulu',
+            ['message' => 'Sulu is awesome', 'threadTitle' => 'Test Thread', 'created' => 1]
+        );
+
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(422, $response);
+        $this->assertStringContainsString('parent=' . $parent->getId(), (string) $response->getContent());
+        $this->assertStringContainsString('referrer=sulu', (string) $response->getContent());
+    }
+
     public function testPostCommentMultiple($type = 'blog', $entityId = '1')
     {
         $thread1 = $this->postComment($type, $entityId);

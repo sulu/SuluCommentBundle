@@ -258,6 +258,8 @@ class WebsiteCommentController extends AbstractRestController implements ClassRe
             [
                 'data_class' => $this->commentClass,
                 'threadId' => $threadId,
+                'referrer' => $request->query->get('referrer'),
+                'parent' => $parent,
             ]
         );
 
